@@ -1,0 +1,29 @@
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Persistence.Context.EFConfigurations
+{
+    public class LearnerCourseEntityTypeConfiguration : IEntityTypeConfiguration<LearnerCourse>
+    {
+        public void Configure(EntityTypeBuilder<LearnerCourse> builder)
+        {
+            builder.ToTable("LearnerCourses");
+
+            builder.HasKey(u => u.Id);
+
+            /*builder.Property(u => u.CourseId)
+                .HasColumnType("Guid")
+                .IsRequired();
+
+            builder.Property(u => u.LearnerId)
+               .HasColumnType("Guid")
+               .IsRequired();*/
+        }
+    }
+}
