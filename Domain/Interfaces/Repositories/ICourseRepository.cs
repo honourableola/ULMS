@@ -12,6 +12,6 @@ namespace Domain.Interfaces.Repositories
         Task<IEnumerable<Course>> GetSelectedCourses(IList<Guid> ids);
         Task<IList<Course>> GetCoursesByLearner(Guid learnerId);
         Task<IList<Course>> GetCoursesByInstructor(Guid instructorId);
-        public Task<IEnumerable<Course>> SearchCoursesByName(string searchText);
+        Task<IEnumerable<Course>> SearchCoursesByName(string searchText);
     }
 }

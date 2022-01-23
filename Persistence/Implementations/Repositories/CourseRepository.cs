@@ -53,7 +53,7 @@ namespace Persistence.Implementations.Repositories
 
         public async Task<IEnumerable<Course>> SearchCoursesByName(string searchText)
         {
-            return await _context.Courses.Where(course => EF.Functions.Like(course.Name, $"%{searchText}%")).ToListAsync();
+            return await _context.Courses.Include(v => v.Category).Where(course => EF.Functions.Like(course.Name, $"%{searchText}%")).ToListAsync();
         }
     }
 }

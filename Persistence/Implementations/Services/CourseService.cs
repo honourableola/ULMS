@@ -130,10 +130,24 @@ namespace Persistence.Implementations.Services
 
                 }).ToListAsync();
 
+            if (courses == null)
+            {
+                throw new BadRequestException($"Courses not found");
+            }
+            else if (courses.Count == 0)
+            {
+                return new CoursesResponseModel
+                {
+                    Data = courses,
+                    Message = $" No Course Found",
+                    Status = true
+                };
+            }
+
             return new CoursesResponseModel
             {
                 Data = courses,
-                Message = $"Courses retrieved successfully",
+                Message = $" {courses.Count} Courses retrieved successfully",
                 Status = true
             };
 
@@ -195,10 +209,104 @@ namespace Persistence.Implementations.Services
 
             }).ToListAsync();
 
+            if (courses == null)
+            {
+                throw new BadRequestException($"Courses Not found");
+            }
+            else if (courses.Count == 0)
+            {
+                return new CoursesResponseModel
+                {
+                    Data = courses,
+                    Message = $" No Course Found",
+                    Status = true
+                };
+            }
+
+
             return new CoursesResponseModel
             {
                 Data = courses,
-                Message = $"Courses retrieved successfully",
+                Message = $" {courses.Count} Courses retrieved successfully",
+                Status = true
+            };
+
+        }
+
+        public async Task<CoursesResponseModel> GetActiveCourses()
+        {
+            var courses = await _courseRepository.Query()
+                .Include(e => e.Category)
+                .Include(a => a.InstructorCourses)
+                .ThenInclude(c => c.Instructor)
+                .Include(d => d.LearnerCourses)
+                .ThenInclude(o => o.Learner)
+                .Where(a => a.AvailabilityStatus == CourseAvailabilityStatus.IsActive)
+                .Select(n => new CourseDTO
+                {
+                    Id = n.Id,
+                    Name = n.Name,
+                    CategoryId = n.CategoryId,
+                    CategoryName = n.Category.Name,
+                    Description = n.Description,
+                    AvailabilityStatus = n.AvailabilityStatus,
+                    Modules = n.Modules.Select(m => new ModuleDTO
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        Description = m.Description,
+                        Content = m.Content,
+                        ModuleImage1 = m.ModuleImage1,
+                        ModuleImage2 = m.ModuleImage2,
+                        ModulePDF1 = m.ModulePDF1,
+                        ModulePDF2 = m.ModulePDF2,
+                        ModuleVideo1 = m.ModuleVideo1,
+                        ModuleVideo2 = m.ModuleVideo2,
+                        CourseId = m.CourseId,
+                        CourseName = m.Course.Name
+
+                    }).ToList(),
+                    InstructorCourses = n.InstructorCourses.Select(ic => new InstructorDTO
+                    {
+                        Id = ic.InstructorId,
+                        FirstName = ic.Instructor.FirstName,
+                        LastName = ic.Instructor.LastName,
+                        Email = ic.Instructor.Email,
+                        PhoneNumber = ic.Instructor.PhoneNumber,
+                        InstructorPhoto = ic.Instructor.InstructorPhoto
+
+                    }).ToList(),
+                    LearnerCourses = n.LearnerCourses.Select(l => new LearnerDTO
+                    {
+                        Id = l.Learner.Id,
+                        FirstName = l.Learner.FirstName,
+                        LastName = l.Learner.LastName,
+                        Email = l.Learner.Email,
+                        LearnerPhoto = l.Learner.LearnerPhoto,
+                        PhoneNumber = l.Learner.PhoneNumber,
+
+                    }).ToList()
+
+                }).ToListAsync();
+
+            if (courses == null)
+            {
+                throw new BadRequestException($"Courses not found");
+            }
+            else if (courses.Count == 0)
+            {
+                return new CoursesResponseModel
+                {
+                    Data = courses,
+                    Message = $" No Course Found",
+                    Status = true
+                };
+            }
+
+            return new CoursesResponseModel
+            {
+                Data = courses,
+                Message = $" {courses.Count} Courses retrieved successfully",
                 Status = true
             };
 
@@ -214,6 +322,10 @@ namespace Persistence.Implementations.Services
                 .ThenInclude(o => o.Learner)
                 .SingleOrDefaultAsync(a => a.Id == id);
 
+            if(course == null)
+            {
+                throw new BadRequestException($"Course with id {id} does not exist");
+            }
             return new CourseResponseModel
             {
                 Data = new CourseDTO
@@ -262,7 +374,7 @@ namespace Persistence.Implementations.Services
                     }).ToList()
 
                 },
-                Message = $"Courses retrieved successfully",
+                Message = $"Course retrieved successfully",
                 Status = true
             };
  
@@ -323,11 +435,24 @@ namespace Persistence.Implementations.Services
                     }).ToList()
 
                 }).ToListAsync();
+            if(courses == null)
+            {
+                throw new BadRequestException($"Courses with categoryId {categoryId} not found");
+            }
+            else if(courses.Count == 0)
+            {
+                return new CoursesResponseModel
+                {
+                    Data = courses,
+                    Message = $" No Course Found",
+                    Status = true
+                };
+            }
 
             return new CoursesResponseModel
             {
                 Data = courses,
-                Message = $"Courses retrieved successfully",
+                Message = $"{courses.Count} Courses retrieved successfully",
                 Status = true
             };
         }
@@ -336,6 +461,20 @@ namespace Persistence.Implementations.Services
         {
             var courses = await _courseRepository.GetCoursesByInstructor(instructorId);
 
+            if (courses == null)
+            {
+                throw new BadRequestException($"Courses not found");
+            }
+            else if (courses.Count == 0)
+            {
+                return new CoursesResponseModel
+                {
+                    
+                    Message = $" No Course Found",
+                    Status = true
+                };
+            }
+
             var coursesReturned = courses.Select(n => new CourseDTO
             {
                 Id = n.Id,
@@ -384,7 +523,7 @@ namespace Persistence.Implementations.Services
             return new CoursesResponseModel
             {
                 Data = coursesReturned,
-                Message = $"Instructor Courses retrieved successfully",
+                Message = $" {courses.Count} Instructor Courses retrieved successfully",
                 Status = true
             };
         }
@@ -393,6 +532,21 @@ namespace Persistence.Implementations.Services
         {
             var courses = await _courseRepository.GetCoursesByLearner(learnerId);
 
+            if (courses == null)
+            {
+                throw new BadRequestException($"Courses not found");
+            }
+            else if (courses.Count == 0)
+            {
+                return new CoursesResponseModel
+                {
+                   
+                    Message = $" No Course Found",
+                    Status = true
+                };
+            }
+
+
             var coursesReturned = courses.Select(n => new CourseDTO
             {
                 Id = n.Id,
@@ -441,14 +595,76 @@ namespace Persistence.Implementations.Services
             return new CoursesResponseModel
             {
                 Data = coursesReturned,
-                Message = $"Instructor Courses retrieved successfully",
+                Message = $"{courses.Count} Learner Courses retrieved successfully",
                 Status = true
             };
         }
 
-        public async Task<IEnumerable<Course>> SearchCoursesByName(string searchText)
+        public async Task<CoursesResponseModel> SearchCoursesByName(string searchText)
         {
-            return await _courseRepository.SearchCoursesByName(searchText);
+            var courses = await _courseRepository.SearchCoursesByName(searchText);
+
+            if (courses == null)
+            {
+                throw new BadRequestException($"Courses not found");
+            }
+           
+
+
+            var coursesReturned = courses.Select(n => new CourseDTO
+            {
+                Id = n.Id,
+                Name = n.Name,
+                CategoryId = n.CategoryId,
+                CategoryName = n.Category.Name,
+                Description = n.Description,
+                AvailabilityStatus = n.AvailabilityStatus,
+                Modules = n.Modules.Select(m => new ModuleDTO
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Description = m.Description,
+                    Content = m.Content,
+                    ModuleImage1 = m.ModuleImage1,
+                    ModuleImage2 = m.ModuleImage2,
+                    ModulePDF1 = m.ModulePDF1,
+                    ModulePDF2 = m.ModulePDF2,
+                    ModuleVideo1 = m.ModuleVideo1,
+                    ModuleVideo2 = m.ModuleVideo2,
+                    CourseId = m.CourseId,
+                    CourseName = m.Course.Name
+
+                }).ToList(),
+                InstructorCourses = n.InstructorCourses.Select(ic => new InstructorDTO
+                {
+                    Id = ic.InstructorId,
+                    FirstName = ic.Instructor.FirstName,
+                    LastName = ic.Instructor.LastName,
+                    Email = ic.Instructor.Email,
+                    PhoneNumber = ic.Instructor.PhoneNumber,
+                    InstructorPhoto = ic.Instructor.InstructorPhoto
+
+                }).ToList(),
+                LearnerCourses = n.LearnerCourses.Select(l => new LearnerDTO
+                {
+                    Id = l.Learner.Id,
+                    FirstName = l.Learner.FirstName,
+                    LastName = l.Learner.LastName,
+                    Email = l.Learner.Email,
+                    LearnerPhoto = l.Learner.LearnerPhoto,
+                    PhoneNumber = l.Learner.PhoneNumber,
+
+                }).ToList()
+            });
+            return new CoursesResponseModel
+            {
+                Data = coursesReturned,
+                Message = $"{coursesReturned.Count()} Searched Courses retrieved successfully",
+                Status = true
+            };
+       
+            
+       
         }
 
         public async Task<BaseResponse> UpdateCourse(Guid id, UpdateCourseRequestModel model)

@@ -16,5 +16,6 @@ namespace Domain.Interfaces.Services
         public Task<ModuleResponseModel> GetModule(Guid id);
         public Task<ModulesResponseModel> GetAllModules();
         public Task<ModulesResponseModel> GetModulesByCourse(Guid courseId);
+        public Task<ModulesResponseModel> SearchModulesByName(string searchText);
     }
 }

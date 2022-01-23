@@ -90,15 +90,30 @@ namespace Persistence.Implementations.Services
                        CategoryId = o.Course.CategoryId,
                        CategoryName = o.Course.Category.Name,
                        Description = o.Course.Description,
-                       IsArchived = o.Course.IsArchived
+                       AvailabilityStatus = o.Course.AvailabilityStatus
                    }).ToList()
               
                }).ToListAsync();
 
+            if (instructors == null)
+            {
+                throw new BadRequestException($"Instructors not found");
+            }
+            else if (instructors.Count == 0)
+            {
+                return new InstructorsResponseModel
+                {
+                   
+                    Message = $" No Instructor Found",
+                    Status = true
+                };
+            }
+
+
             return new InstructorsResponseModel
             {
                 Data = instructors,
-                Message = $"Instructors retrieved successfully",
+                Message = $"{instructors.Count} Instructors retrieved successfully",
                 Status = true
             };
         }
@@ -109,6 +124,11 @@ namespace Persistence.Implementations.Services
                 .Include(u => u.InstructorCourses)
                 .ThenInclude(a => a.Course)
                 .SingleOrDefaultAsync(a => a.Email == email);
+
+            if(instructor == null)
+            {
+                throw new BadRequestException($"Instructor with email {email} does not exist");
+            }
 
             return new InstructorResponseModel
             {
@@ -127,7 +147,7 @@ namespace Persistence.Implementations.Services
                         CategoryId = o.Course.CategoryId,
                         CategoryName = o.Course.Category.Name,
                         Description = o.Course.Description,
-                        IsArchived = o.Course.IsArchived
+                        AvailabilityStatus = o.Course.AvailabilityStatus
                     }).ToList()
                 },
                 Message = $"Instructor retrieved successfully",
@@ -142,6 +162,11 @@ namespace Persistence.Implementations.Services
                 .ThenInclude(a => a.Course)
                 .SingleOrDefaultAsync(a => a.Id == id);
 
+            if(instructor == null)
+            {
+                throw new BadRequestException($"Instructor with id {id} does not exist");
+            }
+
             return new InstructorResponseModel
             {
                 Data = new InstructorDTO
@@ -159,7 +184,7 @@ namespace Persistence.Implementations.Services
                         CategoryId = o.Course.CategoryId,
                         CategoryName = o.Course.Category.Name,
                         Description = o.Course.Description,
-                        IsArchived = o.Course.IsArchived
+                        AvailabilityStatus = o.Course.AvailabilityStatus
                     }).ToList()
                 },
                 Message = $"Instructor retrieved successfully",
@@ -170,6 +195,21 @@ namespace Persistence.Implementations.Services
         public async Task<InstructorsResponseModel> GetInstructorsByCourse(Guid courseId)
         {
             var instructors = await _instructorRepository.GetInstructorsByCourse(courseId);
+
+            if (instructors == null)
+            {
+                throw new BadRequestException($"Instructors not found");
+            }
+            else if (instructors.Count == 0)
+            {
+                return new InstructorsResponseModel
+                {
+                   
+                    Message = $" No Instructor Found",
+                    Status = true
+                };
+            }
+
 
             var instructorsReturned = instructors.Select(instructor => new InstructorDTO
             {
@@ -186,20 +226,53 @@ namespace Persistence.Implementations.Services
                     CategoryId = o.Course.CategoryId,
                     CategoryName = o.Course.Category.Name,
                     Description = o.Course.Description,
-                    IsArchived = o.Course.IsArchived
+                    AvailabilityStatus = o.Course.AvailabilityStatus
                 }).ToList()
             });
             return new InstructorsResponseModel
             {
                 Data = instructorsReturned,
-                Message = $"Instructors offering course with id {courseId} retrieved successfully",
+                Message = $"{instructors.Count} Instructors offering course with id {courseId} retrieved successfully",
                 Status = true
             };
         }
 
-        public async Task<IEnumerable<Instructor>> SearchInstructorsByName(string searchText)
+        public async Task<InstructorsResponseModel> SearchInstructorsByName(string searchText)
         {
-            return await _instructorRepository.SearchInstructorsByName(searchText);
+            var instructors = await _instructorRepository.SearchInstructorsByName(searchText);
+
+            if (instructors == null)
+            {
+                throw new BadRequestException($"Instructors not found");
+            }
+           
+
+            var instructorsReturned = instructors.Select(instructor => new InstructorDTO
+            {
+                Id = instructor.Id,
+                FirstName = instructor.FirstName,
+                LastName = instructor.LastName,
+                Email = instructor.Email,
+                InstructorPhoto = instructor.InstructorPhoto,
+                PhoneNumber = instructor.PhoneNumber,
+                InstructorCourses = instructor.InstructorCourses.Select(o => new CourseDTO
+                {
+                    Id = o.Id,
+                    Name = o.Course.Name,
+                    CategoryId = o.Course.CategoryId,
+                    CategoryName = o.Course.Category.Name,
+                    Description = o.Course.Description,
+                    AvailabilityStatus = o.Course.AvailabilityStatus
+                }).ToList()
+            });
+
+            return new InstructorsResponseModel
+            {
+                Data = instructorsReturned,
+                Message = $"{instructors.Count()} Instructors retrieved successfully",
+                Status = true
+            };
+
         }
 
         public async Task<BaseResponse> UpdateInstructor(Guid id, UpdateInstructorRequestModel model)
@@ -222,5 +295,7 @@ namespace Persistence.Implementations.Services
                 Status = true
             };
         }
+
+       
     }
 }

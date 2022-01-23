@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,12 @@ namespace Persistence.Implementations.Repositories
         public TopicRepository(ApplicationContext context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<Topic>> SearchTopicsByTitle(string searchText)
+        {    
+            return await _context.Topics.Include(o => o.Module).Where(topic => EF.Functions.Like(topic.Title, $"%{searchText}%")).ToListAsync();
+       
         }
     }
 }

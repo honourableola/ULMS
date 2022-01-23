@@ -74,5 +74,13 @@ namespace ULMS.API.Controllers
             var response = await _learnerService.GetLearnerByEmail(email);
             return Ok(response);
         }
+
+        [Route("SearchLearnersByName/{searchText}")]
+        [HttpGet]
+        public async Task<IActionResult> SearchLearnersByName([FromRoute] string searchText)
+        {
+            var response = await _learnerService.SearchLearnersByName(searchText);
+            return Ok(response);
+        }
     }
 }

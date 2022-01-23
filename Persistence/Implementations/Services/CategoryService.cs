@@ -81,14 +81,29 @@ namespace Persistence.Implementations.Services
                        CategoryId = o.CategoryId,
                        CategoryName = o.Category.Name,
                        Description = o.Description,
-                       IsArchived = o.IsArchived
+                       AvailabilityStatus = o.AvailabilityStatus
                    }).ToList()
                }).ToListAsync();
+
+            if (categories == null)
+            {
+                throw new BadRequestException($"Categories not found");
+            }
+            else if (categories.Count == 0)
+            {
+                return new CategoriesResponseModel
+                {
+                   
+                    Message = $" No Category Found",
+                    Status = true
+                };
+            }
+
 
             return new CategoriesResponseModel
             {
                 Data = categories,
-                Message = $"Categories retrieved successfully",
+                Message = $" {categories.Count} Categories retrieved successfully",
                 Status = true
             };
         }
@@ -97,6 +112,11 @@ namespace Persistence.Implementations.Services
         {
             var category = await _categoryRepository.Query()
                 .SingleOrDefaultAsync(a => a.Id == id);
+
+            if(category == null)
+            {
+                throw new BadRequestException($"Category with id {id} does not exist");
+            }
 
             return new CategoryResponseModel
             {
@@ -111,7 +131,7 @@ namespace Persistence.Implementations.Services
                         CategoryId = o.CategoryId,
                         CategoryName = o.Category.Name,
                         Description = o.Description,
-                        IsArchived = o.IsArchived
+                        AvailabilityStatus = o.AvailabilityStatus
                     }).ToList()
                 },
                 Message = $"Category retrieved successfully",

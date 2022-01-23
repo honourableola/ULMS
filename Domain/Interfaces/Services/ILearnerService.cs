@@ -16,7 +16,7 @@ namespace Domain.Interfaces.Services
         public Task<BaseResponse> DeleteLearner(Guid id);
         public Task<LearnerResponseModel> GetLearnerById(Guid id);
         public Task<LearnerResponseModel> GetLearnerByEmail(string email);
-        public Task<IEnumerable<Learner>> SearchLearnersByName(string searchText);
+        public Task<LearnersResponseModel> SearchLearnersByName(string searchText);
         public Task<LearnersResponseModel> GetLearnersByCourse(Guid courseId);
         public Task<LearnersResponseModel> GetAllLearners();
     }

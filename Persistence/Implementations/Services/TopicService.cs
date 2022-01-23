@@ -78,14 +78,28 @@ namespace Persistence.Implementations.Services
                Id = n.Id,
                Title = n.Title,
                Content = n.Content,
-               ModuleName = n.Module.Name
+               ModuleName = n.Module.Name,
+               ModuleId = n.ModuleId
              
            }).ToListAsync();
 
-        return new TopicsResponseModel
+            if (topics == null)
+            {
+                throw new BadRequestException($"Topics not found");
+            }
+            else if (topics.Count == 0)
+            {
+                return new TopicsResponseModel
+                {                   
+                    Message = $" No Topic Found",
+                    Status = true
+                };
+            }
+
+            return new TopicsResponseModel
         {
             Data = topics,
-            Message = $"Topics retrieved successfully",
+            Message = $"{topics.Count} Topics retrieved successfully",
             Status = true
         };
     }
@@ -93,7 +107,12 @@ namespace Persistence.Implementations.Services
         public async Task<TopicResponseModel> GetTopic(Guid id)
         {
             var topic = await _topicRepository.Query()
+                .Include(h => h.Module)
                 .SingleOrDefaultAsync(a => a.Id == id);
+            if(topic == null)
+            {
+                throw new BadRequestException($"Topic with id {id} does not exist");
+            }
 
             return new TopicResponseModel
             {
@@ -102,8 +121,9 @@ namespace Persistence.Implementations.Services
                     Id = topic.Id,
                     Title = topic.Title,
                     Content = topic.Content,
-                    ModuleName = topic.Module.Name
-                
+                    ModuleName = topic.Module.Name,
+                    ModuleId = topic.ModuleId
+
                 },
                 Message = $"Topic retrieved successfully",
                 Status = true
@@ -119,14 +139,55 @@ namespace Persistence.Implementations.Services
                     Id = n.Id,
                     Title = n.Title,
                     Content = n.Content,
-                    ModuleName = n.Module.Name
+                    ModuleName = n.Module.Name,
+                    ModuleId = n.ModuleId
+                    
                 }).ToListAsync();
 
+            if (topics == null)
+            {
+                throw new BadRequestException($"Topics not found");
+            }
+            else if (topics.Count == 0)
+            {
+                return new TopicsResponseModel
+                {              
+                    Message = $" No Topic Found",
+                    Status = true
+                };
+            
 
+        }
             return new TopicsResponseModel
             {
                 Data = topics,
-                Message = $"Topics retrieved successfully",
+                Message = $"{topics.Count} Topics retrieved successfully",
+                Status = true
+            };
+        }
+
+        public async Task<TopicsResponseModel> SearchTopicsByTitle(string searchText)
+        {
+            var topics = await _topicRepository.SearchTopicsByTitle(searchText);
+
+            if (topics == null)
+            {
+                throw new BadRequestException($"Topics not found");
+            }
+
+            var topicsReturned = topics.Select(n => new TopicDTO
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Content = n.Content,
+                ModuleName = n.Module.Name,
+                ModuleId = n.ModuleId
+            }).ToList();
+
+            return new TopicsResponseModel
+            {
+                Data = topicsReturned,
+                Message = $"{topics.Count()} Topics retrieved successfully",
                 Status = true
             };
         }

@@ -91,15 +91,29 @@ namespace Persistence.Implementations.Services
                        CategoryId = o.Course.CategoryId,
                        CategoryName = o.Course.Category.Name,
                        Description = o.Course.Description,
-                       IsArchived = o.Course.IsArchived
+                       AvailabilityStatus = o.Course.AvailabilityStatus
                    }).ToList()
 
                }).ToListAsync();
 
+            if (learners == null)
+            {
+                throw new BadRequestException($"Learners not found");
+            }
+            else if (learners.Count == 0)
+            {
+                return new LearnersResponseModel
+                {                   
+                    Message = $" No Learner Found",
+                    Status = true
+                };
+            }
+
+
             return new LearnersResponseModel
             {
                 Data = learners,
-                Message = $"Learners retrieved successfully",
+                Message = $" {learners.Count} Learners retrieved successfully",
                 Status = true
             };
         }
@@ -110,6 +124,10 @@ namespace Persistence.Implementations.Services
                 .Include(u => u.LearnerCourses)
                 .ThenInclude(a => a.Course)
                 .SingleOrDefaultAsync(a => a.Email == email);
+            if(learner == null)
+            {
+                throw new BadRequestException($"Learner with eamil {email} does not exist");
+            }
 
             return new LearnerResponseModel
             {
@@ -128,7 +146,7 @@ namespace Persistence.Implementations.Services
                         CategoryId = o.Course.CategoryId,
                         CategoryName = o.Course.Category.Name,
                         Description = o.Course.Description,
-                        IsArchived = o.Course.IsArchived
+                        AvailabilityStatus = o.Course.AvailabilityStatus
                     }).ToList()
                 },
                 Message = $"Learner retrieved successfully",
@@ -143,6 +161,10 @@ namespace Persistence.Implementations.Services
                 .ThenInclude(a => a.Course)
                 .SingleOrDefaultAsync(a => a.Id == id);
 
+            if(learner == null)
+            {
+                throw new BadRequestException($"Learner with id {id} does not exist");
+            }
             return new LearnerResponseModel
             {
                 Data = new LearnerDTO
@@ -160,7 +182,7 @@ namespace Persistence.Implementations.Services
                         CategoryId = o.Course.CategoryId,
                         CategoryName = o.Course.Category.Name,
                         Description = o.Course.Description,
-                        IsArchived = o.Course.IsArchived
+                        AvailabilityStatus = o.Course.AvailabilityStatus
                     }).ToList()
                 },
                 Message = $"Learner retrieved successfully",
@@ -171,6 +193,21 @@ namespace Persistence.Implementations.Services
         public async Task<LearnersResponseModel> GetLearnersByCourse(Guid courseId)
         {
             var learners = await _learnerRepository.GetLearnersByCourse(courseId);
+
+            if (learners == null)
+            {
+                throw new BadRequestException($"Learners not found");
+            }
+            else if (learners.Count == 0)
+            {
+                return new LearnersResponseModel
+                {
+                  
+                    Message = $" No Learner Found",
+                    Status = true
+                };
+            }
+
 
             var learnersReturned = learners.Select(learner => new LearnerDTO
             {
@@ -187,20 +224,51 @@ namespace Persistence.Implementations.Services
                     CategoryId = o.Course.CategoryId,
                     CategoryName = o.Course.Category.Name,
                     Description = o.Course.Description,
-                    IsArchived = o.Course.IsArchived
+                    AvailabilityStatus = o.Course.AvailabilityStatus
                 }).ToList()
             });
             return new LearnersResponseModel
             {
                 Data = learnersReturned,
-                Message = $"Learners offering course with id {courseId} retrieved successfully",
+                Message = $"{learners.Count} Learners offering course with id {courseId} retrieved successfully",
                 Status = true
             };
         }
 
-        public async Task<IEnumerable<Learner>> SearchLearnersByName(string searchText)
+        public async Task<LearnersResponseModel> SearchLearnersByName(string searchText)
         {
-            return await _learnerRepository.SearchLearnersByName(searchText);
+            var learners = await _learnerRepository.SearchLearnersByName(searchText);
+
+            if (learners == null)
+            {
+                throw new BadRequestException($"Learners not found");
+            }
+
+            var learnersReturned = learners.Select(learner => new LearnerDTO
+            {
+                Id = learner.Id,
+                FirstName = learner.FirstName,
+                LastName = learner.LastName,
+                Email = learner.Email,
+                LearnerPhoto = learner.LearnerPhoto,
+                PhoneNumber = learner.PhoneNumber,
+                LearnerCourses = learner.LearnerCourses.Select(o => new CourseDTO
+                {
+                    Id = o.Id,
+                    Name = o.Course.Name,
+                    CategoryId = o.Course.CategoryId,
+                    CategoryName = o.Course.Category.Name,
+                    Description = o.Course.Description,
+                    AvailabilityStatus = o.Course.AvailabilityStatus
+                }).ToList()
+            });
+            return new LearnersResponseModel
+            {
+                Data = learnersReturned,
+                Message = $"{learners.Count()} Learners retrieved successfully",
+                Status = true
+            };
+       
         }
 
         public async Task<BaseResponse> UpdateLearner(Guid id, UpdateLearnerRequestModel model)

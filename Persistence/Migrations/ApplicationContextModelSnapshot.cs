@@ -61,6 +61,12 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AssignmentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AvailabilityStatus")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
@@ -72,9 +78,6 @@ namespace Persistence.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -429,7 +432,7 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.LearnerCourse", b =>
                 {
                     b.HasOne("Domain.Entities.Course", "Course")
-                        .WithMany("StudentCourses")
+                        .WithMany("LearnerCourses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -476,9 +479,9 @@ namespace Persistence.Migrations
                 {
                     b.Navigation("InstructorCourses");
 
-                    b.Navigation("Modules");
+                    b.Navigation("LearnerCourses");
 
-                    b.Navigation("StudentCourses");
+                    b.Navigation("Modules");
                 });
 
             modelBuilder.Entity("Domain.Entities.Instructor", b =>

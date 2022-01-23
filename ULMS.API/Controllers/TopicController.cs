@@ -51,11 +51,27 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
+        [Route("GetTopicsByModule/{moduleId}")] 
+        [HttpGet]
+        public async Task<IActionResult> GetTopicsByModule([FromRoute] Guid moduleId)
+        {
+            var response = await _topicService.GetTopicsByModule(moduleId);
+            return Ok(response);
+        }
+
         [Route("GetAllTopics")]
         [HttpGet]
         public async Task<IActionResult> GetAllTopics()
         {
             var response = await _topicService.GetAllTopics();
+            return Ok(response);
+        }
+
+        [Route("SearchTopicsByTitle/{searchText}")]
+        [HttpGet]
+        public async Task<IActionResult> SearchTopicsByTitle([FromRoute] string searchText)
+        {
+            var response = await _topicService.SearchTopicsByTitle(searchText);
             return Ok(response);
         }
 

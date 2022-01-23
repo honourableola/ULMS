@@ -67,5 +67,13 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
+        [Route("SearchModulesByName/{searchText}")]
+        [HttpGet]
+        public async Task<IActionResult> SearchModulesByName([FromRoute] string searchText)
+        {
+            var response = await _moduleService.SearchModulesByName(searchText);
+            return Ok(response);
+        }
+
     }
 }

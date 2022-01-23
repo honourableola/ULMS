@@ -9,5 +9,6 @@ namespace Domain.Interfaces.Repositories
 {
     public interface ITopicRepository : IRepository<Topic>
     {
+        Task<IEnumerable<Topic>> SearchTopicsByTitle(string searchText);
     }
 }

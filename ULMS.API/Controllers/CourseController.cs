@@ -67,6 +67,14 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
+        [Route("GetAllActiveCourses")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllActiveCourses()
+        {
+            var response = await _courseService.GetActiveCourses();
+            return Ok(response);
+        }
+
         [Route("GetCoursesByCategory/{categoryId}")]
         [HttpGet]
         public async Task<IActionResult> GetCoursesByCategory([FromRoute] Guid categoryId)
@@ -91,6 +99,14 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
-        
+        [Route("SearchCoursesByName/{searchText}")]
+        [HttpGet]
+        public async Task<IActionResult> SearchCoursesByName([FromRoute] string searchText)
+        {
+            var response = await _courseService.SearchCoursesByName(searchText);
+            return Ok(response);
+        }
+
+
     }
 }

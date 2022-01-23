@@ -16,7 +16,6 @@ namespace Domain.Models
             public string Description { get; set; }
             public string Content { get; set; }
             public Guid CourseId { get; set; }
-            public Course Course { get; set; }
             public string ModuleImage1 { get; set; }
             public string ModuleImage2 { get; set; }
             public string ModulePDF1 { get; set; }

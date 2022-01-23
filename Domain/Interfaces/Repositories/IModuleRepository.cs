@@ -9,5 +9,6 @@ namespace Domain.Interfaces.Repositories
 {
     public interface IModuleRepository : IRepository<Module>
     {
+        Task<IEnumerable<Module>> SearchModuleByName(string searchText);
     }
 }

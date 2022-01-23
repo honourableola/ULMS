@@ -104,10 +104,24 @@ namespace Persistence.Implementations.Services
                    }).ToList()
                }).ToListAsync();
 
+            if (modules == null)
+            {
+                throw new BadRequestException($"Modules not found");
+            }
+            else if (modules.Count == 0)
+            {
+                return new ModulesResponseModel
+                {                
+                    Message = $" No Module Found",
+                    Status = true
+                };
+            }
+
+
             return new ModulesResponseModel
             {
                 Data = modules,
-                Message = $"Modules retrieved successfully",
+                Message = $"{modules.Count} Modules retrieved successfully",
                 Status = true
             };
         }
@@ -115,7 +129,13 @@ namespace Persistence.Implementations.Services
         public async Task<ModuleResponseModel> GetModule(Guid id)
         {
             var module = await _moduleRepository.Query()
+                .Include(d => d.Course)
                 .SingleOrDefaultAsync(a => a.Id == id);
+
+            if(module == null)
+            {
+                throw new BadRequestException($"Module with id {id} does not exist");
+            }
 
             return new ModuleResponseModel
             {
@@ -177,14 +197,71 @@ namespace Persistence.Implementations.Services
                     }).ToList()
 
                 }).ToListAsync();
-                
+
+            if (modules == null)
+            {
+                throw new BadRequestException($"Modules not found");
+            }
+            else if (modules.Count == 0)
+            {
+                return new ModulesResponseModel
+                {                  
+                    Message = $" No Module Found",
+                    Status = true
+                };
+            }
+
 
             return new ModulesResponseModel
             {
                 Data = modules,
-                Message = $"Modules retrieved successfully",
+                Message = $"{modules.Count} Modules retrieved successfully",
                 Status = true
             };
+        }
+
+        public async Task<ModulesResponseModel> SearchModulesByName(string searchText)
+        {
+            var modules = await _moduleRepository.SearchModuleByName(searchText);
+            if (modules == null)
+            {
+                throw new BadRequestException($"Modules not found");
+            }
+           
+
+            var modulesReturned = modules.Select(n => new ModuleDTO
+            {
+                Id = n.Id,
+                Name = n.Name,
+                Content = n.Content,
+                CourseId = n.CourseId,
+                CourseName = n.Course.Name,
+                Description = n.Description,
+                ModuleImage1 = n.ModuleImage1,
+                ModuleImage2 = n.ModuleImage2,
+                ModulePDF1 = n.ModulePDF1,
+                ModulePDF2 = n.ModulePDF2,
+                ModuleVideo1 = n.ModuleVideo1,
+                ModuleVideo2 = n.ModuleVideo2,
+                Topics = n.Topics.Select(o => new TopicDTO
+                {
+                    Id = o.Id,
+                    Content = o.Content,
+                    ModuleId = o.ModuleId,
+                    ModuleName = o.Module.Name,
+                    Title = o.Title
+                }).ToList()
+
+            }).ToList();
+
+
+            return new ModulesResponseModel
+            {
+                Data = modulesReturned,
+                Message = $"{modules.Count()} Modules retrieved successfully",
+                Status = true
+            };
+       
         }
 
         public async Task<BaseResponse> UpdateModule(Guid id, UpdateModuleRequestModel model)
