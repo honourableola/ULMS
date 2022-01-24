@@ -160,6 +160,7 @@ namespace Persistence.Implementations.Services
             var instructor = await _instructorRepository.Query()
                 .Include(u => u.InstructorCourses)
                 .ThenInclude(a => a.Course)
+                .ThenInclude(a => a.Category)
                 .SingleOrDefaultAsync(a => a.Id == id);
 
             if(instructor == null)

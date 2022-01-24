@@ -13,5 +13,14 @@ namespace Domain.Interfaces.Repositories
         Task<IList<Course>> GetCoursesByLearner(Guid learnerId);
         Task<IList<Course>> GetCoursesByInstructor(Guid instructorId);
         Task<IEnumerable<Course>> SearchCoursesByName(string searchText);
+        Task<LearnerCourse> LearnerCourseAssignment(LearnerCourse learnerCourse);
+        Task<InstructorCourse> InstructorCourseAssignment(InstructorCourse instructorCourse);
+        Task<CourseRequest> CreateCourseRequest(CourseRequest courseRequest);
+        Task<IEnumerable<CourseRequest>> GetAllCourseRequestsUntreated();
+        Task<IEnumerable<CourseRequest>> GetAllCourseRequestsRejected();
+        Task<IEnumerable<CourseRequest>> GetAllCourseRequestsApproved();
+        Task<IEnumerable<CourseRequest>> GetUntreatedCourseRequestsByLearner(Guid learnerId);
+        Task<CourseRequest> GetCourseRequestById(Guid id);
+
     }
 }

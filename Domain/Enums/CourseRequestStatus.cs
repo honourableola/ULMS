@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Enums
 {
-    public enum CourseAssignmentStatus
+    public enum CourseRequestStatus
     {
         Requested = 1,
-        IsAssignedInitiatedByAdmin,
-        IsAssignedInitiatedByLearner
+        Approved,
+        Rejected
     }
 }

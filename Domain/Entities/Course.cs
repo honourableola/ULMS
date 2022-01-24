@@ -16,7 +16,6 @@ namespace Domain.Entities
         public Category Category { get; set; }
         public Guid CategoryId { get; set; }
         public CourseAvailabilityStatus AvailabilityStatus { get; set; }
-        public CourseAssignmentStatus AssignmentStatus { get; set; }
         public ICollection<Module> Modules { get; set; } = new List<Module>();
         public ICollection<InstructorCourse> InstructorCourses { get; set; } = new List<InstructorCourse>();
         public ICollection<LearnerCourse> LearnerCourses { get; set; } = new List<LearnerCourse>();

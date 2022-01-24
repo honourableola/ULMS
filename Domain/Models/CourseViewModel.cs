@@ -13,9 +13,27 @@ namespace Domain.Models
         {
             public string Name { get; set; }
             public string Description { get; set; }
-            public Guid CategoryId { get; set; }
-            
+            public Guid CategoryId { get; set; }           
 
+        }
+
+        public class CourseRequestRequestModel
+        {
+            public Guid courseId { get; set; }
+            public Guid LearnerId { get; set; }
+            public string RequestMessage { get; set; }
+
+        }
+        public class LearnerCourseAssignmentRequestModel
+        {
+            public Guid LearnerId { get; set; }
+            public List<Guid> Ids { get; set; } = new List<Guid>();
+        }
+
+        public class InstructorCourseAssignmentRequestModel
+        {
+            public Guid InstructorId { get; set; }
+            public List<Guid> Ids { get; set; } = new List<Guid>();
         }
 
         public class UpdateCourseRequestModel
@@ -28,9 +46,19 @@ namespace Domain.Models
             public IEnumerable<CourseDTO> Data { get; set; } = new List<CourseDTO>();
         }
 
+        public class CourseRequestsResponseModel : BaseResponse
+        {
+            public IEnumerable<CourseRequestDTO> Data { get; set; } = new List<CourseRequestDTO>();
+        }
+
         public class CourseResponseModel : BaseResponse
         {
             public CourseDTO Data { get; set; }
+        }
+
+        public class CourseRequestResponseModel : BaseResponse
+        {
+            public CourseRequestDTO Data { get; set; }
         }
     }
 }

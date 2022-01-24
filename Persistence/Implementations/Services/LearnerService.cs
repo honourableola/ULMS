@@ -159,9 +159,10 @@ namespace Persistence.Implementations.Services
             var learner = await _learnerRepository.Query()
                 .Include(u => u.LearnerCourses)
                 .ThenInclude(a => a.Course)
+                .ThenInclude(d => d.Category)
                 .SingleOrDefaultAsync(a => a.Id == id);
 
-            if(learner == null)
+            if (learner == null)
             {
                 throw new BadRequestException($"Learner with id {id} does not exist");
             }
@@ -183,6 +184,7 @@ namespace Persistence.Implementations.Services
                         CategoryName = o.Course.Category.Name,
                         Description = o.Course.Description,
                         AvailabilityStatus = o.Course.AvailabilityStatus
+                        
                     }).ToList()
                 },
                 Message = $"Learner retrieved successfully",

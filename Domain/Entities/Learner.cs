@@ -16,5 +16,6 @@ namespace Domain.Entities
         public string LearnerPhoto { get; set; }
         public string TenantId { get; set; }
         public ICollection<LearnerCourse> LearnerCourses { get; set; } = new List<LearnerCourse>();
+        public ICollection<CourseRequest> CourseRequests { get; set; } = new List<CourseRequest>();
     }
 }

@@ -468,9 +468,8 @@ namespace Persistence.Implementations.Services
             else if (courses.Count == 0)
             {
                 return new CoursesResponseModel
-                {
-                    
-                    Message = $" No Course Found",
+                {                    
+                    Message = $"No Course Found",
                     Status = true
                 };
             }
@@ -685,6 +684,307 @@ namespace Persistence.Implementations.Services
             return new BaseResponse
             {
                 Message = $"{course.Name} updated successfully",
+                Status = true
+            };
+        }
+
+        public async Task<BaseResponse> RequestForCourse(CourseRequestRequestModel model)
+        {
+            var learner = await _learnerRepository.GetAsync(model.LearnerId);
+            if (learner == null)
+            {
+                throw new NotFoundException($"Learner not found");
+            }
+            var course = await _courseRepository.GetAsync(model.courseId);
+
+            if (course == null)
+            {
+                throw new NotFoundException($"Selected course not found");
+            }
+
+            var courseRequest = new CourseRequest
+            {
+                Course = course,
+                CourseId = course.Id,
+                Learner = learner,
+                LearnerId = learner.Id,
+                RequestMessage = model.RequestMessage,
+                RequestStatus = CourseRequestStatus.Requested
+            };
+
+            await _courseRepository.CreateCourseRequest(courseRequest);
+            await _courseRepository.SaveChangesAsync();
+
+            return new BaseResponse
+            {
+                Message = $" Course Request for {course.Name} submitted by {learner.FirstName} {learner.LastName} to the Admin Successfully",
+                Status = true
+            };
+           
+        }
+
+        public async Task<BaseResponse> AssignCoursesToLearner(LearnerCourseAssignmentRequestModel model)
+        {
+            var learner = await _learnerRepository.GetAsync(model.LearnerId);
+
+            if (learner == null)
+            {
+                throw new NotFoundException($"Learner with id {model.LearnerId} does not exist");
+            }
+
+            var courses = await _courseRepository.GetSelectedCourses(model.Ids);
+
+            if(courses == null)
+            {
+                throw new NotFoundException($"Courses not found");
+            }
+           
+            foreach(var course in courses)
+            {
+                var learnerCourse = new LearnerCourse
+                {
+                    Course = course,
+                    CourseId = course.Id,
+                    Learner = learner,
+                    LearnerId = model.LearnerId,
+                    CourseType = LearnerCourseType.Major
+                };
+
+                await _courseRepository.LearnerCourseAssignment(learnerCourse);
+            }
+            await _courseRepository.SaveChangesAsync();
+
+            return new BaseResponse
+            {
+                Message = $"{courses.Count()} Courses assigned to learner {learner.FirstName} {learner.LastName} successfully",
+                Status = true
+            };
+            
+           /* var learnerCourses = await _courseRepository.GetCoursesByLearner(model.LearnerId);
+
+            if(learnerCourses.Contains(courses.Any(c => c.Id))*/
+        }
+
+        public async Task<BaseResponse> AssignCoursesToInstructor(InstructorCourseAssignmentRequestModel model)
+        {
+            var instructor = await _instructorRepository.GetAsync(model.InstructorId);
+
+            if (instructor == null)
+            {
+                throw new NotFoundException($"Instructor with id {model.InstructorId} does not exist");
+            }
+
+            var courses = await _courseRepository.GetSelectedCourses(model.Ids);
+
+            if (courses == null)
+            {
+                throw new NotFoundException($"Courses not found");
+            }
+
+            foreach (var course in courses)
+            {
+                var instructorCourse = new InstructorCourse
+                {
+                    Course = course,
+                    CourseId = course.Id,
+                    Instructor = instructor,
+                    InstructorId = model.InstructorId
+                };
+
+                await _courseRepository.InstructorCourseAssignment(instructorCourse);
+            }
+            await _courseRepository.SaveChangesAsync();
+
+            return new BaseResponse
+            {
+                Message = $"{courses.Count()} Courses assigned to Instructor {instructor.FirstName} {instructor.LastName} successfully",
+                Status = true
+            };
+        }
+
+        public async Task<BaseResponse> ApproveCourseRequest(Guid id)
+        {
+            var courseRequest = await _courseRepository.GetCourseRequestById(id);
+
+            if (courseRequest == null)
+            {
+                throw new NotFoundException($"Course request with Id {id} does not exist");
+            }
+
+            var learnerCourse = new LearnerCourse
+            {
+                Course = courseRequest.Course,
+                CourseId = courseRequest.CourseId,
+                Learner = courseRequest.Learner,
+                LearnerId = courseRequest.LearnerId,
+                CourseType = LearnerCourseType.Requested
+
+            };
+            courseRequest.RequestStatus = CourseRequestStatus.Approved;
+            await _courseRepository.LearnerCourseAssignment(learnerCourse);
+            await _courseRepository.SaveChangesAsync();
+
+            return new BaseResponse
+            {
+                Message = $"{courseRequest.Course.Name} approved for {courseRequest.Learner.FirstName} {courseRequest.Learner.LastName} successfully",
+                Status = true
+            };
+        }
+
+        public async Task<BaseResponse> RejectCourseRequest(Guid id)
+        {
+            var courseRequest = await _courseRepository.GetCourseRequestById(id);
+
+            if(courseRequest == null)
+            {
+                throw new NotFoundException($"Course Request with id {id} does not exist");
+            }
+
+            courseRequest.RequestStatus = CourseRequestStatus.Rejected;
+
+            return new BaseResponse
+            {
+                Message = $"{courseRequest.Course.Name} request by {courseRequest.Learner.FirstName} {courseRequest.Learner.LastName} rejected successfully",
+                Status = true
+            };
+        }
+
+        public async Task<CourseRequestsResponseModel> GetAllCourseRequestsUntreated()
+        {
+            var courseRequests = await _courseRepository.GetAllCourseRequestsUntreated();
+
+            if (courseRequests == null)
+            {
+                throw new NotFoundException($"No Untreated Course requets found");
+            }
+            else if (courseRequests.Count() == 0)
+            {
+                return new CourseRequestsResponseModel
+                {
+                    Message = $"No Untreated Course Requests available",
+                    Status = true
+                };
+            }
+
+            var courseRequestsReturned = courseRequests.Select(c => new CourseRequestDTO
+            {
+                Id = c.Id,
+                CourseId = c.CourseId,
+                Course = c.Course,
+                LearnerId = c.LearnerId,
+                Learner = c.Learner,
+                RequestMessage = c.RequestMessage
+            }).ToList();
+
+            return new CourseRequestsResponseModel
+            {
+                Data = courseRequestsReturned,
+                Message = $"{courseRequests.Count()} Untreated Course requests retrieved successfully",
+                Status = true
+            };
+        }
+
+        public async Task<CourseRequestsResponseModel> GetAllCourseRequestsRejected()
+        {
+            var courseRequests = await _courseRepository.GetAllCourseRequestsRejected();
+
+            if (courseRequests == null)
+            {
+                throw new NotFoundException($"No Rejected course requets found");
+            }
+            else if (courseRequests.Count() == 0)
+            {
+                return new CourseRequestsResponseModel
+                {
+                    Message = $"No rejected course Requests available",
+                    Status = true
+                };
+            }
+
+            var courseRequestsReturned = courseRequests.Select(c => new CourseRequestDTO
+            {
+                Id = c.Id,
+                CourseId = c.CourseId,
+                Course = c.Course,
+                LearnerId = c.LearnerId,
+                Learner = c.Learner,
+                RequestMessage = c.RequestMessage
+            }).ToList();
+
+            return new CourseRequestsResponseModel
+            {
+                Data = courseRequestsReturned,
+                Message = $"{courseRequests.Count()} Rejected Course requests retrieved successfully",
+                Status = true
+            };
+        }
+
+        public async Task<CourseRequestsResponseModel> GetAllCourseRequestsApproved()
+        {
+            var courseRequests = await _courseRepository.GetAllCourseRequestsApproved();
+
+            if (courseRequests == null)
+            {
+                throw new NotFoundException($"No Approved course requests found");
+            }
+            else if (courseRequests.Count() == 0)
+            {
+                return new CourseRequestsResponseModel
+                {
+                    Message = $"No Approved course Requests found",
+                    Status = true
+                };
+            }
+
+            var courseRequestsReturned = courseRequests.Select(c => new CourseRequestDTO
+            {
+                Id = c.Id,
+                CourseId = c.CourseId,
+                Course = c.Course,
+                LearnerId = c.LearnerId,
+                Learner = c.Learner,
+                RequestMessage = c.RequestMessage
+            }).ToList();
+
+            return new CourseRequestsResponseModel
+            {
+                Data = courseRequestsReturned,
+                Message = $"{courseRequests.Count()} Approved Course requests retrieved successfully",
+                Status = true
+            };
+        }
+
+        public async Task<CourseRequestsResponseModel> GetUntreatedCourseRequestsByLearner(Guid learnerId)
+        {
+            var courseRequests = await _courseRepository.GetUntreatedCourseRequestsByLearner(learnerId);
+
+            if (courseRequests == null)
+            {
+                throw new NotFoundException($"No Pending course requests found for learner with id {learnerId}");
+            }
+            else if (courseRequests.Count() == 0)
+            {
+                return new CourseRequestsResponseModel
+                {
+                    Message = $"No Pending course Requests for learner with id {learnerId}",
+                    Status = true
+                };
+            }
+
+            var courseRequestsReturned = courseRequests.Select(c => new CourseRequestDTO
+            {
+                Id = c.Id,
+                CourseId = c.CourseId,
+                Course = c.Course,
+                LearnerId = c.LearnerId,
+                Learner = c.Learner,
+                RequestMessage = c.RequestMessage
+            }).ToList();
+
+            return new CourseRequestsResponseModel
+            {
+                Data = courseRequestsReturned,
+                Message = $"{courseRequests.Count()} Untreated Course requests retrieved successfully",
                 Status = true
             };
         }
