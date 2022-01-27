@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace Domain.Models
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
             public string InstructorPhoto { get; set; }
+            public UserType UserType { get; set; }
 
         }
 

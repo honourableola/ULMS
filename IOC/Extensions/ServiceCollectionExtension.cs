@@ -72,6 +72,7 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<ILearnerService, LearnerService>();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<ICourseConstantService, CourseConstantService>();
 
             return services;
         }
@@ -84,6 +85,7 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<ILearnerRepository, LearnerRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
+            services.AddScoped<ICourseConstantRepository, CourseConstantRepository>();
 
             return services;
         }

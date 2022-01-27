@@ -10,7 +10,7 @@ namespace Domain.Interfaces.Repositories
     public interface ICourseRepository : IRepository<Course>
     {
         Task<IEnumerable<Course>> GetSelectedCourses(IList<Guid> ids);
-        Task<IList<Course>> GetCoursesByLearner(Guid learnerId);
+        Task<IList<LearnerCourse>> GetCoursesByLearner(Guid learnerId);
         Task<IList<Course>> GetCoursesByInstructor(Guid instructorId);
         Task<IEnumerable<Course>> SearchCoursesByName(string searchText);
         Task<LearnerCourse> LearnerCourseAssignment(LearnerCourse learnerCourse);
@@ -21,6 +21,9 @@ namespace Domain.Interfaces.Repositories
         Task<IEnumerable<CourseRequest>> GetAllCourseRequestsApproved();
         Task<IEnumerable<CourseRequest>> GetUntreatedCourseRequestsByLearner(Guid learnerId);
         Task<CourseRequest> GetCourseRequestById(Guid id);
+        Task<int> GetNoOfLearnerMajorCourses(Guid learnerId);
+        Task<int> GetNoOfLearnerAdditionalCourses(Guid learnerId);
+
 
     }
 }

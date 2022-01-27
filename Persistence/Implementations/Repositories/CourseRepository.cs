@@ -24,29 +24,41 @@ namespace Persistence.Implementations.Repositories
             await _context.SaveChangesAsync();
             return courseRequest;
         }
+
         public async Task<CourseRequest> GetCourseRequestById(Guid id)
         {
-            return await _context.CourseRequests.Include(c => c.Course).Include(o => o.Learner).SingleOrDefaultAsync(o => o.Id == id);
+            return await _context.CourseRequests
+                .Include(c => c.Course)
+                .Include(o => o.Learner)
+                .SingleOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<IEnumerable<CourseRequest>> GetAllCourseRequestsApproved()
         {
-            return await _context.CourseRequests.Where(d => d.RequestStatus == CourseRequestStatus.Approved).ToListAsync();
+            return await _context.CourseRequests
+                .Where(d => d.RequestStatus == CourseRequestStatus.Approved)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<CourseRequest>> GetAllCourseRequestsRejected()
         {
-            return await _context.CourseRequests.Where(d => d.RequestStatus == CourseRequestStatus.Rejected).ToListAsync();
+            return await _context.CourseRequests
+                .Where(d => d.RequestStatus == CourseRequestStatus.Rejected)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<CourseRequest>> GetAllCourseRequestsUntreated()
         {
-            return await _context.CourseRequests.Where(d => d.RequestStatus == CourseRequestStatus.Requested).ToListAsync();
+            return await _context.CourseRequests
+                .Where(d => d.RequestStatus == CourseRequestStatus.Requested)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<CourseRequest>> GetUntreatedCourseRequestsByLearner(Guid learnerId)
         {
-            return await _context.CourseRequests.Where(c => c.LearnerId == learnerId && c.RequestStatus == CourseRequestStatus.Requested).ToListAsync();
+            return await _context.CourseRequests
+                .Where(c => c.LearnerId == learnerId && c.RequestStatus == CourseRequestStatus.Requested)
+                .ToListAsync();
         }
 
         public async Task<IList<Course>> GetCoursesByInstructor(Guid instructorId)
@@ -62,15 +74,13 @@ namespace Persistence.Implementations.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IList<Course>> GetCoursesByLearner(Guid learnerId)
+        public async Task<IList<LearnerCourse>> GetCoursesByLearner(Guid learnerId)
         {
-            return await _context.Courses
-                .Include(o => o.Category)
-                .Include(m => m.LearnerCourses)
-                .ThenInclude(n => n.Learner)
-                .Include(f => f.InstructorCourses)
-                .ThenInclude(d => d.Instructor)
-                .Where(d => d.LearnerCourses.Any(a => a.LearnerId == learnerId)).ToListAsync();
+            return await _context.LearnerCourses
+                .Include(m => m.Course)
+                .ThenInclude(a => a.Category)
+                .Include(n => n.Learner)
+                .Where(a => a.LearnerId == learnerId).ToListAsync();
         }
 
         public async Task<IEnumerable<Course>> GetSelectedCourses(IList<Guid> ids)
@@ -100,9 +110,26 @@ namespace Persistence.Implementations.Repositories
 
         public async Task<IEnumerable<Course>> SearchCoursesByName(string searchText)
         {
-            return await _context.Courses.Include(v => v.Category).Where(course => EF.Functions.Like(course.Name, $"%{searchText}%")).ToListAsync();
+            return await _context.Courses
+                .Include(v => v.Category)
+                .Where(course => EF.Functions.Like(course.Name, $"%{searchText}%"))
+                .ToListAsync();
         }
 
-        
+        public async Task<int> GetNoOfLearnerMajorCourses(Guid learnerId)
+        {
+            var courses = await _context.LearnerCourses
+                .Where(a => a.LearnerId == learnerId && a.CourseType == LearnerCourseType.Major)
+                .ToListAsync();
+            return courses.Count;
+        }
+
+        public async Task<int> GetNoOfLearnerAdditionalCourses(Guid learnerId)
+        {
+            var courses = await _context.LearnerCourses
+                .Where(a => a.LearnerId == learnerId && a.CourseType == LearnerCourseType.Requested)
+                .ToListAsync();
+            return courses.Count;
+        }
     }
 }

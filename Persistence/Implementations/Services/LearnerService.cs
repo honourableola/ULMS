@@ -1,9 +1,11 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,21 +18,47 @@ namespace Persistence.Implementations.Services
 {
     public class LearnerService : ILearnerService
     {
+        private readonly IPasswordHasher<User> _passwordHasher;
         private readonly ILearnerRepository _learnerRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IMailSender _mailSender;
+        
 
-        public LearnerService(ILearnerRepository learnerRepository)
+        public LearnerService(ILearnerRepository learnerRepository, IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
         {
             _learnerRepository = learnerRepository;
+            _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
         public async Task<BaseResponse> AddLearner(CreateLearnerRequestModel model)
         {
+            var userExist = await _userRepository.ExistsAsync(a => a.Email == model.Email);
+
+            if (userExist)
+            {
+                throw new BadRequestException($"{model.FirstName} {model.LastName} already exist and cannot be added");
+            }
+
             var learnerExist = await _learnerRepository.ExistsAsync(a => a.Email == model.Email);
 
             if (learnerExist)
             {
                 throw new BadRequestException($"{model.FirstName} {model.LastName} already exist and cannot be added");
             }
-
+            var salt = Guid.NewGuid().ToString();
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                UserType = UserType.Learner,
+                HashSalt = salt,
+            };
+            var password = $"LMS{Guid.NewGuid().ToString().Substring(1, 6)}";
+            var passwordHash = _passwordHasher.HashPassword(user, $"{password}{salt}");
+            user.PasswordHash = passwordHash;
             var learner = new Learner
             {
                 Id = Guid.NewGuid(),
@@ -39,11 +67,15 @@ namespace Persistence.Implementations.Services
                 Email = model.Email,
                 LearnerPhoto = model.LearnerPhoto,
                 PhoneNumber = model.PhoneNumber,
-                Created = DateTime.UtcNow
+                LearnerLMSCode = $"LMS{Guid.NewGuid().ToString().Substring(1, 5)}L",
+                UserId = user.Id,
+                User = user
             };
 
             await _learnerRepository.AddAsync(learner);
+            await _userRepository.AddAsync(user);         
             await _learnerRepository.SaveChangesAsync();
+            await _userRepository.SaveChangesAsync();
 
             return new BaseResponse
             {

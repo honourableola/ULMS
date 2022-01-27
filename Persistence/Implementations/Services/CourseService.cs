@@ -20,11 +20,13 @@ namespace Persistence.Implementations.Services
         private readonly ICourseRepository _courseRepository;
         private readonly ILearnerRepository _learnerRepository;
         private readonly IInstructorRepository _instructorRepository;
-        public CourseService(ICourseRepository courseRepository, ILearnerRepository learnerRepository, IInstructorRepository instructorRepository)
+        private readonly ICourseConstantService _courseConstantService;
+        public CourseService(ICourseRepository courseRepository, ILearnerRepository learnerRepository, IInstructorRepository instructorRepository, ICourseConstantService courseConstantService)
         {
             _courseRepository = courseRepository;
             _learnerRepository = learnerRepository;
             _instructorRepository = instructorRepository;
+            _courseConstantService = courseConstantService;
         }
         public async Task<BaseResponse> AddCourse(CreateCourseRequestModel model)
         {
@@ -527,7 +529,7 @@ namespace Persistence.Implementations.Services
             };
         }
 
-        public async Task<CoursesResponseModel> GetCoursesByLearner(Guid learnerId)
+        public async Task<LearnerCoursesResponseModel> GetCoursesByLearner(Guid learnerId)
         {
             var courses = await _courseRepository.GetCoursesByLearner(learnerId);
 
@@ -537,61 +539,24 @@ namespace Persistence.Implementations.Services
             }
             else if (courses.Count == 0)
             {
-                return new CoursesResponseModel
-                {
-                   
-                    Message = $" No Course Found",
+                return new LearnerCoursesResponseModel
+                {                  
+                    Message = $"No Course Found",
                     Status = true
                 };
             }
 
-
-            var coursesReturned = courses.Select(n => new CourseDTO
+            var coursesReturned = courses.Select(n => new LearnerCourseDTO
             {
                 Id = n.Id,
-                Name = n.Name,
-                CategoryId = n.CategoryId,
-                CategoryName = n.Category.Name,
-                Description = n.Description,
-                AvailabilityStatus = n.AvailabilityStatus,
-                Modules = n.Modules.Select(m => new ModuleDTO
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    Description = m.Description,
-                    Content = m.Content,
-                    ModuleImage1 = m.ModuleImage1,
-                    ModuleImage2 = m.ModuleImage2,
-                    ModulePDF1 = m.ModulePDF1,
-                    ModulePDF2 = m.ModulePDF2,
-                    ModuleVideo1 = m.ModuleVideo1,
-                    ModuleVideo2 = m.ModuleVideo2,
-                    CourseId = m.CourseId,
-                    CourseName = m.Course.Name
-
-                }).ToList(),
-                InstructorCourses = n.InstructorCourses.Select(ic => new InstructorDTO
-                {
-                    Id = ic.InstructorId,
-                    FirstName = ic.Instructor.FirstName,
-                    LastName = ic.Instructor.LastName,
-                    Email = ic.Instructor.Email,
-                    PhoneNumber = ic.Instructor.PhoneNumber,
-                    InstructorPhoto = ic.Instructor.InstructorPhoto
-
-                }).ToList(),
-                LearnerCourses = n.LearnerCourses.Select(l => new LearnerDTO
-                {
-                    Id = l.Learner.Id,
-                    FirstName = l.Learner.FirstName,
-                    LastName = l.Learner.LastName,
-                    Email = l.Learner.Email,
-                    LearnerPhoto = l.Learner.LearnerPhoto,
-                    PhoneNumber = l.Learner.PhoneNumber,
-
-                }).ToList()
-            });
-            return new CoursesResponseModel
+                CourseName = n.Course.Name,
+                CategoryName = n.Course.Category.Name,
+                Description = n.Course.Description,
+                AvailabilityStatus = n.Course.AvailabilityStatus,
+                CourseType = n.CourseType,
+                CourseId = n.CourseId          
+            }).ToList();
+            return new LearnerCoursesResponseModel
             {
                 Data = coursesReturned,
                 Message = $"{courses.Count} Learner Courses retrieved successfully",
@@ -660,9 +625,7 @@ namespace Persistence.Implementations.Services
                 Data = coursesReturned,
                 Message = $"{coursesReturned.Count()} Searched Courses retrieved successfully",
                 Status = true
-            };
-       
-            
+            };         
        
         }
 
@@ -690,6 +653,12 @@ namespace Persistence.Implementations.Services
 
         public async Task<BaseResponse> RequestForCourse(CourseRequestRequestModel model)
         {
+            //Check if learner has a pending course request for the new course request
+            //if existing request is approved, deny request
+            //if existing request is initialized deny request
+            //if existing request is rejected grant request
+
+           /* var existingCourseRequests = await */
             var learner = await _learnerRepository.GetAsync(model.LearnerId);
             if (learner == null)
             {
@@ -702,6 +671,23 @@ namespace Persistence.Implementations.Services
                 throw new NotFoundException($"Selected course not found");
             }
 
+            var existingCourseRequests = await _courseRepository.GetUntreatedCourseRequestsByLearner(model.LearnerId);
+            /*if (existingCourseRequests.Where(c => course.Id == c.CourseId) != null)
+            {
+                throw new BadRequestException($"Course request for {course.Name} not successful because there is an active requests for the same course");
+            }*/
+          
+            if (existingCourseRequests.Any(c => c.CourseId == course.Id))
+            {
+                throw new BadRequestException($"Course request for {course.Name} not successful because there is an active requests for the same course");
+            }
+
+            var learnerAssignedCourses = await _courseRepository.GetCoursesByLearner(model.LearnerId);
+
+            if (learnerAssignedCourses.Any(c => c.CourseId == course.Id))
+            {
+                throw new BadRequestException($"Course request not successful because {course.Name} already exist among learner's courses");
+            }
             var courseRequest = new CourseRequest
             {
                 Course = course,
@@ -717,7 +703,7 @@ namespace Persistence.Implementations.Services
 
             return new BaseResponse
             {
-                Message = $" Course Request for {course.Name} submitted by {learner.FirstName} {learner.LastName} to the Admin Successfully",
+                Message = $"Course Request for {course.Name} submitted by {learner.FirstName} {learner.LastName} to the Admin Successfully",
                 Status = true
             };
            
@@ -725,6 +711,8 @@ namespace Persistence.Implementations.Services
 
         public async Task<BaseResponse> AssignCoursesToLearner(LearnerCourseAssignmentRequestModel model)
         {
+            //Check if course is already assigned to learner
+            int countOfDuplicatedCourses = 0;
             var learner = await _learnerRepository.GetAsync(model.LearnerId);
 
             if (learner == null)
@@ -732,15 +720,30 @@ namespace Persistence.Implementations.Services
                 throw new NotFoundException($"Learner with id {model.LearnerId} does not exist");
             }
 
-            var courses = await _courseRepository.GetSelectedCourses(model.Ids);
-
-            if(courses == null)
+            var learnerAssignedCourses = await _courseRepository.GetCoursesByLearner(model.LearnerId);
+            var selectedCourses = await _courseRepository.GetSelectedCourses(model.Ids);
+            
+            if (selectedCourses == null)
             {
                 throw new NotFoundException($"Courses not found");
             }
-           
-            foreach(var course in courses)
+
+            var noOfExistingMajorCourses = await _courseRepository.GetNoOfLearnerMajorCourses(model.LearnerId);
+            var courseConstant = await _courseConstantService.GetCourseConstant();
+
+            if ((noOfExistingMajorCourses + selectedCourses.Count()) > courseConstant.MaximumNoOfMajorCourses)
             {
+                throw new BadRequestException($"Course assignment Not successful because learner already reached the maximum number of Major Courses possible i.e {courseConstant.MaximumNoOfMajorCourses} courses ");
+            }
+
+            foreach (var course in selectedCourses)
+            {
+                if (learnerAssignedCourses.Any(c => c.CourseId == course.Id))
+                {
+                    countOfDuplicatedCourses++;
+                    continue;
+                    //throw new BadRequestException($"{course.Name} already assigned to this learner");
+                }
                 var learnerCourse = new LearnerCourse
                 {
                     Course = course,
@@ -756,17 +759,16 @@ namespace Persistence.Implementations.Services
 
             return new BaseResponse
             {
-                Message = $"{courses.Count()} Courses assigned to learner {learner.FirstName} {learner.LastName} successfully",
+                Message = $"{selectedCourses.Count() - countOfDuplicatedCourses} Courses successfully assigned to {learner.FirstName} {learner.LastName} while {countOfDuplicatedCourses} courses were rejected because they were already assigned to the instructor",
                 Status = true
             };
-            
-           /* var learnerCourses = await _courseRepository.GetCoursesByLearner(model.LearnerId);
-
-            if(learnerCourses.Contains(courses.Any(c => c.Id))*/
+                     
         }
 
         public async Task<BaseResponse> AssignCoursesToInstructor(InstructorCourseAssignmentRequestModel model)
         {
+            int countOfDuplicatedCourses = 0;
+            //Check if course is already assigned to Instructor (Improve the check)
             var instructor = await _instructorRepository.GetAsync(model.InstructorId);
 
             if (instructor == null)
@@ -781,8 +783,15 @@ namespace Persistence.Implementations.Services
                 throw new NotFoundException($"Courses not found");
             }
 
+            var instructorAssignedCourses = await _courseRepository.GetCoursesByInstructor(model.InstructorId);
             foreach (var course in courses)
             {
+
+                if (instructorAssignedCourses.Any(c => c.Id == course.Id))
+                {
+                    countOfDuplicatedCourses++;
+                    continue;
+                }
                 var instructorCourse = new InstructorCourse
                 {
                     Course = course,
@@ -797,7 +806,7 @@ namespace Persistence.Implementations.Services
 
             return new BaseResponse
             {
-                Message = $"{courses.Count()} Courses assigned to Instructor {instructor.FirstName} {instructor.LastName} successfully",
+                Message = $"{courses.Count() - countOfDuplicatedCourses} Courses successfully assigned to {instructor.FirstName} {instructor.LastName} while {countOfDuplicatedCourses} courses were rejected because the courses were already assigned to the instructor",
                 Status = true
             };
         }
@@ -811,6 +820,21 @@ namespace Persistence.Implementations.Services
                 throw new NotFoundException($"Course request with Id {id} does not exist");
             }
 
+            var learnerAssignedCourses = await _courseRepository.GetCoursesByLearner(courseRequest.LearnerId);
+
+            var noOfExistingAdditionalCourses = await _courseRepository.GetNoOfLearnerAdditionalCourses(courseRequest.LearnerId);
+            var courseConstant = await _courseConstantService.GetCourseConstant();
+
+            if ((noOfExistingAdditionalCourses + 1) > courseConstant.MaximumNoOfAdditionalCourses)
+            {
+                throw new BadRequestException($"Course assignment Not successful because learner already reached the maximum number of Additional Courses possible i.e {courseConstant.MaximumNoOfAdditionalCourses} courses ");
+            }
+
+
+            if (learnerAssignedCourses.Any(c => c.CourseId == courseRequest.CourseId))
+            {             
+                throw new BadRequestException($"{courseRequest.Course.Name} approval not successful because it is already assigned to this learner");
+            }
             var learnerCourse = new LearnerCourse
             {
                 Course = courseRequest.Course,
@@ -841,6 +865,8 @@ namespace Persistence.Implementations.Services
             }
 
             courseRequest.RequestStatus = CourseRequestStatus.Rejected;
+            await _courseRepository.UpdateAsync(courseRequest);
+            await _courseRepository.SaveChangesAsync();
 
             return new BaseResponse
             {

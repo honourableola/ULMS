@@ -15,8 +15,10 @@ namespace Persistence.Context.EFConfigurations
         {
             builder.ToTable("Topics");
             builder.HasKey(u => u.Id);
+            builder.Property(c => c.RowVersion)
+               .IsRowVersion();
             //builder.Property(u => u.ModuleId).HasColumnType("Guid").IsRequired();
-            
+
         }
     }
 }

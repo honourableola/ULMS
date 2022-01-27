@@ -19,6 +19,8 @@ namespace Persistence.Context.EFConfigurations
             builder.HasMany<Module>(h => h.Modules)
                 .WithOne(m => m.Course)
                 .HasForeignKey(n => n.CourseId);
+            builder.Property(c => c.RowVersion)
+               .IsRowVersion();
         }
     }
 }

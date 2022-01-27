@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace Persistence.Context.EFConfigurations
 {
-    public class CourseRequestEntityTypeConfiguration : IEntityTypeConfiguration<CourseRequest>
+    public class RoleEntityTypeConfiguration : IEntityTypeConfiguration<Role>
     {
-        public void Configure(EntityTypeBuilder<CourseRequest> builder)
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("CourseRequests");
-            builder.HasKey(c => c.Id);
-            builder.Property(o => o.CourseId).IsRequired();
-            builder.Property(o => o.LearnerId).IsRequired();
+            builder.ToTable("Roles");
+            builder.HasKey(o => o.Id);
+            builder.HasMany(o => o.UserRoles)
+                .WithOne(a => a.Role)
+                .HasForeignKey(o => o.RoleId).OnDelete(DeleteBehavior.Restrict);
             builder.Property(c => c.RowVersion)
                .IsRowVersion();
-
         }
     }
 }

@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 
 namespace Domain.DTOs
 {
-    public class CourseDTO
+    public class LearnerCourseDTO
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string CourseName { get; set; }
         public string Description { get; set; }
         public string CategoryName { get; set; }
         public Guid CategoryId { get; set; }
         public CourseAvailabilityStatus AvailabilityStatus { get; set; }
-        public ICollection<ModuleDTO> Modules { get; set; } = new List<ModuleDTO>();
-        public ICollection<InstructorDTO> InstructorCourses { get; set; } = new List<InstructorDTO>();
-        public ICollection<LearnerDTO> LearnerCourses { get; set; } = new List<LearnerDTO>();
+        public LearnerCourseType CourseType { get; set; }
+        public Guid LearnerId { get; set; } 
+        public Course Course { get; set; }
+        public Guid CourseId { get; set; }
+       
+
     }
 }

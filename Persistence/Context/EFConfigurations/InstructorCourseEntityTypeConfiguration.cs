@@ -16,6 +16,8 @@ namespace Persistence.Context.EFConfigurations
             builder.ToTable("InstructorCourses");
 
             builder.HasKey(u => u.Id);
+            builder.Property(c => c.RowVersion)
+               .IsRowVersion();
 
             /* builder.Property(u => u.CourseId)
                  .HasColumnType("Guid")

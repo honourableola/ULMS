@@ -18,7 +18,7 @@ namespace Domain.Interfaces.Services
         public Task<CourseResponseModel> GetCourseById(Guid id);
         public Task<CoursesResponseModel> GetCoursesByCategory(Guid categoryId);
         public Task<CoursesResponseModel> GetCoursesByInstructor(Guid instructorId);
-        public Task<CoursesResponseModel> GetCoursesByLearner(Guid learnerId);
+        public Task<LearnerCoursesResponseModel> GetCoursesByLearner(Guid learnerId);
         public Task<CoursesResponseModel> GetArchivedCourses();
         public Task<CoursesResponseModel> GetActiveCourses();
         public Task<CoursesResponseModel> SearchCoursesByName(string searchText);

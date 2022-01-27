@@ -14,6 +14,9 @@ namespace Domain.Entities
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string LearnerPhoto { get; set; }
+        public string LearnerLMSCode { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
         public string TenantId { get; set; }
         public ICollection<LearnerCourse> LearnerCourses { get; set; } = new List<LearnerCourse>();
         public ICollection<CourseRequest> CourseRequests { get; set; } = new List<CourseRequest>();

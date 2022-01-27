@@ -56,9 +56,16 @@ namespace Domain.Models
             public CourseDTO Data { get; set; }
         }
 
+        public class LearnerCoursesResponseModel : BaseResponse
+        {
+            public IEnumerable<LearnerCourseDTO> Data { get; set; } = new List<LearnerCourseDTO>();
+        }
+
         public class CourseRequestResponseModel : BaseResponse
         {
             public CourseRequestDTO Data { get; set; }
         }
+
+
     }
 }

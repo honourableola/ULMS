@@ -84,5 +84,6 @@ namespace Persistence.Context
         public DbSet<Topic> Topics { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CourseRequest> CourseRequests { get; set; }
+        public DbSet<CourseConstant> CourseConstants { get; set; }
     }
 }
