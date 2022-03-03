@@ -18,9 +18,14 @@ namespace Persistence.Context.EFConfigurations
             builder.Property(c => c.Name).IsRequired();
             builder.HasMany<Topic>(s => s.Topics)
                 .WithOne(d => d.Module)
-                .HasForeignKey(a => a.ModuleId);
+                .HasForeignKey(a => a.ModuleId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.Property(c => c.RowVersion)
                .IsRowVersion();
+            builder.HasOne(m => m.Assessment)
+                .WithOne(s => s.Module)
+                .HasForeignKey<Assessment>(m => m.ModeuleId);
+ 
         }
     }
 }

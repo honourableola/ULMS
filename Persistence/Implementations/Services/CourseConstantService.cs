@@ -35,7 +35,8 @@ namespace Persistence.Implementations.Services
             var courseConstant = new CourseConstant
             {
                 MaximumNoOfAdditionalCourses = model.MaximumNoOfAdditionalCourses,
-                MaximumNoOfMajorCourses = model.MaximumNoOfMajorCourses
+                MaximumNoOfMajorCourses = model.MaximumNoOfMajorCourses,
+                NoOfAssessmentQuestions = model.NoOfAssessmentQuestions
             };
 
             await _courseConstantRepository.AddAsync(courseConstant);
@@ -48,23 +49,12 @@ namespace Persistence.Implementations.Services
             };
         }
 
-        public async Task<CourseConstant> GetCourseConstant()
+        public CourseConstant GetCourseConstant()
         {
-            var courseConstants = await _courseConstantRepository.GetAllAsync(a => a.Id != null);
+            var courseConstants =  _courseConstantRepository.Query().Where(a => a.Id != null).ToList();
             var courseConstant = courseConstants[0];
 
             return courseConstant;
-
-           /* return new CourseConstantResponseModel
-            {
-                Data = new CourseConstantDTO
-                {
-                    MaximumNoOfAdditionalCourses = courseConstant.MaximumNoOfAdditionalCourses,
-                    MaximumNoOfMajorCourses = courseConstant.MaximumNoOfMajorCourses
-                },
-                Message = $"Course Constant record retrieved successfully",
-                Status = true
-            };*/
         }
 
         public async Task<BaseResponse> UpdateCourseConstant(UpdateCourseConstantRequestModel model)

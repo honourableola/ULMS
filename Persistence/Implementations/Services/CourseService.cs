@@ -572,9 +572,7 @@ namespace Persistence.Implementations.Services
             {
                 throw new BadRequestException($"Courses not found");
             }
-           
-
-
+   
             var coursesReturned = courses.Select(n => new CourseDTO
             {
                 Id = n.Id,
@@ -729,11 +727,11 @@ namespace Persistence.Implementations.Services
             }
 
             var noOfExistingMajorCourses = await _courseRepository.GetNoOfLearnerMajorCourses(model.LearnerId);
-            var courseConstant = await _courseConstantService.GetCourseConstant();
+            var courseConstant = _courseConstantService.GetCourseConstant();
 
             if ((noOfExistingMajorCourses + selectedCourses.Count()) > courseConstant.MaximumNoOfMajorCourses)
             {
-                throw new BadRequestException($"Course assignment Not successful because learner already reached the maximum number of Major Courses possible i.e {courseConstant.MaximumNoOfMajorCourses} courses ");
+                throw new BadRequestException($"Only {courseConstant.MaximumNoOfMajorCourses - noOfExistingMajorCourses } additional Courses can be assigned to this learner due to the restriction maximum number of Major Courses possible i.e {courseConstant.MaximumNoOfMajorCourses} courses ");
             }
 
             foreach (var course in selectedCourses)
@@ -759,7 +757,7 @@ namespace Persistence.Implementations.Services
 
             return new BaseResponse
             {
-                Message = $"{selectedCourses.Count() - countOfDuplicatedCourses} Courses successfully assigned to {learner.FirstName} {learner.LastName} while {countOfDuplicatedCourses} courses were rejected because they were already assigned to the instructor",
+                Message = $"{selectedCourses.Count() - countOfDuplicatedCourses} Courses successfully assigned to {learner.FirstName} {learner.LastName} while {countOfDuplicatedCourses} courses were rejected because they were already assigned to the Learner",
                 Status = true
             };
                      
@@ -823,7 +821,7 @@ namespace Persistence.Implementations.Services
             var learnerAssignedCourses = await _courseRepository.GetCoursesByLearner(courseRequest.LearnerId);
 
             var noOfExistingAdditionalCourses = await _courseRepository.GetNoOfLearnerAdditionalCourses(courseRequest.LearnerId);
-            var courseConstant = await _courseConstantService.GetCourseConstant();
+            var courseConstant =  _courseConstantService.GetCourseConstant();
 
             if ((noOfExistingAdditionalCourses + 1) > courseConstant.MaximumNoOfAdditionalCourses)
             {

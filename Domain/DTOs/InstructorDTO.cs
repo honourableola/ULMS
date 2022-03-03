@@ -15,6 +15,7 @@ namespace Domain.DTOs
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string InstructorPhoto { get; set; }
+        public string InstructorLMSCode { get; set; }
         public ICollection<CourseDTO> InstructorCourses { get; set; } = new List<CourseDTO>();
     }
 }

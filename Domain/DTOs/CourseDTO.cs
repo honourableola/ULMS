@@ -17,6 +17,8 @@ namespace Domain.DTOs
         public Guid CategoryId { get; set; }
         public CourseAvailabilityStatus AvailabilityStatus { get; set; }
         public ICollection<ModuleDTO> Modules { get; set; } = new List<ModuleDTO>();
+        public ICollection<AssessmentDTO> Assessments { get; set; } = new List<AssessmentDTO>();
+        public ICollection<AssignmentDTO> Assignments { get; set; } = new List<AssignmentDTO>();
         public ICollection<InstructorDTO> InstructorCourses { get; set; } = new List<InstructorDTO>();
         public ICollection<LearnerDTO> LearnerCourses { get; set; } = new List<LearnerDTO>();
     }

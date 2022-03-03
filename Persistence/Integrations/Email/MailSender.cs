@@ -64,16 +64,17 @@ namespace Persistence.Integrations.Email
             await _emailService.Send(_emailConfiguration.FromEmail, _emailConfiguration.FromName, email, name, _emailConfiguration.VerifyMailSubject, mailBody);
         }*/
 
-        public async  Task SendWelcomeMail(string email, string fullName, string password, string userName)
+        public async  Task SendWelcomeMail(string email, string fullName, string password)
         {
             var model = new WelcomeEmail()
             {
-                UserName = userName,
                 FullName = fullName,
                 Password = password
             };
             var mailBody = await _razorEngine.ParseAsync("WelcomeEmail", model);
             await _emailService.Send(_emailConfiguration.FromEmail, _emailConfiguration.FromName, email, fullName, _emailConfiguration.WelcomeSubject, mailBody);
         }
+
+        
     }
 }

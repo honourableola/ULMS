@@ -17,7 +17,6 @@ namespace Domain.Models
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
             public string InstructorPhoto { get; set; }
-            public UserType UserType { get; set; }
 
         }
 

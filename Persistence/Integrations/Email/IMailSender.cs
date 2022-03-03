@@ -9,7 +9,7 @@ namespace Persistence.Integrations.Email
 {
     public interface IMailSender
     {
-        public Task SendWelcomeMail(string email, string fullName, string userName, string password);
+        public Task SendWelcomeMail(string email, string fullName, string password);
 
         public Task SendForgotPasswordMail(string email, string name, string passwordResetLink);
 

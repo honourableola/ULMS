@@ -11,6 +11,7 @@ namespace Domain.Entities
     {
         public int MaximumNoOfMajorCourses { get; set; }
         public int MaximumNoOfAdditionalCourses { get; set; }
+        public int NoOfAssessmentQuestions { get; set; }
         public string TenantId { get; set; }
     }
 }

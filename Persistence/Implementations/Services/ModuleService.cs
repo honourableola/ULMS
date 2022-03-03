@@ -117,7 +117,6 @@ namespace Persistence.Implementations.Services
                 };
             }
 
-
             return new ModulesResponseModel
             {
                 Data = modules,

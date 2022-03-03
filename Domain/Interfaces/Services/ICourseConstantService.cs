@@ -13,6 +13,6 @@ namespace Domain.Interfaces.Services
     {
         public Task<BaseResponse> AddCourseConstant(CreateCourseConstantRequestModel model);
         public Task<BaseResponse> UpdateCourseConstant(UpdateCourseConstantRequestModel model);
-        public Task<CourseConstant> GetCourseConstant();
+        public CourseConstant GetCourseConstant();
     }
 }

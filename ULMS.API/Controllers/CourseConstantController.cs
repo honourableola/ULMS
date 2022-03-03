@@ -37,9 +37,9 @@ namespace ULMS.API.Controllers
 
         [Route("GetCourseConstant")]
         [HttpGet]
-        public async Task<IActionResult> GetCourseConstant()
+        public IActionResult GetCourseConstant()
         {
-            var response = await _courseConstantService.GetCourseConstant();
+            var response = _courseConstantService.GetCourseConstant();
             return Ok(response);
         }
     }

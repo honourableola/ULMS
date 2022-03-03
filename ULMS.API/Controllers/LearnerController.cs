@@ -1,8 +1,10 @@
 ﻿using Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.LearnerViewModel;
@@ -14,15 +16,31 @@ namespace ULMS.API.Controllers
     public class LearnerController : ControllerBase
     {
         private readonly ILearnerService _learnerService;
-        public LearnerController(ILearnerService learnerService)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public LearnerController(ILearnerService learnerService, IWebHostEnvironment webHostEnvironment)
         {
             _learnerService = learnerService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [Route("AddLearner")]
         [HttpPost]
-        public async Task<IActionResult> AddLearner([FromBody] CreateLearnerRequestModel model)
+        public async Task<IActionResult> AddLearner([FromBody] CreateLearnerRequestModel model, IFormFile file)
         {
+
+            if (file != null)
+            {
+                string imageDirectory = Path.Combine(_webHostEnvironment.WebRootPath, "LearnerImages");
+                Directory.CreateDirectory(imageDirectory);
+                string contentType = file.ContentType.Split('/')[1];
+                string learnerImage = $"{Guid.NewGuid()}.{contentType}";
+                string fullPath = Path.Combine(imageDirectory, learnerImage);
+                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+                model.LearnerPhoto = learnerImage;
+            }
             var response = await _learnerService.AddLearner(model);
             return Ok(response);
         }

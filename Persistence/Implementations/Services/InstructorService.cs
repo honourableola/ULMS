@@ -1,10 +1,14 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Exceptions;
+using Domain.Interfaces.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Integrations.Email;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +21,25 @@ namespace Persistence.Implementations.Services
     public class InstructorService : IInstructorService
     {
         private readonly IInstructorRepository _instructorRepository;
-        public InstructorService(IInstructorRepository instructorRepository)
+        private readonly IUserRepository _userRepository;
+        private readonly IIdentityService _identityService;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IMailSender _mailSender;
+        public InstructorService(IInstructorRepository instructorRepository, IUserRepository userRepository, IIdentityService identityService, IRoleRepository roleRepository, IMailSender mailSender)
         {
             _instructorRepository = instructorRepository;
+            _userRepository = userRepository;
+            _identityService = identityService;
+            _roleRepository = roleRepository;
+            _mailSender = mailSender;
         }
         public async Task<BaseResponse> AddInstructor(CreateInstructorRequestModel model)
         {
+            var userExist = await _userRepository.ExistsAsync(a => a.Email == model.Email);
+            if (userExist)
+            {
+                throw new BadRequestException($"{model.FirstName} {model.LastName} already exist and cannot be added");
+            }
             var instructorExist = await _instructorRepository.ExistsAsync(a => a.Email == model.Email);
 
             if (instructorExist)
@@ -30,6 +47,21 @@ namespace Persistence.Implementations.Services
                 throw new BadRequestException($"{model.FirstName} {model.LastName} already exist and cannot be added");
             }
 
+            var salt = Guid.NewGuid().ToString();
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                UserType = UserType.Instructor,
+                HashSalt = salt
+            };
+
+            //var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6)}";
+            var password = "password";
+            user.PasswordHash = _identityService.GetPasswordHash(password, salt);
             var instructor = new Instructor
             {
                Id = Guid.NewGuid(),
@@ -38,12 +70,28 @@ namespace Persistence.Implementations.Services
                Email = model.Email,
                InstructorPhoto = model.InstructorPhoto,
                PhoneNumber = model.PhoneNumber,
-               Created = DateTime.UtcNow
+               InstructorLMSCode = $"ULMS{Guid.NewGuid().ToString().Substring(1, 5)}I",
+               UserId = user.Id,
+               User = user              
             };
 
+            var role = await _roleRepository.GetAsync(r => r.Name == "instructor");
+            var userRole = new UserRole
+            {
+                Id = Guid.NewGuid(),
+                Role = role,
+                RoleId = role.Id,
+                User = user,
+                UserId = user.Id
+            };
+
+            user.UserRoles.Add(userRole);
+            await _userRepository.AddAsync(user);
             await _instructorRepository.AddAsync(instructor);
+            await _userRepository.SaveChangesAsync();
             await _instructorRepository.SaveChangesAsync();
 
+            //await _mailSender.SendWelcomeMail(user.Email, $"{user.FirstName} {user.LastName}", password);
             return new BaseResponse
             {
                 Status = true,
@@ -83,6 +131,7 @@ namespace Persistence.Implementations.Services
                    Email = n.Email,
                    InstructorPhoto = n.InstructorPhoto,
                    PhoneNumber = n.PhoneNumber,
+                   InstructorLMSCode = n.InstructorLMSCode,
                    InstructorCourses = n.InstructorCourses.Select(o => new CourseDTO
                    {
                        Id = o.Id,
@@ -140,6 +189,7 @@ namespace Persistence.Implementations.Services
                     Email = instructor.Email,
                     InstructorPhoto = instructor.InstructorPhoto,
                     PhoneNumber = instructor.PhoneNumber,
+                    InstructorLMSCode = instructor.InstructorLMSCode,
                     InstructorCourses = instructor.InstructorCourses.Select(o => new CourseDTO
                     {
                         Id = o.Id,
@@ -178,6 +228,7 @@ namespace Persistence.Implementations.Services
                     Email = instructor.Email,
                     InstructorPhoto = instructor.InstructorPhoto,
                     PhoneNumber = instructor.PhoneNumber,
+                    InstructorLMSCode = instructor.InstructorLMSCode,
                     InstructorCourses = instructor.InstructorCourses.Select(o => new CourseDTO
                     {
                         Id = o.Id,
@@ -220,6 +271,7 @@ namespace Persistence.Implementations.Services
                 Email = instructor.Email,
                 InstructorPhoto = instructor.InstructorPhoto,
                 PhoneNumber = instructor.PhoneNumber,
+                InstructorLMSCode = instructor.InstructorLMSCode,
                 InstructorCourses = instructor.InstructorCourses.Select(o => new CourseDTO
                 {
                     Id = o.Id,
@@ -256,6 +308,7 @@ namespace Persistence.Implementations.Services
                 Email = instructor.Email,
                 InstructorPhoto = instructor.InstructorPhoto,
                 PhoneNumber = instructor.PhoneNumber,
+                InstructorLMSCode = instructor.InstructorLMSCode,
                 InstructorCourses = instructor.InstructorCourses.Select(o => new CourseDTO
                 {
                     Id = o.Id,

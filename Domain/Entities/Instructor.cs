@@ -19,6 +19,7 @@ namespace Domain.Entities
         public User User { get; set; }
         public string TenantId { get; set; }
         public ICollection<InstructorCourse> InstructorCourses { get; set; } = new List<InstructorCourse>();
+        public ICollection<Assessment> Assessments { get; set; } = new List<Assessment>();
 
 
     }

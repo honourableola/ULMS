@@ -20,6 +20,7 @@ namespace Domain.Entities
         public string ModulePDF2 { get; set; }
         public string ModuleVideo1 { get; set; }
         public string ModuleVideo2 { get; set; }
+        public Assessment Assessment { get; set; }
         public string TenantId { get; set; }
         public ICollection<Topic> Topics { get; set; } = new List<Topic>();
     }

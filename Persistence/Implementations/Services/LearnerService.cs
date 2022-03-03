@@ -2,11 +2,13 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Exceptions;
+using Domain.Interfaces.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Integrations.Email;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +20,24 @@ namespace Persistence.Implementations.Services
 {
     public class LearnerService : ILearnerService
     {
-        private readonly IPasswordHasher<User> _passwordHasher;
+        //private readonly IPasswordHasher<User> _passwordHasher;
         private readonly ILearnerRepository _learnerRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMailSender _mailSender;
+       // private readonly UserManager<User> _userManager;
+        private readonly IIdentityService _identityService;
+        private readonly IRoleRepository _roleRepository;
         
 
-        public LearnerService(ILearnerRepository learnerRepository, IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
+        public LearnerService(ILearnerRepository learnerRepository, IUserRepository userRepository, IMailSender mailSender, UserManager<User> userManager, IIdentityService identityService, IRoleRepository roleRepository)
         {
             _learnerRepository = learnerRepository;
             _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
+           // _passwordHasher = passwordHasher;
+            _mailSender = mailSender;
+            //_userManager = userManager;
+            _identityService = identityService;
+            _roleRepository = roleRepository;
         }
         public async Task<BaseResponse> AddLearner(CreateLearnerRequestModel model)
         {
@@ -56,9 +65,9 @@ namespace Persistence.Implementations.Services
                 UserType = UserType.Learner,
                 HashSalt = salt,
             };
-            var password = $"LMS{Guid.NewGuid().ToString().Substring(1, 6)}";
-            var passwordHash = _passwordHasher.HashPassword(user, $"{password}{salt}");
-            user.PasswordHash = passwordHash;
+            // var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6)}";
+            var password = "password";
+            user.PasswordHash = _identityService.GetPasswordHash(password, salt);
             var learner = new Learner
             {
                 Id = Guid.NewGuid(),
@@ -67,20 +76,32 @@ namespace Persistence.Implementations.Services
                 Email = model.Email,
                 LearnerPhoto = model.LearnerPhoto,
                 PhoneNumber = model.PhoneNumber,
-                LearnerLMSCode = $"LMS{Guid.NewGuid().ToString().Substring(1, 5)}L",
+                LearnerLMSCode = $"ULMS{Guid.NewGuid().ToString().ToUpper().Substring(1, 5)}L",
                 UserId = user.Id,
                 User = user
+                
+            };
+            var role = await _roleRepository.GetAsync(r => r.Name == "learner");
+            var userRole = new UserRole
+            {
+                Id = Guid.NewGuid(),
+                Role = role,
+                RoleId = role.Id,
+                User = user,
+                UserId = user.Id
             };
 
+            user.UserRoles.Add(userRole);
             await _learnerRepository.AddAsync(learner);
             await _userRepository.AddAsync(user);         
             await _learnerRepository.SaveChangesAsync();
             await _userRepository.SaveChangesAsync();
 
+            //await _mailSender.SendWelcomeMail(user.Email, $"{user.FirstName} {user.LastName}", password);
             return new BaseResponse
             {
                 Status = true,
-                Message = $"{model.FirstName} {model.LastName} added successfully"
+                Message = $"{model.FirstName} {model.LastName} added successfully. Check your mail for login details"
             };
         }
 
@@ -115,6 +136,7 @@ namespace Persistence.Implementations.Services
                    LastName = n.LastName,
                    Email = n.Email,
                    LearnerPhoto = n.LearnerPhoto,
+                   LearnerLMSCode = n.LearnerLMSCode,
                    PhoneNumber = n.PhoneNumber,
                    LearnerCourses = n.LearnerCourses.Select(o => new CourseDTO
                    {
@@ -140,8 +162,6 @@ namespace Persistence.Implementations.Services
                     Status = true
                 };
             }
-
-
             return new LearnersResponseModel
             {
                 Data = learners,
@@ -170,6 +190,7 @@ namespace Persistence.Implementations.Services
                     LastName = learner.LastName,
                     Email = learner.Email,
                     LearnerPhoto = learner.LearnerPhoto,
+                    LearnerLMSCode = learner.LearnerLMSCode,
                     PhoneNumber = learner.PhoneNumber,
                     LearnerCourses = learner.LearnerCourses.Select(o => new CourseDTO
                     {
@@ -207,6 +228,7 @@ namespace Persistence.Implementations.Services
                     LastName = learner.LastName,
                     Email = learner.Email,
                     LearnerPhoto = learner.LearnerPhoto,
+                    LearnerLMSCode = learner.LearnerLMSCode,
                     PhoneNumber = learner.PhoneNumber,
                     LearnerCourses = learner.LearnerCourses.Select(o => new CourseDTO
                     {
@@ -251,6 +273,7 @@ namespace Persistence.Implementations.Services
                 Email = learner.Email,
                 LearnerPhoto = learner.LearnerPhoto,
                 PhoneNumber = learner.PhoneNumber,
+                LearnerLMSCode = learner.LearnerLMSCode,
                 LearnerCourses = learner.LearnerCourses.Select(o => new CourseDTO
                 {
                     Id = o.Id,
@@ -286,6 +309,7 @@ namespace Persistence.Implementations.Services
                 Email = learner.Email,
                 LearnerPhoto = learner.LearnerPhoto,
                 PhoneNumber = learner.PhoneNumber,
+                LearnerLMSCode = learner.LearnerLMSCode,
                 LearnerCourses = learner.LearnerCourses.Select(o => new CourseDTO
                 {
                     Id = o.Id,

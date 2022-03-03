@@ -92,18 +92,16 @@ namespace Persistence.Implementations.Services
             else if (categories.Count == 0)
             {
                 return new CategoriesResponseModel
-                {
-                   
-                    Message = $" No Category Found",
+                {                  
+                    Message = $"No Category Found",
                     Status = true
                 };
             }
 
-
             return new CategoriesResponseModel
             {
                 Data = categories,
-                Message = $" {categories.Count} Categories retrieved successfully",
+                Message = $"{categories.Count} Categories retrieved successfully",
                 Status = true
             };
         }

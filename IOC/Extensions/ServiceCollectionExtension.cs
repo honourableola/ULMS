@@ -1,12 +1,18 @@
-﻿using Domain.Interfaces.Repositories;
+﻿using Domain.Entities;
+using Domain.Interfaces.Identity;
+using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Multitenancy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Context;
+using Persistence.FileConfigurations.TemplateEngine;
+using Persistence.Identity;
 using Persistence.Implementations.Repositories;
 using Persistence.Implementations.Services;
+using Persistence.Integrations.Email;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,6 +79,8 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<IModuleService, ModuleService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<ICourseConstantService, CourseConstantService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IAdminService, AdminService>();
 
             return services;
         }
@@ -86,19 +94,29 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<ITopicRepository, TopicRepository>();
             services.AddScoped<ICourseConstantRepository, CourseConstantRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
+
 
             return services;
         }
 
+        public static IServiceCollection AddFileExportService(this IServiceCollection services)
+        {
+            services.AddScoped<IRazorEngine, RazorEngine>();
+            return services;
+
+        }
         public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
         {
-           /* services.AddScoped<IUserStore<User>, UserStore>();
+            services.AddScoped<IUserStore<User>, UserStore>();
             services.AddScoped<IRoleStore<Role>, RoleStore>();
             services.AddIdentity<User, Role>()
                 .AddDefaultTokenProviders();
-            services.AddScoped<IIdentityService, IdentityService>();*/
-            /* services.AddScoped<IEmailService, EmailService>();
-             services.AddScoped<IMailSender, MailSender>();*/
+            services.AddScoped<IIdentityService, IdentityService>();
+            /*services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IMailSender, MailSender>();*/
             return services;
         }
     }

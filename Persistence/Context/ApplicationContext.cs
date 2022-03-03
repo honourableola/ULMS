@@ -38,6 +38,12 @@ namespace Persistence.Context
             modelBuilder.Entity<Instructor>().HasQueryFilter(a => a.TenantId == TenantId);
             modelBuilder.Entity<InstructorCourse>().HasQueryFilter(a => a.TenantId == TenantId);
             modelBuilder.Entity<LearnerCourse>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<User>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<Role>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<UserRole>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<Admin>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<CourseConstant>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<CourseRequest>().HasQueryFilter(a => a.TenantId == TenantId);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -85,5 +91,13 @@ namespace Persistence.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<CourseRequest> CourseRequests { get; set; }
         public DbSet<CourseConstant> CourseConstants { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Assessment> Assessments { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Option> Options { get; set; }
+        public DbSet<Result> Results { get; set; }
     }
 }
