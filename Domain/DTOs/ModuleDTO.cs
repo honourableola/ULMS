@@ -1,9 +1,6 @@
 ﻿using Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.DTOs
 {
@@ -22,6 +19,7 @@ namespace Domain.DTOs
         public string ModulePDF2 { get; set; }
         public string ModuleVideo1 { get; set; }
         public string ModuleVideo2 { get; set; }
+        public bool IsTaken { get; set; }
         public ICollection<TopicDTO> Topics { get; set; } = new List<TopicDTO>();
     }
 }

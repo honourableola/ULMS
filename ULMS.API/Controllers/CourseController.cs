@@ -1,9 +1,6 @@
 ﻿using Domain.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.CourseViewModel;
 
@@ -75,6 +72,7 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
+        
         [Route("GetAllCourses")]
         [HttpGet]
         public async Task<IActionResult> GetAllCourses()

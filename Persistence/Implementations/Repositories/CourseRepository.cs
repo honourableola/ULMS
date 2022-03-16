@@ -6,7 +6,6 @@ using Persistence.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Persistence.Implementations.Repositories
@@ -81,6 +80,8 @@ namespace Persistence.Implementations.Repositories
                 .ThenInclude(a => a.Category)
                 .Include(n => n.Learner)
                 .Where(a => a.LearnerId == learnerId).ToListAsync();
+
+            //var courses = _context.LearnerCourses.Where(a => a.LearnerId == learnerId).Select(b => b.Course).ToListAsync();
         }
 
         public async Task<IEnumerable<Course>> GetSelectedCourses(IList<Guid> ids)

@@ -1,8 +1,8 @@
-﻿using Domain.Models;
+﻿using Domain.DTOs;
+using Domain.Entities;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.ModuleViewModel;
 
@@ -16,6 +16,10 @@ namespace Domain.Interfaces.Services
         public Task<ModuleResponseModel> GetModule(Guid id);
         public Task<ModulesResponseModel> GetAllModules();
         public Task<ModulesResponseModel> GetModulesByCourse(Guid courseId);
+        public Task<List<Module>> GetTakenModulesByCourseWithNoAssessment(Guid courseId);
+        public Task<List<Module>> GetTakenModulesByLearnerWithNoAssessment(Guid learnerId);
+        public Task<List<Module>> GetAllModulesByLearner(Guid learnerId);
+        public Task<ModulesResponseModel> GetNotTakenModulesByCourse(Guid courseId);
         public Task<ModulesResponseModel> SearchModulesByName(string searchText);
     }
 }

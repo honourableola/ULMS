@@ -1,10 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Multitenancy;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ULMS.Infrastructure.Persistence.Context.Extensions;
@@ -24,7 +21,6 @@ namespace Persistence.Context
         }
 
         
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -6,13 +6,11 @@ using Domain.Interfaces.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Integrations.Email;
+using Persistence.Integrations.MailKitModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.InstructorViewModel;
 
@@ -22,16 +20,17 @@ namespace Persistence.Implementations.Services
     {
         private readonly IInstructorRepository _instructorRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IIdentityService _identityService;
+        //private readonly IIdentityService _identityService;
         private readonly IRoleRepository _roleRepository;
-        private readonly IMailSender _mailSender;
-        public InstructorService(IInstructorRepository instructorRepository, IUserRepository userRepository, IIdentityService identityService, IRoleRepository roleRepository, IMailSender mailSender)
+        private readonly IMailService _mailService;
+        //private readonly IMailSender _mailSender;
+        public InstructorService(IInstructorRepository instructorRepository, IUserRepository userRepository, /*IIdentityService identityService,*/ IRoleRepository roleRepository/*, IMailSender mailSender*/, IMailService mailService)
         {
             _instructorRepository = instructorRepository;
             _userRepository = userRepository;
-            _identityService = identityService;
+            //_identityService = identityService;
             _roleRepository = roleRepository;
-            _mailSender = mailSender;
+            _mailService = mailService;
         }
         public async Task<BaseResponse> AddInstructor(CreateInstructorRequestModel model)
         {
@@ -61,7 +60,7 @@ namespace Persistence.Implementations.Services
 
             //var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6)}";
             var password = "password";
-            user.PasswordHash = _identityService.GetPasswordHash(password, salt);
+            //user.PasswordHash = _identityService.GetPasswordHash(password, salt);
             var instructor = new Instructor
             {
                Id = Guid.NewGuid(),
@@ -91,7 +90,15 @@ namespace Persistence.Implementations.Services
             await _userRepository.SaveChangesAsync();
             await _instructorRepository.SaveChangesAsync();
 
-            //await _mailSender.SendWelcomeMail(user.Email, $"{user.FirstName} {user.LastName}", password);
+            var request = new WelcomeMail
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Password = password,
+                ToEmail = user.Email
+            };
+
+            await _mailService.SendWelcomeEmailAsync(request);
             return new BaseResponse
             {
                 Status = true,

@@ -100,14 +100,14 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ModeuleId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ModuleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("RowVersion")
                         .HasColumnType("varbinary(max)");
@@ -123,7 +123,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("InstructorId");
 
-                    b.HasIndex("ModeuleId")
+                    b.HasIndex("ModuleId")
                         .IsUnique();
 
                     b.HasIndex("Title")
@@ -944,7 +944,7 @@ namespace Persistence.Migrations
 
                     b.HasOne("Domain.Entities.Module", "Module")
                         .WithOne("Assessment")
-                        .HasForeignKey("Domain.Entities.Assessment", "ModeuleId")
+                        .HasForeignKey("Domain.Entities.Assessment", "ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,11 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistence.Context.EFConfigurations
 {
@@ -24,7 +19,7 @@ namespace Persistence.Context.EFConfigurations
                .IsRowVersion();
             builder.HasOne(m => m.Assessment)
                 .WithOne(s => s.Module)
-                .HasForeignKey<Assessment>(m => m.ModeuleId);
+                .HasForeignKey<Assessment>(m => m.ModuleId);
  
         }
     }

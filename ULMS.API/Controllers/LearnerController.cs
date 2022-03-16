@@ -1,11 +1,8 @@
 ﻿using Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.LearnerViewModel;
 
@@ -23,12 +20,13 @@ namespace ULMS.API.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [Authorize]
         [Route("AddLearner")]
         [HttpPost]
-        public async Task<IActionResult> AddLearner([FromBody] CreateLearnerRequestModel model, IFormFile file)
+        public async Task<IActionResult> AddLearner([FromBody] CreateLearnerRequestModel model)
         {
 
-            if (file != null)
+           /* if (file != null)
             {
                 string imageDirectory = Path.Combine(_webHostEnvironment.WebRootPath, "LearnerImages");
                 Directory.CreateDirectory(imageDirectory);
@@ -40,7 +38,7 @@ namespace ULMS.API.Controllers
                     file.CopyTo(fileStream);
                 }
                 model.LearnerPhoto = learnerImage;
-            }
+            }*/
             var response = await _learnerService.AddLearner(model);
             return Ok(response);
         }
@@ -69,6 +67,7 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         [Route("GetAllLearners")]
         [HttpGet]
         public async Task<IActionResult> GetAllLearners()

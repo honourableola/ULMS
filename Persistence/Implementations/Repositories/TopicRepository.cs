@@ -5,7 +5,6 @@ using Persistence.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Persistence.Implementations.Repositories
@@ -15,6 +14,11 @@ namespace Persistence.Implementations.Repositories
         public TopicRepository(ApplicationContext context)
         {
             _context = context;
+        }
+
+        public List<Topic> GetTopicsByModule(Guid moduleId)
+        {
+            return _context.Topics.Where(c => c.ModuleId == moduleId).ToList();
         }
 
         public async Task<IEnumerable<Topic>> SearchTopicsByTitle(string searchText)

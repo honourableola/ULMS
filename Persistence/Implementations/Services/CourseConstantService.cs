@@ -1,14 +1,9 @@
-﻿using Domain.DTOs;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.CourseConstantViewModel;
 
@@ -36,7 +31,8 @@ namespace Persistence.Implementations.Services
             {
                 MaximumNoOfAdditionalCourses = model.MaximumNoOfAdditionalCourses,
                 MaximumNoOfMajorCourses = model.MaximumNoOfMajorCourses,
-                NoOfAssessmentQuestions = model.NoOfAssessmentQuestions
+                NoOfAssessmentQuestions = model.NoOfAssessmentQuestions,
+                DurationOfAssessment = model.DurationOfAssessment
             };
 
             await _courseConstantRepository.AddAsync(courseConstant);
@@ -64,6 +60,9 @@ namespace Persistence.Implementations.Services
 
             courseConstant.MaximumNoOfAdditionalCourses = model.MaximumNoOfAdditionalCourses;
             courseConstant.MaximumNoOfMajorCourses = model.MaximumNoOfMajorCourses;
+            courseConstant.NoOfAssessmentQuestions = model.NoOfAssessmentQuestions;
+            courseConstant.DurationOfAssessment = model.DurationOfAssessment;
+            
 
             await _courseConstantRepository.UpdateAsync(courseConstant);
             await _courseConstantRepository.SaveChangesAsync();

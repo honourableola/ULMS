@@ -5,7 +5,6 @@ using Persistence.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Persistence.Implementations.Repositories
@@ -18,10 +17,24 @@ namespace Persistence.Implementations.Repositories
         }
         public List<Question> GetQuestionsByModule(Guid moduleId)
         {
-            var questions = _context.Questions
+            var questions = _context.Questions.Include(q => q.Options)
                 .Where(a => a.ModuleId == moduleId).ToList();
             return questions;
+           
         }
 
+        public Question GetQuestionsById(Guid id)
+        {
+            var question = _context.Questions.Include(q => q.Options)
+                .SingleOrDefault(a => a.Id == id);
+            return question;
+
+        }
+
+        public async Task<List<Question>> GetQuestionsByModuleAsync(Guid moduleId)
+        {
+            var questions = await _context.Questions.Include(q => q.Options).Where(a => a.ModuleId == moduleId).ToListAsync();
+            return questions;
+        }
     }
 }

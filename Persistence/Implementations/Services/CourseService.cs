@@ -6,10 +6,11 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Integrations.Email;
+using Persistence.Integrations.MailKitModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.CourseViewModel;
 
@@ -21,12 +22,15 @@ namespace Persistence.Implementations.Services
         private readonly ILearnerRepository _learnerRepository;
         private readonly IInstructorRepository _instructorRepository;
         private readonly ICourseConstantService _courseConstantService;
-        public CourseService(ICourseRepository courseRepository, ILearnerRepository learnerRepository, IInstructorRepository instructorRepository, ICourseConstantService courseConstantService)
+        private readonly IMailService _mailService;
+        //private readonly IMailSender _mailSender;
+        public CourseService(ICourseRepository courseRepository, ILearnerRepository learnerRepository, IInstructorRepository instructorRepository, ICourseConstantService courseConstantService,  IMailService mailService)
         {
             _courseRepository = courseRepository;
             _learnerRepository = learnerRepository;
             _instructorRepository = instructorRepository;
             _courseConstantService = courseConstantService;
+            _mailService = mailService;
         }
         public async Task<BaseResponse> AddCourse(CreateCourseRequestModel model)
         {
@@ -698,7 +702,17 @@ namespace Persistence.Implementations.Services
 
             await _courseRepository.CreateCourseRequest(courseRequest);
             await _courseRepository.SaveChangesAsync();
+            //var mailBody = $"😊😊Hello {learner.FirstName.ToUpper()} {learner.LastName.ToUpper()}. \nYour course request for {courseRequest.Course.Name} has been received by the Administrator. You will be notified of either approval or rejection of the request. Kindly refrain from making another request till you get a response. Warm Regards...✌✌✌✌";
+            // await _mailSender.SendWelcomeMail(learner.User.Email, "Course Request Received".ToUpper(), mailBody, $"{learner.FirstName} {learner.LastName}");
+            var request = new SuccessfulCourseRequestMail
+            {
+                FirstName = learner.FirstName,
+                LastName = learner.LastName,
+                CourseName = courseRequest.Course.Name,
+                ToEmail = learner.Email
+            };
 
+            await _mailService.SendSuccessfulCourseRequestEmailAsync(request);
             return new BaseResponse
             {
                 Message = $"Course Request for {course.Name} submitted by {learner.FirstName} {learner.LastName} to the Admin Successfully",
@@ -754,7 +768,18 @@ namespace Persistence.Implementations.Services
                 await _courseRepository.LearnerCourseAssignment(learnerCourse);
             }
             await _courseRepository.SaveChangesAsync();
+            var courseNames = SelectedCoursesNames(selectedCourses);
+            //var mailBody = $"😊😊Hello {learner.FirstName.ToUpper()} {learner.LastName.ToUpper()}. \nThe following courses has been assigned to you by the Administrator: {courseNames}👏👏. \nLog in to your account to start learning.    happy Learning...✌✌✌✌";
+            //await _mailSender.SendWelcomeMail(learner.User.Email, "Notification of Courses Assigned".ToUpper(), mailBody, $"{learner.FirstName} {learner.LastName}");
+            var request = new SuccessfulCourseAssignmentToLearner
+            {
+                FirstName = learner.FirstName,
+                LastName = learner.LastName,
+                CourseNames = courseNames,
+                ToEmail = learner.Email
+            };
 
+            await _mailService.SendSuccessfulCourseAssignmentToLearnerEmailAsync(request);
             return new BaseResponse
             {
                 Message = $"{selectedCourses.Count() - countOfDuplicatedCourses} Courses successfully assigned to {learner.FirstName} {learner.LastName} while {countOfDuplicatedCourses} courses were rejected because they were already assigned to the Learner",
@@ -763,6 +788,15 @@ namespace Persistence.Implementations.Services
                      
         }
 
+        private string SelectedCoursesNames(IEnumerable<Course> courses)
+        {
+            var names = "";
+            foreach (var course in courses)
+            {
+                names += (course.Name + " ");
+            }
+            return names;
+        }
         public async Task<BaseResponse> AssignCoursesToInstructor(InstructorCourseAssignmentRequestModel model)
         {
             int countOfDuplicatedCourses = 0;
@@ -801,7 +835,18 @@ namespace Persistence.Implementations.Services
                 await _courseRepository.InstructorCourseAssignment(instructorCourse);
             }
             await _courseRepository.SaveChangesAsync();
+            var courseNames = SelectedCoursesNames(courses);
+            //var mailBody = $"😊😊Hello {instructor.FirstName.ToUpper()} {instructor.LastName.ToUpper()}. \nThe following courses has been assigned to you by the Administrator: {courseNames}👏👏. \nLog in to your account to start learning.    happy Learning...✌✌✌✌";
+            //await _mailSender.SendWelcomeMail(instructor.User.Email, "Notification of Courses Assigned".ToUpper(), mailBody, $"{instructor.FirstName} {instructor.LastName}");
+            var request = new SuccessfulCourseAssignmentToInstructor
+            {
+                FirstName = instructor.FirstName,
+                LastName = instructor.LastName,
+                CourseNames = courseNames,
+                ToEmail = instructor.Email
+            };
 
+            await _mailService.SendSuccessfulCourseAssignmentToInstructorEmailAsync(request);
             return new BaseResponse
             {
                 Message = $"{courses.Count() - countOfDuplicatedCourses} Courses successfully assigned to {instructor.FirstName} {instructor.LastName} while {countOfDuplicatedCourses} courses were rejected because the courses were already assigned to the instructor",
@@ -812,6 +857,7 @@ namespace Persistence.Implementations.Services
         public async Task<BaseResponse> ApproveCourseRequest(Guid id)
         {
             var courseRequest = await _courseRepository.GetCourseRequestById(id);
+            var learner = await _learnerRepository.GetAsync(courseRequest.LearnerId);
 
             if (courseRequest == null)
             {
@@ -845,7 +891,18 @@ namespace Persistence.Implementations.Services
             courseRequest.RequestStatus = CourseRequestStatus.Approved;
             await _courseRepository.LearnerCourseAssignment(learnerCourse);
             await _courseRepository.SaveChangesAsync();
+            //var mailBody = $"😊😊Hello {learner.FirstName.ToUpper()} {learner.LastName.ToUpper()}. \nYour request for {courseRequest.Course.Name} has been approved and thus added to your list of courses👏👏. Log in to your account to start learning.    happy Learning...✌✌✌✌";
+            //await _mailSender.SendWelcomeMail(learner.User.Email, "Notification of Approval of Course Request".ToUpper(), mailBody, $"{learner.FirstName} {learner.LastName}");
 
+            var request = new CourseRequestApproval
+            {
+                FirstName = learner.FirstName,
+                LastName = learner.LastName,
+                CourseName = courseRequest.Course.Name,
+                ToEmail = learner.Email
+            };
+
+            await _mailService.SendSuccessfulCourseRequestApprovalEmailAsync(request);
             return new BaseResponse
             {
                 Message = $"{courseRequest.Course.Name} approved for {courseRequest.Learner.FirstName} {courseRequest.Learner.LastName} successfully",
@@ -856,6 +913,7 @@ namespace Persistence.Implementations.Services
         public async Task<BaseResponse> RejectCourseRequest(Guid id)
         {
             var courseRequest = await _courseRepository.GetCourseRequestById(id);
+            var learner = await _learnerRepository.GetAsync(courseRequest.LearnerId);
 
             if(courseRequest == null)
             {
@@ -866,6 +924,17 @@ namespace Persistence.Implementations.Services
             await _courseRepository.UpdateAsync(courseRequest);
             await _courseRepository.SaveChangesAsync();
 
+            //var mailBody = $"😊😊Hello {learner.FirstName.ToUpper()} {learner.LastName.ToUpper()}. \nYour request for {courseRequest.Course.Name} has been rejected by the Administrator. Another request can be made if you are still interested in taking the course.   happy Learning...✌✌✌✌";
+            //await _mailSender.SendWelcomeMail(learner.User.Email, "Notification of Rejection of Course Request".ToUpper(), mailBody, $"{learner.FirstName} {learner.LastName}");
+            var request = new CourseRequestRejection
+            {
+                FirstName = learner.FirstName.ToUpper(),
+                LastName = learner.LastName.ToUpper(),
+                CourseName = courseRequest.Course.Name,
+                ToEmail = learner.Email
+            };
+
+            await _mailService.SendCourseRequestRejectionEmailAsync(request);
             return new BaseResponse
             {
                 Message = $"{courseRequest.Course.Name} request by {courseRequest.Learner.FirstName} {courseRequest.Learner.LastName} rejected successfully",
@@ -879,7 +948,7 @@ namespace Persistence.Implementations.Services
 
             if (courseRequests == null)
             {
-                throw new NotFoundException($"No Untreated Course requets found");
+                throw new NotFoundException($"No Untreated Course requests found");
             }
             else if (courseRequests.Count() == 0)
             {

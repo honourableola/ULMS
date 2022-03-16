@@ -1,11 +1,7 @@
 ﻿using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.InstructorViewModel;
 
@@ -25,9 +21,9 @@ namespace ULMS.API.Controllers
 
         [Route("AddInstructor")]
         [HttpPost]
-        public async Task<IActionResult> AddInstructor([FromBody] CreateInstructorRequestModel model, IFormFile file)
+        public async Task<IActionResult> AddInstructor([FromBody] CreateInstructorRequestModel model)
         {
-            if (file != null)
+           /* if (file != null)
             {
                 string imageDirectory = Path.Combine(_webHostEnvironment.WebRootPath, "InstructorImages");
                 Directory.CreateDirectory(imageDirectory);
@@ -39,7 +35,7 @@ namespace ULMS.API.Controllers
                     file.CopyTo(fileStream);
                 }
                 model.InstructorPhoto = instructorImage;
-            }
+            }*/
             var response = await _instructorService.AddInstructor(model);
             return Ok(response);
         }

@@ -1,14 +1,13 @@
 ﻿using Domain.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.QuestionViewModel;
 
 namespace ULMS.API.Controllers
 {
+    //[Authorize(Roles ="learner")]
     [Route("api/[controller]")]
     [ApiController]
     public class QuestionController : ControllerBase
@@ -50,6 +49,7 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         [Route("GetQuestionsByModule/{moduleId}")]
         [HttpGet]
         public async Task<IActionResult> GetQuestionsByCourse([FromRoute] Guid moduleId)
@@ -58,10 +58,12 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
-        [Route("GetAllQuestions")]
-        [HttpGet]
+        [Authorize]
+        //[Route()]
+        [HttpGet("GetAllQuestions")]
         public async Task<IActionResult> GetAllQuestions()
         {
+
             var response = await _questionService.GetAllQuestions();
             return Ok(response);
         }

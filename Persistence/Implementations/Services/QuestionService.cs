@@ -4,11 +4,8 @@ using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.QuestionViewModel;
 
@@ -72,9 +69,9 @@ namespace Persistence.Implementations.Services
 
         public async Task<QuestionsResponseModel> GetAllQuestions()
         {
-            var questions = await _questionRepository
-               .Query()
-               .Select(question => new QuestionDTO
+            var questions = await _questionRepository.GetAllAsync(a => a.Id.ToString().Length > 0);
+
+                var questionsReturned = questions.Select(question => new QuestionDTO
                {
                    Id = question.Id,
                    QuestionText = question.QuestionText,
@@ -88,7 +85,7 @@ namespace Persistence.Implementations.Services
                        QuestionId = o.QuestionId,
                        Status = o.Status,
                    }).ToList()
-               }).ToListAsync();
+               }).ToList();
 
             if (questions.Count() == 0)
             {
@@ -101,7 +98,7 @@ namespace Persistence.Implementations.Services
             }
             return new QuestionsResponseModel
             {
-                Data = questions,
+                Data = questionsReturned,
                 Message = $"{questions.Count} Questions retrieved successfully",
                 Status = true
             };
@@ -139,9 +136,8 @@ namespace Persistence.Implementations.Services
 
         public async Task<QuestionsResponseModel> GetQuestionsByModule(Guid moduleId)
         {
-            var questions = await _questionRepository.Query()
-                .Where(a => a.ModuleId == moduleId)
-                .Select(question => new QuestionDTO
+            var questions = await _questionRepository.GetAllAsync(a => a.ModuleId == moduleId);
+                var req = questions.Select(question => new QuestionDTO
                 {
                     Id = question.Id,
                     QuestionText = question.QuestionText,
@@ -155,7 +151,16 @@ namespace Persistence.Implementations.Services
                         QuestionId = o.QuestionId,
                         Status = o.Status,
                     }).ToList()
-                }).ToListAsync();
+                }).ToList();
+           /* var questions = await _questionRepository.GetAllAsync(a => a.ModuleId == moduleId);
+
+               var req = questions.Select(question => new QuestionDTO
+                {
+                    Id = question.Id,
+                    QuestionText = question.QuestionText,
+                    Points = question.Points,
+                    ModuleId = question.ModuleId
+                }).ToList();*/
 
             if (questions.Count() == 0)
             {
@@ -170,7 +175,7 @@ namespace Persistence.Implementations.Services
             var module = await _moduleRepository.GetAsync(moduleId);
             return new QuestionsResponseModel
             {
-                Data = questions,
+                Data = req,
                 Message = $"Questions for {module.Name} retrieved successfully",
                 Status = true
             };

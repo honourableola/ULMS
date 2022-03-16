@@ -9,10 +9,9 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Integrations.Email;
+using Persistence.Integrations.MailKitModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.LearnerViewModel;
 
@@ -23,24 +22,25 @@ namespace Persistence.Implementations.Services
         //private readonly IPasswordHasher<User> _passwordHasher;
         private readonly ILearnerRepository _learnerRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IMailSender _mailSender;
-       // private readonly UserManager<User> _userManager;
+        private readonly IMailService _mailService;
+       //private readonly UserManager<User> _userManager;
         private readonly IIdentityService _identityService;
         private readonly IRoleRepository _roleRepository;
         
 
-        public LearnerService(ILearnerRepository learnerRepository, IUserRepository userRepository, IMailSender mailSender, UserManager<User> userManager, IIdentityService identityService, IRoleRepository roleRepository)
+        public LearnerService(ILearnerRepository learnerRepository, IUserRepository userRepository, /*UserManager<User> userManager,*/ IIdentityService identityService, IRoleRepository roleRepository, IMailService mailService)
         {
             _learnerRepository = learnerRepository;
             _userRepository = userRepository;
+            _mailService = mailService;
            // _passwordHasher = passwordHasher;
-            _mailSender = mailSender;
             //_userManager = userManager;
             _identityService = identityService;
             _roleRepository = roleRepository;
         }
         public async Task<BaseResponse> AddLearner(CreateLearnerRequestModel model)
         {
+            var usa = await _userRepository.GetAsync(a => a.Email == model.Email);
             var userExist = await _userRepository.ExistsAsync(a => a.Email == model.Email);
 
             if (userExist)
@@ -65,9 +65,10 @@ namespace Persistence.Implementations.Services
                 UserType = UserType.Learner,
                 HashSalt = salt,
             };
-            // var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6)}";
+            //var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6).ToUpper()}";
             var password = "password";
             user.PasswordHash = _identityService.GetPasswordHash(password, salt);
+            //user.PasswordHash = password;
             var learner = new Learner
             {
                 Id = Guid.NewGuid(),
@@ -97,7 +98,15 @@ namespace Persistence.Implementations.Services
             await _learnerRepository.SaveChangesAsync();
             await _userRepository.SaveChangesAsync();
 
-            //await _mailSender.SendWelcomeMail(user.Email, $"{user.FirstName} {user.LastName}", password);
+            var request = new WelcomeMail
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Password = password,
+                ToEmail = user.Email
+            };
+
+            await _mailService.SendWelcomeEmailAsync(request);
             return new BaseResponse
             {
                 Status = true,

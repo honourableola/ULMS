@@ -1,8 +1,5 @@
 ﻿using Domain.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.TopicViewModel;
 
@@ -16,6 +13,9 @@ namespace Domain.Interfaces.Services
         public Task<TopicResponseModel> GetTopic(Guid id);
         public Task<TopicsResponseModel> GetAllTopics();
         public Task<TopicsResponseModel> GetTopicsByModule(Guid moduleId);
+        public Task<TopicsResponseModel> GetTakenTopicsByModule(Guid moduleId);
+        public Task<TopicsResponseModel> GetNotTakenTopicsByModule(Guid moduleId);
         public Task<TopicsResponseModel> SearchTopicsByTitle(string searchText);
+        public bool IsAllModuleTopicsTaken(Guid moduleId);
     }
 }

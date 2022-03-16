@@ -1,0 +1,133 @@
+﻿
+@model Domain.Models.AdminViewModel.CreateAdminRequestModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Book";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class=" card col-md-6">
+            <div class="card-body ">
+                <div class="bg-light">
+                    <h1 class="tagcolor" style="color:mediumblue">Add Book</h1>
+                    <p class="tagcolor" style="color:mediumblue">Please fill in this form to add a book.</p>
+                    <hr class="tagcolor" style="color:mediumblue">
+
+                </div>
+                <form asp-action="Add" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-6">
+                            <label asp-for="FirstName" class="control-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label asp-for="LastName" class="control-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-6">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label asp-for="PhoneNumber" class="control-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-6">
+                            <label asp-for="PublicationDate" class="control-label"></label>
+                            <input asp-for="PublicationDate" class="form-control" />
+                            <span asp-validation-for="PublicationDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label asp-for="Language" class="control-label"></label>
+                            <input asp-for="Language" class="form-control" />
+                            <span asp-validation-for="Language" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-6">
+                            <label asp-for="NumberOfPages" class="control-label"></label>
+                            <input asp-for="NumberOfPages" class="form-control" />
+                            <span asp-validation-for="NumberOfPages" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="control-label">Select Image</label>
+                            <input name="file" type="file" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Select Image</label>
+                            <input name="pdf" type="file" class="form-control" />
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-sm-6">
+                            <label asp-for="AccessibilityStatus" class="control-label"></label>
+                            <select asp-for="AccessibilityStatus" class="form-control">
+                                Select User Type
+                                <option value="@BookAccessibilityStatus.FREE"> Free</option>
+                                <option value="@BookAccessibilityStatus.NOTFREE"> Not Free</option>
+                            </select>
+                            <span asp-validation-for="AccessibilityStatus" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label asp-for="AvailabilityStatus" class="control-label"></label>
+                            <select asp-for="AvailabilityStatus" class="form-control">
+                                Select User Type
+                                <option value="@BookAvailabilityStatus.AVAILABLE"> Available</option>
+                                <option value="@BookAvailabilityStatus.UNAVAILABLE"> Unavailable</option>
+                            </select>
+                            <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6" style="margin-top: 20px; font-size: larger; font-weight: bold; color: darkcyan">
+                            <label asp-for="Authors" class="control-label"></label>
+                            <select asp-for="Authors" class="form-control" asp-items="ViewBag.Authors" required multiple>
+                                <option value="">--Select Author--</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6" style="margin-top: 20px; font-size: larger; font-weight: bold; color: darkcyan">
+                            <label asp-for="Categories" class="control-label"></label>
+                            <select asp-for="Categories" class="form-control" asp-items="ViewBag.Categories" required multiple>
+                                <option value="">--Select Author--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <input href="#myModal" type="submit" value="Submit" class="btn btn-success trigger-btn col-sm-12" data-toggle="modal" />
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

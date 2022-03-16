@@ -1,6 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Entities;
 using Domain.Exceptions;
+using Domain.Interfaces.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.AssessmentViewModel;
 
@@ -21,45 +21,53 @@ namespace Persistence.Implementations.Services
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ICourseRepository _courseRepository;
         private readonly IQuestionRepository _questionRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICourseConstantService _courseConstantService;
-        public AssessmentService(IAssessmentRepository assessmentRepository, IHttpContextAccessor httpContextAccessor, ICourseRepository courseRepository, IQuestionRepository questionRepository, ICourseConstantService courseConstantService)
+        private readonly IModuleService _moduleService;
+        //private readonly IIdentityService _identityService;
+
+        public AssessmentService(IAssessmentRepository assessmentRepository,/* IHttpContextAccessor httpContextAccessor,*/ ICourseRepository courseRepository, IQuestionRepository questionRepository, ICourseConstantService courseConstantService, IModuleService moduleService /*IIdentityService identityService*/)
         {
             _assessmentRepository = assessmentRepository;
             _courseRepository = courseRepository;
             _questionRepository = questionRepository;
-            _httpContextAccessor = httpContextAccessor;
+            //_httpContextAccessor = httpContextAccessor;
             _courseConstantService = courseConstantService;
+            _moduleService = moduleService;
+           // _moduleRepository = moduleRepository;
+            //_identityService = identityService;
         }
 
-        public async Task<BaseResponse> GenerateAssessment(CreateAssessmentRequestModel model)
+        public async Task<BaseResponse> GenerateAssessment(Guid learnerId)
         {
-            var assessmentExist = await _assessmentRepository.GetAsync(a => a.Title.Equals(model.Title, StringComparison.OrdinalIgnoreCase));
-            if (assessmentExist != null)
+            var modules = await _moduleService.GetTakenModulesByLearnerWithNoAssessment(learnerId);
+            var courseConstant =  _courseConstantService.GetCourseConstant();
+            //var signedInUserId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+ 
+            foreach(var module in modules)
             {
-                throw new BadRequestException($"{assessmentExist.Title} already exist");
+                var assessment = new Assessment
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Assessment for " + module.Name,
+                    Description = $"This assessment tests the understanding of learner on {module.Name}",
+                    DurationInMinutes = courseConstant.DurationOfAssessment,
+                    ModuleId = module.Id
+                };
+                var questions = GenerateAssessmentQuestions(module.Id);
+                assessment.Questions = questions;
+
+                await _assessmentRepository.AddAsync(assessment);
+                await _assessmentRepository.SaveChangesAsync();
+                module.AssessmentGenerated = true;
+                await _assessmentRepository.SaveChangesAsync();
             }
-
-            var assessment = new Assessment
-            {
-                Id = Guid.NewGuid(),
-                Title = model.Title,
-                Description = model.Description,
-                InstructorId = Guid.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
-                DurationInMinutes = model.DurationInMinutes,
-                ModeuleId = model.ModeuleId               
-            };
-            var questions = GenerateAssessmentQuestions(model.ModeuleId);        
-            assessment.Questions = questions;
-
-            await _assessmentRepository.AddAsync(assessment);
-            await _assessmentRepository.SaveChangesAsync();
-
+                     
             return new BaseResponse
             {
-                Message = $"{assessmentExist.Title} generated successfully",
+                Message = $"assessments generated successfully",
                 Status = true
-            };
+            }; 
         }
 
         public async Task<BaseResponse> DeleteAssessment(Guid id)
@@ -87,8 +95,7 @@ namespace Persistence.Implementations.Services
                 {
                     Id = a.Id,
                     Description = a.Description,
-                    InstructorId = a.InstructorId,
-                    ModeuleId = a.ModeuleId,
+                    ModeuleId = a.ModuleId,
                     Title = a.Title,
                     DurationInMinutes = a.DurationInMinutes                   
                 }).ToListAsync();
@@ -124,8 +131,7 @@ namespace Persistence.Implementations.Services
                 {
                     Id = assessment.Id,
                     Description = assessment.Description,
-                    InstructorId = assessment.InstructorId,
-                    ModeuleId = assessment.ModeuleId,
+                    ModeuleId = assessment.ModuleId,
                     Title = assessment.Title,
                     DurationInMinutes = assessment.DurationInMinutes
                 },
@@ -143,8 +149,7 @@ namespace Persistence.Implementations.Services
                 {
                     Id = assessment.Id,
                     Description = assessment.Description,
-                    InstructorId = assessment.InstructorId,
-                    ModeuleId = assessment.ModeuleId,
+                    ModeuleId = assessment.ModuleId,
                     Title = assessment.Title,
                     DurationInMinutes = assessment.DurationInMinutes
                 }).ToListAsync();
@@ -158,7 +163,7 @@ namespace Persistence.Implementations.Services
             };
         }
 
-        public async Task<BaseResponse> UpdateAssessment(Guid id, UpdateAssessmentRequestModel model)
+        /*public async Task<BaseResponse> UpdateAssessment(Guid id, UpdateAssessmentRequestModel model)
         {
             var assessment = await _assessmentRepository.GetAsync(id);
             if (assessment == null)
@@ -166,7 +171,6 @@ namespace Persistence.Implementations.Services
                 throw new NotFoundException($"Assessment with id {id} not found");
             }
 
-            assessment.Description = model.Description;
             assessment.DurationInMinutes = model.DurationInMinutes;
 
             await _assessmentRepository.UpdateAsync(assessment);
@@ -177,7 +181,7 @@ namespace Persistence.Implementations.Services
                 Message = $"{assessment.Title} updated successfully",
                 Status = true
             };
-        }
+        }*/
 
         private List<Question> GenerateAssessmentQuestions(Guid moduleId)
         {

@@ -1,9 +1,6 @@
 ﻿using Domain.Multitenancy;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
@@ -21,6 +18,8 @@ namespace Domain.Entities
         public string ModuleVideo1 { get; set; }
         public string ModuleVideo2 { get; set; }
         public Assessment Assessment { get; set; }
+        public bool IsTaken { get; set; } = false;
+        public bool AssessmentGenerated { get; set; } = false;
         public string TenantId { get; set; }
         public ICollection<Topic> Topics { get; set; } = new List<Topic>();
     }

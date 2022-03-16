@@ -6,9 +6,7 @@ using Domain.Interfaces.Services;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.TopicViewModel;
 
@@ -79,7 +77,8 @@ namespace Persistence.Implementations.Services
                Title = n.Title,
                Content = n.Content,
                ModuleName = n.Module.Name,
-               ModuleId = n.ModuleId
+               ModuleId = n.ModuleId,
+               IsTaken = n.IsTaken
              
            }).ToListAsync();
 
@@ -104,6 +103,77 @@ namespace Persistence.Implementations.Services
         };
     }
 
+        public async Task<TopicsResponseModel> GetNotTakenTopicsByModule(Guid moduleId)
+        {
+            var topics = await _topicRepository.Query()
+                .Where(c => c.ModuleId == moduleId && c.IsTaken == false)
+                .Select(n => new TopicDTO
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Content = n.Content,
+                    ModuleName = n.Module.Name,
+                    ModuleId = n.ModuleId,
+                    IsTaken = n.IsTaken
+
+                }).ToListAsync();
+
+            if (topics == null)
+            {
+                throw new BadRequestException($"Topics not found");
+            }
+            else if (topics.Count == 0)
+            {
+                return new TopicsResponseModel
+                {
+                    Message = $" No Topic Found",
+                    Status = true
+                };
+            }
+            return new TopicsResponseModel
+            {
+                Data = topics,
+                Message = $"{topics.Count} Topics not yet completed retrieved successfully",
+                Status = true
+            };
+        }
+
+        public async Task<TopicsResponseModel> GetTakenTopicsByModule(Guid moduleId)
+        {
+            var topics = await _topicRepository.Query()
+                .Where(c => c.ModuleId == moduleId && c.IsTaken == true)
+                .Select(n => new TopicDTO
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Content = n.Content,
+                    ModuleName = n.Module.Name,
+                    ModuleId = n.ModuleId,
+                    IsTaken = n.IsTaken
+
+                }).ToListAsync();
+
+            if (topics == null)
+            {
+                throw new BadRequestException($"Topics not found");
+            }
+            else if (topics.Count == 0)
+            {
+                return new TopicsResponseModel
+                {
+                    Message = $" No Topic Found",
+                    Status = true
+                };
+
+            }
+            return new TopicsResponseModel
+            {
+                Data = topics,
+                Message = $"{topics.Count} Completed Topics retrieved successfully",
+                Status = true
+            };
+        }
+
         public async Task<TopicResponseModel> GetTopic(Guid id)
         {
             var topic = await _topicRepository.Query()
@@ -122,7 +192,8 @@ namespace Persistence.Implementations.Services
                     Title = topic.Title,
                     Content = topic.Content,
                     ModuleName = topic.Module.Name,
-                    ModuleId = topic.ModuleId
+                    ModuleId = topic.ModuleId,
+                    IsTaken = topic.IsTaken
 
                 },
                 Message = $"Topic retrieved successfully",
@@ -140,7 +211,8 @@ namespace Persistence.Implementations.Services
                     Title = n.Title,
                     Content = n.Content,
                     ModuleName = n.Module.Name,
-                    ModuleId = n.ModuleId
+                    ModuleId = n.ModuleId,
+                    IsTaken = n.IsTaken
                     
                 }).ToListAsync();
 
@@ -154,8 +226,7 @@ namespace Persistence.Implementations.Services
                 {              
                     Message = $" No Topic Found",
                     Status = true
-                };
-            
+                };          
 
         }
             return new TopicsResponseModel
@@ -164,6 +235,17 @@ namespace Persistence.Implementations.Services
                 Message = $"{topics.Count} Topics retrieved successfully",
                 Status = true
             };
+        }
+
+        public bool IsAllModuleTopicsTaken(Guid moduleId)
+        {
+            var isTaken = true;
+            var topics = _topicRepository.GetTopicsByModule(moduleId);
+            foreach(var topic in topics)
+            {
+                if (!topic.IsTaken) { isTaken = false; }
+            }
+            return isTaken;
         }
 
         public async Task<TopicsResponseModel> SearchTopicsByTitle(string searchText)
@@ -181,7 +263,8 @@ namespace Persistence.Implementations.Services
                 Title = n.Title,
                 Content = n.Content,
                 ModuleName = n.Module.Name,
-                ModuleId = n.ModuleId
+                ModuleId = n.ModuleId,
+                IsTaken = n.IsTaken
             }).ToList();
 
             return new TopicsResponseModel

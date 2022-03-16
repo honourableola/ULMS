@@ -6,9 +6,7 @@ using Domain.Interfaces.Services;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.OptionViewModel;
 
@@ -24,7 +22,7 @@ namespace Persistence.Implementations.Services
 
         public async Task<BaseResponse> AddOption(CreateOptionRequestModel model)
         {
-            var optionExist = _optionRepository.GetAsync(o => o.Label.Equals(model.Label, StringComparison.OrdinalIgnoreCase) && o.OptionText.Equals(model.OptionText, StringComparison.OrdinalIgnoreCase));
+            var optionExist = await _optionRepository.GetAsync(o => o.Label == model.Label && o.OptionText == model.OptionText);
             if(optionExist != null)
             {
                 throw new BadRequestException("Option already exist");

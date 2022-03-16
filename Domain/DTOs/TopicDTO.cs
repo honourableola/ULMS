@@ -1,9 +1,5 @@
 ﻿using Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.DTOs
 {
@@ -15,5 +11,6 @@ namespace Domain.DTOs
         public Guid ModuleId { get; set; }
         public string ModuleName { get; set; }
         public Module Module { get; set; }
+        public bool IsTaken { get; set; }
     }
 }

@@ -1,11 +1,7 @@
 ﻿using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.ModuleViewModel;
 
@@ -25,9 +21,9 @@ namespace ULMS.API.Controllers
 
         [Route("AddModule")]
         [HttpPost]
-        public async Task<IActionResult> AddModule([FromBody] CreateModuleRequestModel model, IFormFile image1, IFormFile image2, IFormFile pdf1, IFormFile pdf2, IFormFile videoFile1, IFormFile videoFile2)
+        public async Task<IActionResult> AddModule([FromBody] CreateModuleRequestModel model /*IFormFile image1, IFormFile image2, IFormFile pdf1, IFormFile pdf2, IFormFile videoFile1, IFormFile videoFile2*/)
         {
-            if (image1 != null || image2 != null)
+            /*if (image1 != null || image2 != null)
             {
                 string imageDirectory = Path.Combine(_webHostEnvironment.WebRootPath, "ModuleImages");
                 Directory.CreateDirectory(imageDirectory);
@@ -91,7 +87,7 @@ namespace ULMS.API.Controllers
                 }
                 model.ModuleVideo1 = moduleVideo1;
                 model.ModuleVideo2 = moduleVideo2;
-            }
+            }*/
             var response = await _moduleService.AddModule(model);
             return Ok(response);
         }

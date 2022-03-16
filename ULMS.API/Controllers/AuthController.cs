@@ -1,14 +1,11 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces.Identity;
 using Domain.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.LoginViewModel;
 
@@ -23,12 +20,15 @@ namespace ULMS.API.Controllers
         private readonly IConfiguration _configuration;
         // private readonly IMailSender _mailSender;
         private readonly ILogger<AuthController> _logger;
+
         public AuthController(IIdentityService identityService, IConfiguration configuration, UserManager<User> userManager, ILogger<AuthController> logger)
         {
-            _configuration = configuration;
-            _identityService = identityService;
-            _logger = logger;
+            //_userService = userService;
             _userManager = userManager;
+            _identityService = identityService;
+            _configuration = configuration;
+            _logger = logger;
+            //_mailSender = mailSender;
         }
         [HttpPost("token")]
         public async Task<IActionResult> Token([FromBody] LoginRequestModel model)

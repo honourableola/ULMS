@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32002.261
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5FED3990-A637-4749-9EDC-7182AE2FA8AE}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOC", "IOC\IOC.csproj", "{5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{5102A99D-F547-4799-919B-F9D24E52C6CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ULMS.API", "ULMS.API\ULMS.API.csproj", "{3D8C9EB2-9FBB-4289-9A0F-666CE78C37BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ULMS.API", "ULMS.API\ULMS.API.csproj", "{3D8C9EB2-9FBB-4289-9A0F-666CE78C37BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

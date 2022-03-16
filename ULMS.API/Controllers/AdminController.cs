@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.AdminViewModel;
 
@@ -23,30 +21,18 @@ namespace ULMS.API.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+
         [Route("AddAdmin")]
         [HttpPost]
-        public async Task<IActionResult> AddAdmin([FromBody] CreateAdminRequestModel model, IFormFile file)
+        public async Task<IActionResult> AddAdmin([FromHeader(Name = "Tenant")] string tenant, [FromBody]CreateAdminRequestModel model, IFormFile file)
         {
-            if (file != null)
-            {
-                string imageDirectory = Path.Combine(_webHostEnvironment.WebRootPath, "AdminImages");
-                Directory.CreateDirectory(imageDirectory);
-                string contentType = file.ContentType.Split('/')[1];
-                string adminImage = $"{Guid.NewGuid()}.{contentType}";
-                string fullPath = Path.Combine(imageDirectory, adminImage);
-                using (var fileStream = new FileStream(fullPath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-                model.AdminPhoto = adminImage;
-            }
-            var response = await _adminService.AddAdmin(model);
+            var response = await _adminService.AddAdmin(model, file);
             return Ok(response);
         }
 
         [Route("UploadAdminPicture/{adminId}")]
         [HttpPost]
-        public async Task<IActionResult> UploadAdminImage([FromRoute] Guid adminId, [FromBody] UpdateAdminPhotoRequestModel model, IFormFile file)
+        public async Task<IActionResult> UploadAdminImage([FromHeader(Name = "Tenant")] string tenant, [FromRoute] Guid adminId, IFormFile file)
         {
             if (file != null)
             {
@@ -59,10 +45,10 @@ namespace ULMS.API.Controllers
                 {
                     file.CopyTo(fileStream);
                 }
-                model.AdminPhoto = adminImage;
+                //model.AdminPhoto = adminImage;
             }
-            var response = await _adminService.UploadPhoto(adminId, model);
-            return Ok(response);
+            //var response = await _adminService.UploadPhoto(adminId, model);
+            return Ok();
         }
 
         [Route("UpdateAdmin/{id}")]

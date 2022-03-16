@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.ModuleViewModel;
 
@@ -17,10 +16,12 @@ namespace Persistence.Implementations.Services
     public class ModuleService : IModuleService
     {
         private readonly IModuleRepository _moduleRepository;
+        private readonly ICourseService _courseService;
 
-        public ModuleService(IModuleRepository moduleRepository)
+        public ModuleService(IModuleRepository moduleRepository, ICourseService courseService)
         {
             _moduleRepository = moduleRepository;
+            _courseService = courseService;
         }
         public async Task<BaseResponse> AddModule(CreateModuleRequestModel model)
         {
@@ -45,7 +46,6 @@ namespace Persistence.Implementations.Services
                 ModuleVideo1 = model.ModuleVideo1,
                 ModuleVideo2 = model.ModuleVideo2,
                 Created = DateTime.UtcNow
-
             };
 
             await _moduleRepository.AddAsync(module);
@@ -79,7 +79,7 @@ namespace Persistence.Implementations.Services
 
         public async Task<ModulesResponseModel> GetAllModules()
         {
-            var modules = await _moduleRepository.Query()
+            var modules = await _moduleRepository.Query().Include(m => m.Topics)
                .Select(n => new ModuleDTO
                {
                    Id = n.Id,
@@ -93,7 +93,8 @@ namespace Persistence.Implementations.Services
                    ModulePDF1 = n.ModulePDF1,
                    ModulePDF2 = n.ModulePDF2,
                    ModuleVideo1 = n.ModuleVideo1,
-                   ModuleVideo2 = n.ModuleVideo2,                  
+                   ModuleVideo2 = n.ModuleVideo2,  
+                   IsTaken = n.IsTaken,
                    Topics = n.Topics.Select(o => new TopicDTO
                    {
                        Id = o.Id,
@@ -125,6 +126,18 @@ namespace Persistence.Implementations.Services
             };
         }
 
+        public async Task<List<Module>> GetAllModulesByLearner(Guid learnerId)
+        {
+            var allModules = new List<Module>();
+            var courses = await _courseService.GetCoursesByLearner(learnerId);
+            foreach (var course in courses.Data)
+            {
+                var modules = await GetModulesByCourseP(course.Id);
+                allModules.AddRange(modules);
+            }
+            return allModules;
+        }
+
         public async Task<ModuleResponseModel> GetModule(Guid id)
         {
             var module = await _moduleRepository.Query()
@@ -152,6 +165,7 @@ namespace Persistence.Implementations.Services
                     ModulePDF2 = module.ModulePDF2,
                     ModuleVideo1 = module.ModuleVideo1,
                     ModuleVideo2 = module.ModuleVideo2,
+                    IsTaken = module.IsTaken,
                     Topics = module.Topics.Select(o => new TopicDTO
                     {
                         Id = o.Id,
@@ -159,8 +173,7 @@ namespace Persistence.Implementations.Services
                         ModuleId = o.ModuleId,
                         ModuleName = o.Module.Name,
                         Title = o.Title
-                    }).ToList()
-                
+                    }).ToList()                
                 },
                 Message = $"Module retrieved successfully",
                 Status = true
@@ -186,6 +199,7 @@ namespace Persistence.Implementations.Services
                     ModulePDF2 = n.ModulePDF2,
                     ModuleVideo1 = n.ModuleVideo1,
                     ModuleVideo2 = n.ModuleVideo2,
+                    IsTaken = n.IsTaken,
                     Topics = n.Topics.Select(o => new TopicDTO
                     {
                         Id = o.Id,
@@ -194,7 +208,6 @@ namespace Persistence.Implementations.Services
                         ModuleName = o.Module.Name,
                         Title = o.Title
                     }).ToList()
-
                 }).ToListAsync();
 
             if (modules == null)
@@ -210,7 +223,6 @@ namespace Persistence.Implementations.Services
                 };
             }
 
-
             return new ModulesResponseModel
             {
                 Data = modules,
@@ -219,14 +231,103 @@ namespace Persistence.Implementations.Services
             };
         }
 
+        private async Task<List<Module>> GetModulesByCourseP(Guid courseId)
+        {
+            var modules = await _moduleRepository.Query()
+                .Include(e => e.Course)
+                .Where(c => c.CourseId == courseId).ToListAsync();
+
+            if (modules == null)
+            {
+                throw new BadRequestException($"Modules not found");
+            }
+            return modules;
+        }
+
+        public async Task<ModulesResponseModel> GetNotTakenModulesByCourse(Guid courseId)
+        {
+            var modules = await _moduleRepository.Query()
+                 .Include(e => e.Course)
+                 .Where(c => c.CourseId == courseId && c.IsTaken == false)
+                 .Select(n => new ModuleDTO
+                 {
+                     Id = n.Id,
+                     Name = n.Name,
+                     Content = n.Content,
+                     CourseId = n.CourseId,
+                     CourseName = n.Course.Name,
+                     Description = n.Description,
+                     ModuleImage1 = n.ModuleImage1,
+                     ModuleImage2 = n.ModuleImage2,
+                     ModulePDF1 = n.ModulePDF1,
+                     ModulePDF2 = n.ModulePDF2,
+                     ModuleVideo1 = n.ModuleVideo1,
+                     ModuleVideo2 = n.ModuleVideo2,
+                     IsTaken = n.IsTaken,
+                     Topics = n.Topics.Select(o => new TopicDTO
+                     {
+                         Id = o.Id,
+                         Content = o.Content,
+                         ModuleId = o.ModuleId,
+                         ModuleName = o.Module.Name,
+                         Title = o.Title
+                     }).ToList()
+                 }).ToListAsync();
+
+            if (modules == null)
+            {
+                throw new BadRequestException($"Modules not found");
+            }
+            else if (modules.Count == 0)
+            {
+                return new ModulesResponseModel
+                {
+                    Message = $" No Module Found",
+                    Status = true
+                };
+            }
+
+            return new ModulesResponseModel
+            {
+                Data = modules,
+                Message = $"{modules.Count} Modules Not Yet Completed retrieved successfully",
+                Status = true
+            };
+        }
+
+        public async Task<List<Module>> GetTakenModulesByCourseWithNoAssessment(Guid courseId)
+        {
+            var modules = await _moduleRepository.Query()
+                 .Include(e => e.Course)
+                 .Where(c => c.CourseId == courseId && c.IsTaken == true && c.AssessmentGenerated == false).ToListAsync();
+                 
+            if (modules == null)
+            {
+                throw new BadRequestException($"Modules not found");
+            }
+
+            return modules;
+        }
+
+        public async Task<List<Module>> GetTakenModulesByLearnerWithNoAssessment(Guid learnerId)
+        {
+            var takenModules = new List<Module>();
+            var courses = await _courseService.GetCoursesByLearner(learnerId);
+            foreach(var course in courses.Data)
+            {
+                var modules = await GetTakenModulesByCourseWithNoAssessment(course.Id);
+                takenModules.AddRange(modules);
+            }
+            return takenModules;
+        }
+
         public async Task<ModulesResponseModel> SearchModulesByName(string searchText)
         {
             var modules = await _moduleRepository.SearchModuleByName(searchText);
             if (modules == null)
             {
                 throw new BadRequestException($"Modules not found");
-            }
-           
+            }          
 
             var modulesReturned = modules.Select(n => new ModuleDTO
             {
@@ -242,6 +343,7 @@ namespace Persistence.Implementations.Services
                 ModulePDF2 = n.ModulePDF2,
                 ModuleVideo1 = n.ModuleVideo1,
                 ModuleVideo2 = n.ModuleVideo2,
+                IsTaken = n.IsTaken,
                 Topics = n.Topics.Select(o => new TopicDTO
                 {
                     Id = o.Id,
@@ -252,7 +354,6 @@ namespace Persistence.Implementations.Services
                 }).ToList()
 
             }).ToList();
-
 
             return new ModulesResponseModel
             {

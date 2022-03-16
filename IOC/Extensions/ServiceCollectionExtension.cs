@@ -7,17 +7,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence.BackgroundTasks;
 using Persistence.Context;
 using Persistence.FileConfigurations.TemplateEngine;
 using Persistence.Identity;
 using Persistence.Implementations.Repositories;
 using Persistence.Implementations.Services;
 using Persistence.Integrations.Email;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ULMS.Infrastructure.IOC.Extensions
 {
@@ -81,6 +78,11 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<ICourseConstantService, CourseConstantService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IOptionService, OptionService>();
+            services.AddScoped<IAssessmentService, AssessmentService>();
+            services.AddTransient<IMailService, MailService>();
+            //services.AddScoped<IAssignmentService, AssignmentService>();
 
             return services;
         }
@@ -97,6 +99,9 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<IOptionRepository, OptionRepository>();
+            services.AddScoped<IAssessmentRepository, AssessmentRepository>();
 
 
             return services;
@@ -107,6 +112,14 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<IRazorEngine, RazorEngine>();
             return services;
 
+        }
+
+        public static IServiceCollection AddBackgroundTasks(this IServiceCollection services)
+        {
+
+            services.AddHostedService<SetModuleToTaken>();
+
+            return services;
         }
         public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
         {

@@ -1,9 +1,5 @@
 ﻿using Domain.DTOs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Models
 {
@@ -14,6 +10,7 @@ namespace Domain.Models
             public int MaximumNoOfMajorCourses { get; set; }
             public int MaximumNoOfAdditionalCourses { get; set; }
             public int NoOfAssessmentQuestions { get; set; }
+            public TimeSpan DurationOfAssessment { get; set; }
 
         }
 
@@ -21,6 +18,8 @@ namespace Domain.Models
         {
             public int MaximumNoOfMajorCourses { get; set; }
             public int MaximumNoOfAdditionalCourses { get; set; }
+            public int NoOfAssessmentQuestions { get; set; }
+            public TimeSpan DurationOfAssessment { get; set; }
         }
         public class CourseConstantResponseModel : BaseResponse
         {

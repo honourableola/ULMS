@@ -6,12 +6,12 @@ using Domain.Interfaces.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Integrations.Email;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.AdminViewModel;
 
@@ -19,24 +19,38 @@ namespace Persistence.Implementations.Services
 {
     public class AdminService : IAdminService
     {
-        private readonly IIdentityService _identityService;
+        //private readonly IIdentityService _identityService;
         private readonly IAdminRepository _adminRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly IMailSender _mailSender;
+        //private readonly IMailSender _mailSender;
 
-        public AdminService(IAdminRepository adminRepository, IUserRepository userRepository, IIdentityService identityService, IRoleRepository roleRepository, IMailSender mailSender)
+        public AdminService(IAdminRepository adminRepository, IUserRepository userRepository, /*IIdentityService identityService,*/ IRoleRepository roleRepository)//, IMailSender mailSender)
         {
             _adminRepository = adminRepository;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _identityService = identityService;
-            _mailSender = mailSender;
+            //_identityService = identityService;
+            //_mailSender = mailSender;
         }
 
-        public async Task<BaseResponse> AddAdmin(CreateAdminRequestModel model)
+        public async Task<BaseResponse> AddAdmin(CreateAdminRequestModel model, IFormFile file)
         {
-            var userExist = await _userRepository.ExistsAsync(u => u.Email.ToLower() == model.Email.ToLower());
+            string adminImage = "";
+            if (file != null)
+            {
+                var path = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\Persistence\\Images\\";
+                string imageDirectory = Path.Combine(path, "AdminImages");
+                Directory.CreateDirectory(imageDirectory);
+                string contentType = file.ContentType.Split('/')[1];
+                adminImage = $"{Guid.NewGuid()}.{contentType}";
+                string fullPath = Path.Combine(imageDirectory, adminImage);
+                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+            }
+                var userExist = await _userRepository.ExistsAsync(u => u.Email.ToLower() == model.Email.ToLower());
             if (userExist)
             {
                 throw new BadRequestException($"User with email {model.Email} already exist");
@@ -60,8 +74,8 @@ namespace Persistence.Implementations.Services
             };
             //var password = Guid.NewGuid().ToString().Substring(1, 6);
             var password = "password";
-            var passwordHash = _identityService.GetPasswordHash(password, salt);
-            user.PasswordHash = passwordHash;
+            //var passwordHash = _identityService.GetPasswordHash(password, salt);
+            user.PasswordHash = password;
 
             var admin = new Admin
             {
@@ -70,6 +84,7 @@ namespace Persistence.Implementations.Services
                 LastName = model.LastName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
+                AdminPhoto = adminImage,
                 UserId = user.Id,
                 User = user
             };
