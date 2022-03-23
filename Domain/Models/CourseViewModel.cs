@@ -16,8 +16,7 @@ namespace Domain.Models
 
         public class CourseRequestRequestModel
         {
-            public Guid courseId { get; set; }
-            public Guid LearnerId { get; set; }
+            public Guid CourseId { get; set; }
             public string RequestMessage { get; set; }
 
         }

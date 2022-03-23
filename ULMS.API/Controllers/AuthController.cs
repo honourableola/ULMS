@@ -28,13 +28,12 @@ namespace ULMS.API.Controllers
             _identityService = identityService;
             _configuration = configuration;
             _logger = logger;
-            //_mailSender = mailSender;
         }
         [HttpPost("token")]
         public async Task<IActionResult> Token([FromBody] LoginRequestModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            //var user = await _userService.GetUserAsync(model.Email);
+            
             if (user != null)
             {
                 var isValidPassword = await _userManager.CheckPasswordAsync(user, $"{model.Password}{user.HashSalt}");

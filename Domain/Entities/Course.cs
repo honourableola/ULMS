@@ -16,6 +16,7 @@ namespace Domain.Entities
         public ICollection<Module> Modules { get; set; } = new List<Module>();
         public ICollection<InstructorCourse> InstructorCourses { get; set; } = new List<InstructorCourse>();
         public ICollection<LearnerCourse> LearnerCourses { get; set; } = new List<LearnerCourse>();
-        
+        public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
+
     }
 }

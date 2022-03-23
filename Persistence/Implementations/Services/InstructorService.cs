@@ -20,15 +20,15 @@ namespace Persistence.Implementations.Services
     {
         private readonly IInstructorRepository _instructorRepository;
         private readonly IUserRepository _userRepository;
-        //private readonly IIdentityService _identityService;
+        private readonly IIdentityService _identityService;
         private readonly IRoleRepository _roleRepository;
         private readonly IMailService _mailService;
         //private readonly IMailSender _mailSender;
-        public InstructorService(IInstructorRepository instructorRepository, IUserRepository userRepository, /*IIdentityService identityService,*/ IRoleRepository roleRepository/*, IMailSender mailSender*/, IMailService mailService)
+        public InstructorService(IInstructorRepository instructorRepository, IUserRepository userRepository, IIdentityService identityService, IRoleRepository roleRepository/*, IMailSender mailSender*/, IMailService mailService)
         {
             _instructorRepository = instructorRepository;
             _userRepository = userRepository;
-            //_identityService = identityService;
+            _identityService = identityService;
             _roleRepository = roleRepository;
             _mailService = mailService;
         }
@@ -60,7 +60,7 @@ namespace Persistence.Implementations.Services
 
             //var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6)}";
             var password = "password";
-            //user.PasswordHash = _identityService.GetPasswordHash(password, salt);
+            user.PasswordHash = _identityService.GetPasswordHash(password, salt);
             var instructor = new Instructor
             {
                Id = Guid.NewGuid(),

@@ -23,7 +23,6 @@ namespace Persistence.Implementations.Services
         private readonly IAdminRepository _adminRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        //private readonly IMailSender _mailSender;
 
         public AdminService(IAdminRepository adminRepository, IUserRepository userRepository, /*IIdentityService identityService,*/ IRoleRepository roleRepository)//, IMailSender mailSender)
         {

@@ -1,6 +1,9 @@
-﻿using Domain.Interfaces.Services;
+﻿using Domain.Exceptions;
+using Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static Domain.Models.CourseViewModel;
 
@@ -11,9 +14,11 @@ namespace ULMS.API.Controllers
     public class CourseController : ControllerBase
     {
         private readonly ICourseService _courseService;
-        public CourseController(ICourseService courseService)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public CourseController(ICourseService courseService, IHttpContextAccessor contextAccessor)
         {
             _courseService = courseService;
+            _contextAccessor = contextAccessor; 
         }
 
         [Route("AddCourse")]
@@ -44,7 +49,17 @@ namespace ULMS.API.Controllers
         [HttpPost]
         public async Task<IActionResult> LearnerRequestForCourse(CourseRequestRequestModel model)
         {
-            var response = await _courseService.RequestForCourse(model);
+            Guid signedInUserId;
+            var signedInUser = _contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if(signedInUser == null)
+            {
+                throw new NotFoundException("User not signed In");
+            }
+            else
+            {
+                signedInUserId = Guid.Parse(signedInUser);
+            }
+            var response = await _courseService.RequestForCourse(model, signedInUserId);
             return Ok(response);
         }
 

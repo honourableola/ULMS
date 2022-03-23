@@ -40,6 +40,8 @@ namespace Persistence.Context
             modelBuilder.Entity<Admin>().HasQueryFilter(a => a.TenantId == TenantId);
             modelBuilder.Entity<CourseConstant>().HasQueryFilter(a => a.TenantId == TenantId);
             modelBuilder.Entity<CourseRequest>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<Assignment>().HasQueryFilter(a => a.TenantId == TenantId);
+            modelBuilder.Entity<LearnerAssignment>().HasQueryFilter(a => a.TenantId == TenantId);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -95,5 +97,7 @@ namespace Persistence.Context
         public DbSet<Question> Questions { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Result> Results { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<LearnerAssignment> LearnerAssignments { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Domain.Interfaces.Services
         public Task<CoursesResponseModel> GetActiveCourses();
         public Task<CoursesResponseModel> SearchCoursesByName(string searchText);
         public Task<CoursesResponseModel> GetAllCourses();
-        public Task<BaseResponse> RequestForCourse(CourseRequestRequestModel model);
+        public Task<BaseResponse> RequestForCourse(CourseRequestRequestModel model, Guid signedInUserId);
         public Task<BaseResponse> AssignCoursesToLearner(LearnerCourseAssignmentRequestModel model);
         public Task<BaseResponse> AssignCoursesToInstructor(InstructorCourseAssignmentRequestModel model);
         public Task<BaseResponse> ApproveCourseRequest(Guid id);

@@ -82,7 +82,8 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<IOptionService, OptionService>();
             services.AddScoped<IAssessmentService, AssessmentService>();
             services.AddTransient<IMailService, MailService>();
-            //services.AddScoped<IAssignmentService, AssignmentService>();
+            services.AddScoped<IAssignmentService, AssignmentService>();
+            services.AddScoped<IResultService, ResultService>();
 
             return services;
         }
@@ -102,6 +103,8 @@ namespace ULMS.Infrastructure.IOC.Extensions
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IOptionRepository, OptionRepository>();
             services.AddScoped<IAssessmentRepository, AssessmentRepository>();
+            services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+            services.AddScoped<IResultRepository, ResultRepository>();
 
 
             return services;

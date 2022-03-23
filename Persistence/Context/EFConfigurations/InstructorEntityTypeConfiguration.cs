@@ -14,7 +14,8 @@ namespace Persistence.Context.EFConfigurations
             builder.HasIndex(s => s.Email).IsUnique();
             builder.HasMany<InstructorCourse>(i => i.InstructorCourses)
                 .WithOne(d => d.Instructor)
-                .HasForeignKey(c => c.InstructorId);
+                .HasForeignKey(c => c.InstructorId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.Property(c => c.RowVersion)
                .IsRowVersion();
         }

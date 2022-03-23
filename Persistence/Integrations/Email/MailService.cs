@@ -4,6 +4,7 @@ using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Persistence.Integrations.MailKitModels;
+using Persistence.Integrations.MailKitModels.MailTemplates;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -164,6 +165,27 @@ namespace Persistence.Integrations.Email
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(request.ToEmail));
             email.Subject = $"Welcome {request.FirstName} {request.LastName}";
+            var builder = new BodyBuilder();
+            builder.HtmlBody = MailText;
+            email.Body = builder.ToMessageBody();
+            using var smtp = new SmtpClient();
+            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+            await smtp.SendAsync(email);
+            smtp.Disconnect(true);
+        }
+
+        public async Task SendAssignmentSuccessfullyAssignedToLearnerEmailAsync(AssignmentSuccessfullyAssigned request)
+        {
+            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\AssignmentSuccessfullyAssigned.html";
+            StreamReader str = new StreamReader(FilePath);
+            string MailText = str.ReadToEnd();
+            str.Close();
+            MailText = MailText.Replace("[username]", request.ToEmail).Replace("[email]", request.ToEmail).Replace("[assignmentnames]", request.AssignmentNames).Replace("[firstname]", request.FirstName).Replace("[lastname]", request.LastName);
+            var email = new MimeMessage();
+            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+            email.To.Add(MailboxAddress.Parse(request.ToEmail));
+            email.Subject = $"Assignments Notification";
             var builder = new BodyBuilder();
             builder.HtmlBody = MailText;
             email.Body = builder.ToMessageBody();

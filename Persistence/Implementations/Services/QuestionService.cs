@@ -136,7 +136,7 @@ namespace Persistence.Implementations.Services
 
         public async Task<QuestionsResponseModel> GetQuestionsByModule(Guid moduleId)
         {
-            var questions = await _questionRepository.GetAllAsync(a => a.ModuleId == moduleId);
+            var questions =  _questionRepository.GetQuestionsByModule(moduleId);
                 var req = questions.Select(question => new QuestionDTO
                 {
                     Id = question.Id,
@@ -176,7 +176,7 @@ namespace Persistence.Implementations.Services
             return new QuestionsResponseModel
             {
                 Data = req,
-                Message = $"Questions for {module.Name} retrieved successfully",
+                Message = $"{req.Count} Questions for {module.Name} retrieved successfully",
                 Status = true
             };
         }

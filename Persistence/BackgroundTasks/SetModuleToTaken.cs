@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+ 
 namespace Persistence.BackgroundTasks
 {
     public class SetModuleToTaken : BackgroundService
@@ -54,17 +54,10 @@ namespace Persistence.BackgroundTasks
                     var context3 = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                     var context4 = scope.ServiceProvider.GetRequiredService<IAssessmentService>();
 
-
-                    //var signedInUserId = _contextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier);
                     if(_contextAccessor.HttpContext?.User == null)
                     {
                         _logger.LogInformation($"No Module is due for returning");
                     }
-                    //var signedInUserId = _contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    /*if (signedInUserId == null)
-                    {
-                        _logger.LogInformation($"No Module is due for returning");
-                    }*/
                     else
                     {
                         var signedInUserId = _contextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -72,7 +65,7 @@ namespace Persistence.BackgroundTasks
                         var modules = await context.GetAllModulesByLearner(learnerId);
                         if (modules == null)
                         {
-                            _logger.LogInformation($"No Module is due for returning");
+                            _logger.LogInformation($"No Module is due for ");
                         }
                         foreach (var module in modules)
                         {

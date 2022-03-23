@@ -16,6 +16,11 @@ namespace Persistence.Implementations.Repositories
             _context = context;
         }
 
+        public async Task<Learner> GetLearnerByEmail(string email)
+        {
+            return await _context.Learners.SingleOrDefaultAsync(l => l.Email == email);
+        }
+
         public async Task<IList<Learner>> GetLearnersByCourse(Guid courseId)
         {
             return await _context.Learners

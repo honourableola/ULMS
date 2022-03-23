@@ -10,5 +10,6 @@ namespace Domain.Interfaces.Repositories
         Task<IEnumerable<Learner>> GetSelectedLearners(IList<Guid> ids);
         Task<IList<Learner>> GetLearnersByCourse(Guid courseId);
         Task<IEnumerable<Learner>> SearchLearnersByName(string searchText);
+        Task<Learner> GetLearnerByEmail(string email);
     }
 }

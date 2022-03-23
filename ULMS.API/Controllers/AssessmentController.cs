@@ -1,7 +1,10 @@
-﻿using Domain.Interfaces.Services;
+﻿using Domain.Interfaces.Repositories;
+using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static Domain.Models.AssessmentViewModel;
 
@@ -12,19 +15,30 @@ namespace ULMS.API.Controllers
     public class AssessmentController : ControllerBase
     {
         private readonly IAssessmentService _assessmentService;
-        public AssessmentController(IAssessmentService assessmentService)
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IUserRepository _userRepository;
+        private readonly ILearnerRepository _learnerRepository;
+        public AssessmentController(IAssessmentService assessmentService, IHttpContextAccessor contextAccessor, IUserRepository userRepository, ILearnerRepository learnerRepository)
         {
             _assessmentService = assessmentService;
+            _contextAccessor = contextAccessor;
+            _userRepository = userRepository;
+            _learnerRepository = learnerRepository;
         }
 
-        /*[Authorize]
+        [Authorize]
         [Route("GenerateAssessment")]
         //[Authorize(Roles = "instructor")]
-        [HttpPost]      
+        [HttpPost]
         public async Task<IActionResult> GenerateAssessment()
         {
-            return Ok(await _assessmentService.GenerateAssessment(model));
-        }*/
+            var signedInUserId = Guid.Parse(_contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var user = await _userRepository.GetUserById(signedInUserId);
+            var learner = await _learnerRepository.GetLearnerByEmail(user.Email);
+
+            var response = await _assessmentService.GenerateAssessment(learner.Id);
+            return Ok(response);
+        }
 
         [Route("DeleteAssessment/{id}")]
         [HttpDelete]

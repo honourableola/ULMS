@@ -14,6 +14,5 @@ namespace Domain.Entities
         public Result Result { get; set; }
         public List<Question> Questions { get; set; } = new List<Question>();
         public string TenantId { get; set; }
-
     }
 }

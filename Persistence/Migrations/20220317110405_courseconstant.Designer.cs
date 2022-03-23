@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Context;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220317110405_courseconstant")]
+    partial class courseconstant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,72 +132,6 @@ namespace Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Assessments");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Assignment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AssignmentContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AssignmentPdfUpload")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("InstructorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("LearnerScore")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ResponseContent")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResponsePdfUpload")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<string>("TenantId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("InstructorId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -478,6 +414,8 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CourseId");
+
                     b.HasIndex("InstructorId");
 
                     b.ToTable("InstructorCourses");
@@ -543,51 +481,6 @@ namespace Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Learners");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LearnerAssignment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AssignmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LearnerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TenantId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LearnerId");
-
-                    b.ToTable("LearnerAssignments");
                 });
 
             modelBuilder.Entity("Domain.Entities.LearnerCourse", b =>
@@ -1070,25 +963,6 @@ namespace Persistence.Migrations
                     b.Navigation("Module");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Assignment", b =>
-                {
-                    b.HasOne("Domain.Entities.Course", "Course")
-                        .WithMany("Assignments")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Instructor", "Instructor")
-                        .WithMany("Assignments")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Instructor");
-                });
-
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
                     b.HasOne("Domain.Entities.Category", "Category")
@@ -1134,7 +1008,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Course", "Course")
                         .WithMany("InstructorCourses")
-                        .HasForeignKey("InstructorId")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1158,25 +1032,6 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LearnerAssignment", b =>
-                {
-                    b.HasOne("Domain.Entities.Assignment", "Assignment")
-                        .WithMany("LearnerAssignments")
-                        .HasForeignKey("LearnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Learner", "Learner")
-                        .WithMany("LearnerAssignments")
-                        .HasForeignKey("LearnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assignment");
-
-                    b.Navigation("Learner");
                 });
 
             modelBuilder.Entity("Domain.Entities.LearnerCourse", b =>
@@ -1291,11 +1146,6 @@ namespace Persistence.Migrations
                     b.Navigation("Result");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Assignment", b =>
-                {
-                    b.Navigation("LearnerAssignments");
-                });
-
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
                     b.Navigation("Courses");
@@ -1303,8 +1153,6 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
-                    b.Navigation("Assignments");
-
                     b.Navigation("InstructorCourses");
 
                     b.Navigation("LearnerCourses");
@@ -1316,16 +1164,12 @@ namespace Persistence.Migrations
                 {
                     b.Navigation("Assessments");
 
-                    b.Navigation("Assignments");
-
                     b.Navigation("InstructorCourses");
                 });
 
             modelBuilder.Entity("Domain.Entities.Learner", b =>
                 {
                     b.Navigation("CourseRequests");
-
-                    b.Navigation("LearnerAssignments");
 
                     b.Navigation("LearnerCourses");
                 });

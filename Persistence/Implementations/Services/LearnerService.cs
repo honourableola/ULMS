@@ -65,8 +65,8 @@ namespace Persistence.Implementations.Services
                 UserType = UserType.Learner,
                 HashSalt = salt,
             };
-            //var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6).ToUpper()}";
-            var password = "password";
+            var password = $"ULMS{Guid.NewGuid().ToString().Substring(1, 6).ToUpper()}";
+            //var password = "password";
             user.PasswordHash = _identityService.GetPasswordHash(password, salt);
             //user.PasswordHash = password;
             var learner = new Learner

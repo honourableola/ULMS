@@ -207,6 +207,7 @@ namespace Persistence.Implementations.Services
 
             for(int i = 0; i < courseConstant.NoOfAssessmentQuestions; i++)
             {
+                questions[ids[i]].QuestionNumber = i + 1;
                 assessmentQuestions.Add(questions[ids[i]]);
             }
             return assessmentQuestions;

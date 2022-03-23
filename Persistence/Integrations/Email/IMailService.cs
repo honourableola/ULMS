@@ -1,5 +1,6 @@
 ﻿
 using Persistence.Integrations.MailKitModels;
+using Persistence.Integrations.MailKitModels.MailTemplates;
 using System.Threading.Tasks;
 
 namespace Persistence.Integrations.Email
@@ -12,6 +13,7 @@ namespace Persistence.Integrations.Email
         Task SendSuccessfulCourseRequestApprovalEmailAsync(CourseRequestApproval request);
         Task SendCourseRequestRejectionEmailAsync(CourseRequestRejection request);
         Task SendSuccessfulCourseAssignmentToLearnerEmailAsync(SuccessfulCourseAssignmentToLearner request);
+        Task SendAssignmentSuccessfullyAssignedToLearnerEmailAsync(AssignmentSuccessfullyAssigned request);
         Task SendSuccessfulCourseAssignmentToInstructorEmailAsync(SuccessfulCourseAssignmentToInstructor request);
     }
 }
