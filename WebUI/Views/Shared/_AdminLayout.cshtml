@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <title>EEducation Master Template</title>
+    <!-- META TAGS -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="EEducation master is one of the best eEducational html template, it's suitable for all eEducation websites like university,college,school,online eEducation,tution center,distance eEducation,computer eEducation">
+    <meta name="keyword" content="eEducation html template, university template, college template, school template, online eEducation template, tution center template">
+    <!-- FAV ICON(BROWSER TAB ICON) -->
+    <link rel="shortcut icon" href="~/edu/images/fav.ico" type="image/x-icon">
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700%7CJosefin+Sans:600,700" rel="stylesheet">
+    <!-- FONTAWESOME ICONS -->
+    <link rel="stylesheet" href="~/edu/css/font-awesome.min.css">
+    <!-- ALL CSS FILES -->
+    <link href="~/edu/css/materialize.css" rel="stylesheet">
+    <link href="~/edu/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/edu/css/style.css" rel="stylesheet" />
+    <!-- RESPONSIVE.CSS ONLY FOR MOBILE AND TABLET VIEWS -->
+    <link href="~/edu/css/style-mob.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+	<script src="js/html5shiv.js"></script>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+    <!--== MAIN CONTRAINER ==-->
+    <div class="container-fluid sb1">
+        <div class="row">
+            <!--== LOGO ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6 sb1-1">
+                <a href="#" class="btn-close-menu"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <a href="#" class="atab-menu"><i class="fa fa-bars tab-menu" aria-hidden="true"></i></a>
+                <a href="index-2.html" class="logo"><img src="~/edu/images/logo1.png" alt="" />
+                </a>
+            </div>
+            <!--== SEARCH ==-->
+            <div class="col-md-6 col-sm-6 mob-hide">
+                <form class="app-search">
+                    <input type="text" placeholder="Search..." class="form-control">
+                    <a href="#"><i class="fa fa-search"></i></a>
+                </form>
+            </div>
+            <!--== NOTIFICATION ==-->
+            <div class="col-md-2 tab-hide">
+                <div class="top-not-cen">
+                    <a class='waves-effect btn-noti' href="admin-all-enquiry.html" title="all enquiry messages"><i class="fa fa-commenting-o" aria-hidden="true"></i><span>5</span></a>
+                    <a class='waves-effect btn-noti' href="admin-course-enquiry.html" title="course booking messages"><i class="fa fa-envelope-o" aria-hidden="true"></i><span>5</span></a>
+                    <a class='waves-effect btn-noti' href="admin-admission-enquiry.html" title="admission enquiry"><i class="fa fa-tag" aria-hidden="true"></i><span>5</span></a>
+                </div>
+            </div>
+            <!--== MY ACCCOUNT ==-->
+            <div class="col-md-2 col-sm-3 col-xs-6">
+                <!-- Dropdown Trigger -->
+                <a class='waves-effect dropdown-button top-user-pro' href='#' data-activates='top-menu'><img src="images/user/6.png" alt="" />My Account <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </a>
+
+                <!-- Dropdown Structure -->
+                <ul id='top-menu' class='dropdown-content top-menu-sty'>
+                    <li><a href="admin-panel-setting.html" class="waves-effect"><i class="fa fa-cogs" aria-hidden="true"></i>Admin Setting</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li><a href="#" class="ho-dr-con-last waves-effect"><i class="fa fa-sign-in" aria-hidden="true"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--== BODY CONTNAINER ==-->
+    <div class="container-fluid sb2">
+        <div class="row">
+            <div class="sb2-1">
+                <!--== USER INFO ==-->
+                <div class="sb2-12">
+                    <ul>
+                        <li><img src="~/edu/images/placeholder.jpg" alt="">
+                        </li>
+                        <li>
+                            <h5>Victoria Baker <span> Santa Ana, CA</span></h5>
+                        </li>
+                        <li></li>
+                    </ul>
+                </div>
+                <!--== LEFT MENU ==-->
+                <div class="sb2-13">
+                    <ul class="collapsible" data-collapsible="accordion">
+                        <li><a href="admin.html" class="menu-active"><i class="fa fa-bar-chart" aria-hidden="true"></i> Profile</a>                          
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a asp-controller="Admin" asp-action="ViewAdminProfile">View Profile</a>
+                                    </li>
+                                    <li><a asp-controller="Admin" asp-action="UpdateAdmin">Update Profile</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+						<li><a href="admin-setting.html"><i class="fa fa-cogs" aria-hidden="true"></i>Default Settings</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a asp-controller="CourseConstant" asp-action="AddSettings">View System Settings</a>
+                                    </li>
+                                    <li><a asp-controller="CourseConstant" asp-action="UpdateSettings">Update System Settings</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> Administrators</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a asp-controller="Admin" asp-action="ViewAllAdmins">View All Administrators</a>
+                                    </li>
+                                    <li><a asp-controller="Admin" asp-action="AddAdmin">Add Admin</a>
+                                    </li>
+                                    <li><a asp-controller="Admin" asp-action="UpdateAdmin">Update Admin</a>
+                                    </li>
+                                    <li><a asp-controller="Admin" asp-action="ViewAdminProfile">View Profile</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Categories</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a href="admin-all-courses.html">View All Course Categories</a>
+                                    </li>
+                                    <li><a href="admin-add-courses.html">Add New Course Category</a>
+                                    </li>
+                                    <li><a href="admin-trash-courses.html">Delete Course c</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> All Courses</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a href="admin-all-courses.html">All Course</a>
+                                    </li>
+                                    <li><a href="admin-add-courses.html">Add New Course</a>
+                                    </li>
+                                    <li><a href="admin-trash-courses.html">Trash Course</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Instructors</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a href="admin-all-courses.html">View All Instructors</a>
+                                    </li>
+                                    <li><a asp-controller="Instructor" asp-action="AddInstructor">Add New Instructor</a>
+                                    </li>
+                                    <li><a href="admin-trash-courses.html">Remove Instructor</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Learners</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a href="admin-all-courses.html">View All Learners</a>
+                                    </li>
+                                    <li><a asp-controller="Learner" asp-action="AddLearner">Add New Learner</a>
+                                    </li>
+                                    <li><a href="admin-trash-courses.html">Remove Learner</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Requests</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a href="admin-all-courses.html">View All Course Requests</a>
+                                    </li>
+                                    <li><a href="admin-add-courses.html">Add New Instructor</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                       
+                    </ul>
+                </div>
+            </div>
+
+            <!--== BODY INNER CONTAINER ==-->
+            <div class="container-fluid">
+     <main role="main" class="pb-3">
+           @RenderBody()
+      </main>
+   </div>
+
+        </div>
+    </div>
+
+    <!--Import jQuery before materialize.js-->
+    <script src="~/edu/js/main.min.js"></script>
+    <script src="~/edu/js/bootstrap.min.js"></script>
+    <script src="~/edu/js/materialize.min.js"></script>
+    <script src="~/edu/js/custom.js"></script>
+</body>
+
+
+</html>

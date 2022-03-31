@@ -13,6 +13,8 @@ namespace Domain.DTOs
         public string ResponseContent { get; set; }
         public string ResponsePdfUpload { get; set; }
         public double LearnerScore { get; set; }
+        public Guid InstructorId { get; set; }
+        public Instructor Instructor { get; set; }
         public Guid CourseId { get; set; }
         public string CourseName { get; set; }
         public Course Course { get; set; }

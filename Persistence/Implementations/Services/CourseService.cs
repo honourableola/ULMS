@@ -27,16 +27,18 @@ namespace Persistence.Implementations.Services
         private readonly IInstructorRepository _instructorRepository;
         private readonly ICourseConstantService _courseConstantService;
         private readonly IMailService _mailService;
+        private readonly ICategoryRepository _categoryRepository;
        // private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserRepository _userRepository;
 
-        public CourseService(ICourseRepository courseRepository, IUserRepository userRepository,ILearnerRepository learnerRepository, IInstructorRepository instructorRepository, ICourseConstantService courseConstantService,  IMailService mailService/*, IHttpContextAccessor contextAccessor*/)
+        public CourseService(ICourseRepository courseRepository, IUserRepository userRepository,ILearnerRepository learnerRepository, IInstructorRepository instructorRepository, ICourseConstantService courseConstantService,  IMailService mailService, ICategoryRepository categoryRepository)
         {
             _courseRepository = courseRepository;
             _learnerRepository = learnerRepository;
             _instructorRepository = instructorRepository;
             _courseConstantService = courseConstantService;
             _mailService = mailService;
+            _categoryRepository = categoryRepository;
             //_contextAccessor = contextAccessor;
             _userRepository = userRepository;
         }
@@ -47,6 +49,13 @@ namespace Persistence.Implementations.Services
             if (courseExist)
             {
                 throw new BadRequestException($"{model.Name} already exist and cannot be added");
+            }
+
+            var categoryExist = await _categoryRepository.ExistsAsync(model.CategoryId);
+
+            if (!categoryExist)
+            {
+                throw new BadRequestException($"category with Id {model.CategoryId} does NOT exist");
             }
 
             var course = new Course
@@ -745,6 +754,10 @@ namespace Persistence.Implementations.Services
 
             var noOfExistingMajorCourses = await _courseRepository.GetNoOfLearnerMajorCourses(model.LearnerId);
             var courseConstant = _courseConstantService.GetCourseConstant();
+            if (courseConstant == null)
+            {
+                throw new NotFoundException($"Kindly populate the constants table to assign a course to a learner");
+            }
 
             if ((noOfExistingMajorCourses + selectedCourses.Count()) > courseConstant.MaximumNoOfMajorCourses)
             {

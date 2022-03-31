@@ -15,7 +15,7 @@ namespace Domain.Models
         {
             public string Name { get; set; }
             public string AssignmentContent { get; set; }
-            public IFormFile PdfUpload { get; set; }
+            //public IFormFile PdfUpload { get; set; }
             public Guid CourseId { get; set; }          
         }
 

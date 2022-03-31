@@ -78,6 +78,13 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetAssignmentById/{assignmentId}")]
+        public async Task<IActionResult> GetAssignmentById([FromRoute] Guid assignmentId)
+        {
+            var response = await _assignmentService.GetAssignmentById(assignmentId);
+            return Ok(response);
+        }
+
         [HttpPost("AssignAssignmentsToLearner")]
         public async Task<IActionResult> AssignAssignmentsToLearner([FromBody] AssignAssignmentRequestModel model)
         {

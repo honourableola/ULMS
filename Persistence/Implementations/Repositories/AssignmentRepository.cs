@@ -21,17 +21,22 @@ namespace Persistence.Implementations.Repositories
         public async Task<LearnerAssignment> AddLearnerAssignment(LearnerAssignment learnerAssignment)
         {
             await _context.LearnerAssignments.AddAsync(learnerAssignment);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             return learnerAssignment;
         }
 
-       
+        public async Task<Assignment> GetAssignmentByNameAndCourseId(string name, Guid courseId)
+        {
+            var assignment = await _context.Assignments.SingleOrDefaultAsync(a => a.Name.ToLower() == name.ToLower() && a.CourseId == courseId);
+            return assignment;
+        }
+
         public async Task<List<Assignment>> GetInstructorAssignmentsToBeGradedByCourse(Guid courseId, Guid instructorId)
         {
             var assignments = await _context.LearnerAssignments
                 .Include(a => a.Learner)
                 .Include(a => a.Assignment)
-                .Where(a => a.Assignment.CreatedBy == instructorId.ToString()
+                .Where(a => a.Assignment.InstructorId == instructorId
                 && a.Assignment.CourseId == courseId
                 && a.Status == AssignmentStatus.Submitted)
                 .Select(a => a.Assignment)
@@ -47,6 +52,7 @@ namespace Persistence.Implementations.Repositories
             return learnerAssignment;
         }
 
+        
         public async Task<List<Assignment>> GetLearnerAssignments(Guid learnerId)
         {
             var assignments = await _context.LearnerAssignments
@@ -87,6 +93,7 @@ namespace Persistence.Implementations.Repositories
         {
             var assignments = await _context.Assignments
                 .Include(a => a.Course)
+                .Include(a => a.Instructor)
                 .Where(a => ids.Contains(a.Id))
                 .ToListAsync();
             return assignments;

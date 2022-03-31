@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Multitenancy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class LearnerAssignment : BaseEntity
+    public class LearnerAssignment : BaseEntity, ITenant
     {
         public Guid LearnerId { get; set; }
         public Guid AssignmentId { get; set; }

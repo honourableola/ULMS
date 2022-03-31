@@ -12,6 +12,7 @@ namespace Domain.Interfaces.Repositories
     {
         Task<List<Assignment>> GetLearnerAssignmentsByCourseAndStatus(Guid learnerId, Guid courseId, AssignmentStatus status);
         Task<List<Assignment>> GetLearnerAssignments(Guid learnerId);
+        Task<Assignment> GetAssignmentByNameAndCourseId(string name, Guid courseId);
         Task<LearnerAssignment> GetLearnerAssignmentById(Guid learnerId, Guid assignmentId);
         Task<List<Assignment>> GetSelectedAssignments(List<Guid> ids);
         Task<LearnerAssignment> AddLearnerAssignment(LearnerAssignment learnerAssignment);

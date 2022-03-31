@@ -73,7 +73,6 @@ namespace Persistence.Context
                         entry.CurrentValues[IsDeletedProperty] = true;
                         break;
 
-
                 }
             }
             this.AddAuditInfo();

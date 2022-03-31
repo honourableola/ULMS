@@ -20,7 +20,7 @@ namespace ULMS.API.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        [Authorize]
+        //[Authorize]
         [Route("AddLearner")]
         [HttpPost]
         public async Task<IActionResult> AddLearner([FromBody] CreateLearnerRequestModel model)
@@ -67,7 +67,7 @@ namespace ULMS.API.Controllers
             return Ok(response);
         }
 
-        [Authorize]
+        //[Authorize]
         [Route("GetAllLearners")]
         [HttpGet]
         public async Task<IActionResult> GetAllLearners()

@@ -478,6 +478,8 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CourseId");
+
                     b.HasIndex("InstructorId");
 
                     b.ToTable("InstructorCourses");
@@ -1134,14 +1136,14 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Course", "Course")
                         .WithMany("InstructorCourses")
-                        .HasForeignKey("InstructorId")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Instructor", "Instructor")
                         .WithMany("InstructorCourses")
                         .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");

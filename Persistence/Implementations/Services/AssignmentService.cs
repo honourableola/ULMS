@@ -33,7 +33,6 @@ namespace Persistence.Implementations.Services
             _learnerRepository = learnerRepository;
             _userRepository = userRepository;
             _mailService = mailService;
-
         }
 
         //Upload of AssignmentPDF during creation
@@ -48,7 +47,7 @@ namespace Persistence.Implementations.Services
             }
 
             var selectedAssignments = await _assignmentRepository.GetSelectedAssignments(model.AssignmentIds);
-            var alreadyAssigned = await GetAssignmentsByLearner(learner.Id);
+            //var alreadyAssigned = await GetAssignmentsByLearner(learner.Id);
             if(selectedAssignments == null || selectedAssignments.Count == 0)
             {
                 throw new NotFoundException("Selected assignemnts not found");
@@ -57,12 +56,15 @@ namespace Persistence.Implementations.Services
             int noOfDuplicatedAssignments = 0;
             var successfullyAssigned = new List<Assignment>();
             foreach (var assignment in selectedAssignments)
-            {
-                if (alreadyAssigned.Data.Any(c => c.Id == assignment.Id))
+            {               
+                /*if (alreadyAssigned.Data != null)
                 {
-                    noOfDuplicatedAssignments++;
-                    continue;
-                }
+                    bool existing = alreadyAssigned.Data.Any(c => c.Id == assignment.Id);
+                    if (existing)
+                    {
+                        continue;
+                    }                   
+                }*/
                 var learnerAssignment = new LearnerAssignment
                 {
                     Assignment = assignment,
@@ -73,6 +75,10 @@ namespace Persistence.Implementations.Services
                 };
                 successfullyAssigned.Add(assignment);
                 await _assignmentRepository.AddLearnerAssignment(learnerAssignment);
+                /*if (alreadyAssigned.Data.Any(c => c.Id == assignment.Id))
+                {
+                    noOfDuplicatedAssignments++;
+                }*/
             }
             await _assignmentRepository.SaveChangesAsync();
             var assignmentNames = SelectedAssignmentsNames(successfullyAssigned);
@@ -111,8 +117,8 @@ namespace Persistence.Implementations.Services
                 throw new BadRequestException($"Course with Id {model.CourseId} selected does not exist");
             }
 
-            var assignmentExist = await _assignmentRepository.GetAsync(a => a.Name.ToLower().Equals(model.Name) && a.CourseId == model.CourseId);
-            if(assignmentExist == null)
+            var assignmentExist = await _assignmentRepository.GetAssignmentByNameAndCourseId(model.Name, model.CourseId);
+            if(assignmentExist != null)
             {
                 throw new BadRequestException($"Assignment {model.Name} already exist and cannot be created");
             }
@@ -122,7 +128,7 @@ namespace Persistence.Implementations.Services
                 Name = model.Name,
                 AssignmentContent = model.AssignmentContent,
                 CourseId = model.CourseId,
-                CreatedBy = instructor.Id.ToString()
+                InstructorId = instructor.Id
             };
             await _assignmentRepository.AddAsync(assignment);
             await _assignmentRepository.SaveChangesAsync();
@@ -161,7 +167,7 @@ namespace Persistence.Implementations.Services
             }
             var assigments = await _assignmentRepository.Query()
                 .Include(a => a.Course)
-                .Where(a => a.CreatedBy == instructor.Id.ToString() && a.CourseId == courseId).Select(a => new AssignmentDTO
+                .Where(a => a.InstructorId == instructor.Id && a.CourseId == courseId).Select(a => new AssignmentDTO
                 {
                     Id = a.Id,
                     AssignmentContent = a.AssignmentContent,
@@ -230,6 +236,7 @@ namespace Persistence.Implementations.Services
         {
             var assignment = await _assignmentRepository.Query()
                 .Include(a => a.Course)
+                .Include(a => a.Instructor)
                 .SingleOrDefaultAsync(a => a.Id == assignmentId);
             if (assignment == null)
             {
@@ -253,8 +260,7 @@ namespace Persistence.Implementations.Services
                 },
                 Message = $"Assignment retrieved successsfully",
                 Status = true
-            };
-        
+            };      
         }
 
         public async Task<AssignmentsResponseModel> GetAssignmentsByCourse(Guid courseId)
@@ -267,6 +273,7 @@ namespace Persistence.Implementations.Services
 
             var assignments = await _assignmentRepository.Query()
                 .Include(a => a.Course)
+                .Include(a => a.Instructor)
                 .Where(a => a.CourseId == courseId)
                 .ToListAsync();
             if (assignments == null || assignments.Count == 0)
@@ -304,7 +311,8 @@ namespace Persistence.Implementations.Services
 
             var assignments = await _assignmentRepository.Query()
                 .Include(a => a.Course)
-                .Where(a => a.CreatedBy == instructorId.ToString())
+                .Include(a => a.Instructor)
+                .Where(a => a.InstructorId == instructorId)
                 .ToListAsync();
             if (assignments == null || assignments.Count == 0)
             {
@@ -337,7 +345,12 @@ namespace Persistence.Implementations.Services
             var assignments = await _assignmentRepository.GetLearnerAssignments(learnerId);
             if (assignments == null || assignments.Count == 0)
             {
-                throw new BadRequestException($"Assignments not found");
+                return new AssignmentsResponseModel
+                {
+                    Data = null,
+                    Message = $"No Assignments currently found for learner {learnerId}",
+                    Status = true
+                };
             }
             var assignmentsReturned = assignments.Select(a => new AssignmentDTO
             {

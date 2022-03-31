@@ -29,7 +29,6 @@ namespace Persistence.BackgroundTasks
         private readonly ILogger<SetModuleToTaken> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-
         public SetModuleToTaken(IServiceScopeFactory serviceScopeFactory, IOptions<SetModuleToTakenConfig> configuration, ILogger<SetModuleToTaken> logger, IHttpContextAccessor contextAccessor)
         {
             _serviceScopeFactory = serviceScopeFactory;
@@ -42,7 +41,7 @@ namespace Persistence.BackgroundTasks
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation($"Background Hosted Service for {nameof(SetModuleToTaken)}  is starting");
+           _logger.LogInformation($"Background Hosted Service for {nameof(SetModuleToTaken)}  is starting");
             while (!stoppingToken.IsCancellationRequested)
             {
                 var now = DateTime.UtcNow;
