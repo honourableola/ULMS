@@ -4,7 +4,17 @@ namespace WebUI.Controllers
 {
     public class CategoryController : Controller
     {
-        public IActionResult Index()
+        public IActionResult AddCategory()
+        {
+            return View();
+        }
+
+        public IActionResult UpdateCategory()
+        {
+            return View();
+        }
+
+        public IActionResult ViewAllCategories()
         {
             return View();
         }

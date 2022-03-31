@@ -1,6 +1,6 @@
 ﻿ @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Courses";
+    ViewData["Title"] = "Options";
 }
 
  
@@ -10,7 +10,7 @@
                     <ul>
                         <li><a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
                         </li>
-                        <li class="active-bre"><a href="#"> Courses</a>
+                        <li class="active-bre"><a href="#"> Options</a>
                         </li>
                         <li class="page-back"><a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
                         </li>
@@ -23,7 +23,7 @@
                         <div class="col-md-12">
                             <div class="box-inn-sp">
                                 <div class="inn-title">
-									<h4>All Courses</h4>
+									<h4>All Options</h4>
                                     <p>All about students like name, student id, phone, email, country, city and more</p>
                                 </div>
                                 <div class="tab-inn">
@@ -32,8 +32,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>S/No.</th>
-													<th>Name</th>
-                                                    <th>Category</th>
+													<th>Label</th>
+                                                    <th>Option</th>
 													<th>View Details</th>
 													<th>Edit</th>
 													<th>Delete</th>
@@ -45,68 +45,57 @@
                                                     <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
 													<td>Admissions Information 2018</td>
                                                
-													<td><a asp-controller="Course" asp-action="ViewCourseDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
+													<td><a asp-controller="Option" asp-action="ViewOptionDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
                                                     <td>
-                                                       <a asp-controller="Course" asp-action="UpdateCourse" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
+                                                       <a asp-controller="Option" asp-action="UpdateOption" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
                                                     </td>
-													<td><a asp-controller="Course" asp-action="" style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
+													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>1</td>
                                                     <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
 													<td>Admissions Information 2018</td>
                                                
-													<td><a asp-controller="Course" asp-action="ViewCourseDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
+													<td><a asp-controller="Option" asp-action="ViewOptionDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
                                                     <td>
-                                                       <a asp-controller="Course" asp-action="UpdateCourse" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
+                                                       <a asp-controller="Option" asp-action="UpdateOption" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
                                                     </td>
-													<td><a asp-controller="Course" asp-action="" style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
+													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>1</td>
                                                     <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
 													<td>Admissions Information 2018</td>
                                                
-													<td><a asp-controller="Course" asp-action="ViewCourseDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
+													<td><a asp-controller="Option" asp-action="ViewOptionDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
                                                     <td>
-                                                       <a asp-controller="Course" asp-action="UpdateCourse" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
+                                                       <a asp-controller="Option" asp-action="UpdateOption" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
                                                     </td>
-													<td><a asp-controller="Course" asp-action="" style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
+													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>1</td>
                                                     <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
 													<td>Admissions Information 2018</td>
                                                
-													<td><a asp-controller="Course" asp-action="ViewCourseDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
+													<td><a asp-controller="Option" asp-action="ViewOptionDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
                                                     <td>
-                                                       <a asp-controller="Course" asp-action="UpdateCourse" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
+                                                       <a asp-controller="Option" asp-action="UpdateOption" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
                                                     </td>
-													<td><a asp-controller="Course" asp-action="" style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
+													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
                                                 </tr>
                                                 <tr>
                                                     <td>1</td>
                                                     <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
 													<td>Admissions Information 2018</td>
                                                
-													<td><a asp-controller="Course" asp-action="ViewCourseDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
+													<td><a asp-controller="Option" asp-action="ViewOptionDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
                                                     <td>
-                                                       <a asp-controller="Course" asp-action="UpdateCourse" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
+                                                       <a asp-controller="Option" asp-action="UpdateOption" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
                                                     </td>
-													<td><a asp-controller="Course" asp-action="" style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
+													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
                                                 </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
-													<td>Admissions Information 2018</td>
-                                               
-													<td><a asp-controller="Course" asp-action="ViewCourseDetails" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
-                                                    <td>
-                                                       <a asp-controller="Course" asp-action="UpdateCourse" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
-                                                    </td>
-													<td><a asp-controller="Course" asp-action="" style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
-                                                </tr>
-                                               
+                                              
                                             </tbody>
                                         </table>
                                     </div>

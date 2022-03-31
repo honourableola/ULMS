@@ -4,7 +4,22 @@ namespace WebUI.Controllers
 {
     public class ModuleController : Controller
     {
-        public IActionResult Index()
+        public IActionResult AddModule()
+        {
+            return View();
+        }
+
+        public IActionResult UpdateModule()
+        {
+            return View();
+        }
+
+        public IActionResult ViewModuleDetails()
+        {
+            return View();
+        }
+
+        public IActionResult ViewAllModules()
         {
             return View();
         }

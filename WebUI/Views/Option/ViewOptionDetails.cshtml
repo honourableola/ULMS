@@ -1,6 +1,6 @@
 ﻿ @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Admin DashBoard";
+    ViewData["Title"] = "Option Details";
 }
 
 <div class="sb2-2">
@@ -9,7 +9,7 @@
                     <ul>
                         <li><a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
                         </li>
-                        <li class="active-bre"><a href="#">Add Option</a>
+                        <li class="active-bre"><a href="#">Option Deatails</a>
                         </li>
                         <li class="page-back"><a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
                         </li>
@@ -22,46 +22,31 @@
                         <div class="col-md-12">
 						<div class="box-inn-sp admin-form">
                                 <div class="inn-title">
-                                    <h4>Add  an Option</h4>
+                                    <h4>Option Information</h4>
                                     <p>Provide the following details to add a new Option</p>
                                 </div>
                                 <div class="tab-inn">
                                     <form>
                                         <div class="row">
                                             <div class="input-field col s6">
-                                                <input type="text" value="" class="validate" required>
+                                                <input type="text" value="" class="validate" disabled>
                                                 <label class="">Label</label>
                                             </div>
                                             <div class="input-field col s6">
-                                                <input type="number" value="" class="validate" required>
+                                                <input type="text" value="" class="validate" disabled>
                                                 <label class="">Option</label>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s6">
-                                                <select>
-									  <option value="" disabled selected>Select Status</option>
-									  <option value="1">Active</option>
-									  <option value="2">De-Active</option>
-									  <option value="3">Delete</option>
-									</select>
+                                          <input type="text" value="" class="validate" disabled>
                                                 <label class="">Status</label>
                                             </div>
                                              <div class="input-field col s6">
-                                                <select>
-									  <option value="" disabled selected>Select Question</option>
-									  <option value="1">Active</option>
-									  <option value="2">De-Active</option>
-									  <option value="3">Delete</option>
-									</select>
+                                                <input type="text" value="" class="validate" disabled>
                                                 <label class="">Question</label>
                                             </div>
                                         </div>                                
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input type="submit" class="waves-button-input"></i>
-                                            </div>
-                                        </div>
                                     </form>
                                 </div>
                             </div>

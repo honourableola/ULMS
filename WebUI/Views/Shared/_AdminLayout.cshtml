@@ -119,33 +119,7 @@
                                     </li>
                                     <li><a asp-controller="Admin" asp-action="AddAdmin">Add Admin</a>
                                     </li>
-                                    <li><a asp-controller="Admin" asp-action="UpdateAdmin">Update Admin</a>
-                                    </li>
                                     <li><a asp-controller="Admin" asp-action="ViewAdminProfile">View Profile</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Categories</a>
-                            <div class="collapsible-body left-sub-menu">
-                                <ul>
-                                    <li><a href="admin-all-courses.html">View All Course Categories</a>
-                                    </li>
-                                    <li><a href="admin-add-courses.html">Add New Course Category</a>
-                                    </li>
-                                    <li><a href="admin-trash-courses.html">Delete Course c</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> All Courses</a>
-                            <div class="collapsible-body left-sub-menu">
-                                <ul>
-                                    <li><a href="admin-all-courses.html">All Course</a>
-                                    </li>
-                                    <li><a href="admin-add-courses.html">Add New Course</a>
-                                    </li>
-                                    <li><a href="admin-trash-courses.html">Trash Course</a>
                                     </li>
                                 </ul>
                             </div>
@@ -153,11 +127,9 @@
                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Instructors</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a href="admin-all-courses.html">View All Instructors</a>
+                                    <li><a asp-controller="Instructor" asp-action="ViewAllInstructors">View All Instructors</a>
                                     </li>
                                     <li><a asp-controller="Instructor" asp-action="AddInstructor">Add New Instructor</a>
-                                    </li>
-                                    <li><a href="admin-trash-courses.html">Remove Instructor</a>
                                     </li>
                                 </ul>
                             </div>
@@ -165,21 +137,44 @@
                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Learners</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a href="admin-all-courses.html">View All Learners</a>
+                                    <li><a asp-controller="Learner" asp-action="ViewAllLearners">View All Learners</a>
                                     </li>
                                     <li><a asp-controller="Learner" asp-action="AddLearner">Add New Learner</a>
-                                    </li>
-                                    <li><a href="admin-trash-courses.html">Remove Learner</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
+                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Categories</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a asp-controller="Category" asp-action="ViewAllCategories">View All Course Categories</a>
+                                    </li>
+                                    <li><a asp-controller="Category" asp-action="AddCategory">Add New Course Category</a>
+                                    </li>
+                                
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> All Courses</a>
+                            <div class="collapsible-body left-sub-menu">
+                                <ul>
+                                    <li><a asp-controller="Course" asp-action="ViewAllCourses">All Course</a>
+                                    </li>
+                                    <li><a asp-controller="Course" asp-action="AddCourse">Add New Course</a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                        
                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Requests</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a href="admin-all-courses.html">View All Course Requests</a>
+                                    <li><a href="admin-all-courses.html">View Pending Course Requests</a>
                                     </li>
-                                    <li><a href="admin-add-courses.html">Add New Instructor</a>
+                                     <li><a href="admin-all-courses.html">View Approved Course Requests</a>
+                                    </li>
+                                    <li><a href="admin-add-courses.html">View Rejected Course Requests</a>
                                     </li>
                                 </ul>
                             </div>

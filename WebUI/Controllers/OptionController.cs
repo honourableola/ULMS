@@ -4,7 +4,22 @@ namespace WebUI.Controllers
 {
     public class OptionController : Controller
     {
-        public IActionResult Index()
+        public IActionResult AddOption()
+        {
+            return View();
+        }
+
+        public IActionResult UpdateOption()
+        {
+            return View();
+        }
+
+        public IActionResult ViewOptionDetails()
+        {
+            return View();
+        }
+
+        public IActionResult ViewAllOptions()
         {
             return View();
         }

@@ -14,6 +14,11 @@ namespace WebUI.Controllers
             return View();
         }
 
+        public IActionResult UpdateLearner()
+        {
+            return View();
+        }
+
         public IActionResult ViewAllLearners()
         {
             return View();

@@ -4,12 +4,27 @@ namespace WebUI.Controllers
 {
     public class CourseController : Controller
     {
-        public IActionResult Index()
+        public IActionResult AddCourse()
         {
             return View();
         }
 
-        public IActionResult allCourses()
+        public IActionResult CourseList()
+        {
+            return View();
+        }
+
+        public IActionResult UpdateCourse()
+        {
+            return View();
+        }
+
+        public IActionResult ViewAllCourses()
+        {
+            return View();
+        }
+
+        public IActionResult ViewCourseDetails()
         {
             return View();
         }
