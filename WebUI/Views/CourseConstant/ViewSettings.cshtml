@@ -1,5 +1,51 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Admin DashBoard";
 }
+<div class="sb2-2">
+<div style="font-size:15px"  class="tab-content">
+                        <div id="home" class="tab-pane fade active in">
+                            <div class="box-inn-sp">
+                                <div class="inn-title">
+                                    <h4>Default Settings</h4>
+                                    <p>Airtport Hotels The Right Way To Start A Short Break Holiday</p>
+                                </div>
+                                <div class="bor">
+                                    <form>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <input id="list-title" type="text" value="Marine Engineering" class="validate">
+                                                <label for="list-title" class="">Course Name</label>
+                                            </div>
+                                            <div class="input-field col s12">
+                                                <input id="list-name" type="text" value="John Smith" class="validate">
+                                                <label for="list-name">Contact Person</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <textarea class="materialize-textarea">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.</textarea>
+                                                <label>Course Descriptions:</label>
+                                            </div>
+                                        </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <select>
+									  <option value="" disabled selected>Select Status</option>
+									  <option value="1">Active</option>
+									  <option value="2">De-Active</option>
+									  <option value="3">Delete</option>
+									</select>
+                                                </div>
+                                            </div>
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input type="submit" class="waves-button-input" value="Submit"></i>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

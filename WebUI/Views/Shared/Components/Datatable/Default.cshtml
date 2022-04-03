@@ -1,0 +1,197 @@
+﻿@model WebUI.Models.Components.DatatableComponentModel;
+
+@if (Model.ShouldShowGeneralFilter || Model.ShouldShowExtraFilterControls || Model.SupportsMultiselectActions)
+{
+
+        <!--begin: Search Form -->
+        @if (Model.ShouldShowGeneralFilter || Model.ShouldShowExtraFilterControls)
+        {
+            <div class="form-inline">
+              
+                    @if (Model.ShouldShowGeneralFilter)
+                    {
+                        <label for="filter" class="mr-sm-2">Search:</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" 
+                                       name="filter" 
+                                       placeholder="@Model.GeneralFilterPlaceholder" 
+                                       id="filter">
+                        
+                    }
+                    @if (Model.ShouldShowExtraFilterControls)
+                    {
+                        @foreach (var pair in Model.FilterControlsPartials)
+                        {
+                            <partial name="@pair.Key"
+                                     model="@pair.Value" />
+                        }
+                    }
+                
+            </div>
+
+        }
+        <!--end: Search Form -->
+        <!--begin: Selected Rows Group Action Form -->
+        @if (Model.SupportsMultiselectActions)
+        {
+            <div class="kt-form kt-form--label-align-right kt-margin-t-20 collapse" id="kt_datatable_group_action_form">
+                <div class="row align-items-center">
+                    <div class="col-xl-12">
+                        <div class="kt-form__group kt-form__group--inline">
+                            <div class="kt-form__label kt-form__label-no-wrap">
+                                <label class="kt-font-bold kt-font-danger-">
+                                    Selected
+                                    <span id="kt_datatable_selected_number">0</span> records:
+                                </label>
+                            </div>
+                            @foreach (var pair in Model.SelectedRowsActionButtonsPartials)
+                            {
+                                <partial name="@pair.Key" model="@pair.Value" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <!--end: Selected Rows Group Action Form -->
+    
+}
+<div class="kt-portlet__body kt-portlet__body--fit">
+
+    <!--begin: Datatable -->
+    <div class="kt-datatable" id="@Model.DatatableId"></div>
+
+    <!--end: Datatable -->
+</div>
+
+<script>
+    var token = localStorage.getItem("authToken");
+    // initialize the datatable when the page is loaded
+    window.addEventListener('DOMContentLoaded',
+        function() {
+            (function($) {
+                var datatable = $('#@Model.DatatableId').KTDatatable({
+                    // datasource definition
+                    data: {
+                        type: 'remote',
+                        source: {
+                            read: {
+                                url: '@Model.DataLoadUrl',
+                                method: 'GET',
+                                contentType: 'application/json',
+                                headers: { 'Authorization': 'Bearer ' +token },
+                                map: function(raw) {
+                                    // sample data mapping
+                                    var dataSet = raw;
+                                    if (typeof raw.data !== 'undefined') {
+                                        dataSet = raw.data;
+                                    }
+                                    return dataSet;
+                                },
+                            },
+                        },
+                        pageSize: @Model.PageSize,
+                        serverPaging: @Model.ServerPaging.ToString().ToLowerInvariant(),
+                        serverFiltering: @Model.ServerFiltering.ToString().ToLowerInvariant(),
+                        serverSorting: @Model.ServerSorting.ToString().ToLowerInvariant()
+                    },
+
+                    // layout definition
+                    layout: {
+                        scroll: !0,
+                        height: 550,
+                        footer: !1
+                    },
+
+                    // column sorting
+                    sortable: true,
+
+                    pagination: true,
+                    @if (Model.ShouldShowGeneralFilter)
+                    {
+                        <text>
+                            search:
+                            {
+                                input: $('#filter')
+                            },
+                        </text>
+                    }
+                    // columns definition
+                    columns: [
+                        @foreach (var column in Model.Columns)
+                        {
+                            <text>
+                                {
+                                    field: '@column.FieldName',
+                                    title: '@column.Title',
+                                    @if (!column.IsSortable)
+                                    {
+                                        @:sortable: false,
+                                    }
+                                    @if (column.Width != 0)
+                                    {
+                                        @:width: '@column.Width',
+                                    }
+                                    @if (column.Type != null)
+                                    {
+                                        @:type: '@column.Type',
+                                    }
+                                    @if (column.CssClass != null)
+                                    {
+                                        @:selector: { class: '@column.CssClass' },
+                                    }
+                                    @if (column.TextAlign != null)
+                                    {
+                                        @:textAlign: '@column.TextAlign',
+                                    }
+                                    @if (column.Format != null)
+                                    {
+                                        @:format: '@column.Format',
+                                    }
+                                    @if (!column.ShouldAutoHide)
+                                    {
+                                        @:autoHide: false,
+                                        @:overflow: 'visible',
+                                    }
+                                    @if (column.Template != null)
+                                    {
+                                        <text>
+                                    template: function(row) {
+                                        @Html.Raw(column.Template)
+                                    },
+                                        </text>
+                                    }
+                                },
+                            </text>
+                        }
+                    ]
+                });
+                @if (Model.SupportsMultiselectActions)
+                {
+                    <text>
+                        datatable.on(
+                            'kt-datatable--on-check kt-datatable--on-uncheck kt-datatable--on-layout-updated',
+                            function(e) {
+                                var checkedNodes = datatable.rows('.kt-datatable__row--active').nodes();
+                                var count = checkedNodes.length;
+                                $('#kt_datatable_selected_number').html(count);
+                                if (count > 0) {
+                                    $('#kt_datatable_group_action_form').collapse('show');
+                                } else {
+                                    $('#kt_datatable_group_action_form').collapse('hide');
+                                }
+                            });
+                    </text>
+                }
+
+                var event = new CustomEvent('DatatableReady.@Model.DatatableId',
+                    {
+                        detail: {
+                            datatable: datatable
+                        }
+                    });
+
+                @*//the event listeners will listen to the DatatableReady event and *@
+                window.dispatchEvent(event);
+            })(jQuery);
+        });
+</script>

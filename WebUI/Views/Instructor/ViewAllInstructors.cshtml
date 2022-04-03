@@ -1,119 +1,93 @@
-﻿ @{
+﻿@using Microsoft.Extensions.Configuration;
+@inject IConfiguration configuration; 
+@using WebUI.Models.Components
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Admin DashBoard";
+    ViewBag.Title = "Instructors";
+
+    var apiBaseUrl = configuration.GetValue<string>("ApiBaseUrl");
+    var instructorData = apiBaseUrl + "/" + "api" + "/" + "Instructor" + "/" + "GetAllInstructors" + "/" + "data";
+    // initialize datatable
+    const string datatableId = "instructorsDataTable";
+    var dataLoadUrl = instructorData;
+    var columns = new List<DatatableComponentModelColumn>
+    {
+        new DatatableComponentModelColumn
+        {
+            FieldName = "id",
+            Title = "#",
+            IsSortable = false,
+            Width = 20,
+            Type = "number",
+            CssClass = "kt-checkbox--solid",
+            TextAlign = "center"
+        },
+        new DatatableComponentModelColumn
+        {
+            FieldName = "firstName",
+            Title = "FirstName"
+        },
+        new DatatableComponentModelColumn
+        {
+            FieldName = "lastName",
+            Title = "LastName"
+        },
+        new DatatableComponentModelColumn
+        {
+            FieldName = "actions",
+            Title = "Actions",
+            IsSortable = false,
+            Width = 100,
+            ShouldAutoHide = false,
+            Template = @"return '\
+                                <input type=""hidden"" value=' +
+                            row.courses +
+                            ' />\
+                                <a href=""/religions/edit/' +
+                            row.id +
+                            '"" class=""btn btn-sm btn-clean btn-icon btn-icon-md"" title=""Review"">\
+                                    <i class=""la la-edit""></i>\
+                                </a>\
+                            ';"
+        }
+    };
 }
-
- 
-   <div class="sb2-2">
-                <!--== breadcrumbs ==-->
-                <div class="sb2-2-2">
-                    <ul>
-                        <li><a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
-                        </li>
-                        <li class="active-bre"><a href="#"> Instructors</a>
-                        </li>
-                        <li class="page-back"><a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!--== User Details ==-->
-                <div class="sb2-2-3">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="box-inn-sp">
-                                <div class="inn-title">
-									<h4>All Instructors</h4>
-                                    <p>All about students like name, student id, phone, email, country, city and more</p>
-                                </div>
-                                <div class="tab-inn">
-                                    <div class="table-responsive table-desi">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>S/No.</th>
-													<th>Image</th>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-													<th>View Details</th>
-													<th>Edit</th>
-													<th>Delete</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
-													<td>Admissions Information 2018</td>
-                                                    <td>21 June 2018</td>
-													<td><a asp-controller="Instructor" asp-action="InstructorProfile" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
-                                                    <td>
-                                                       <a asp-controller="Instructor" asp-action="UpdateInstructor" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
-                                                    </td>
-													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
-													<td>Admissions Information 2018</td>
-                                                    <td>21 June 2018</td>
-													<td><a asp-controller="Instructor" asp-action="InstructorProfile" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
-                                                    <td>
-                                                       <a asp-controller="Instructor" asp-action="UpdateInstructor" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
-                                                    </td>
-													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
-													<td>Admissions Information 2018</td>
-                                                    <td>21 June 2018</td>
-													<td><a asp-controller="Instructor" asp-action="InstructorProfile" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
-                                                    <td>
-                                                       <a asp-controller="Instructor" asp-action="UpdateInstructor" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
-                                                    </td>
-													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
-													<td>Admissions Information 2018</td>
-                                                    <td>21 June 2018</td>
-													<td><a asp-controller="Instructor" asp-action="InstructorProfile" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
-                                                    <td>
-                                                       <a asp-controller="Instructor" asp-action="UpdateInstructor" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
-                                                    </td>
-													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
-													<td>Admissions Information 2018</td>
-                                                    <td>21 June 2018</td>
-													<td><a asp-controller="Instructor" asp-action="InstructorProfile" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
-                                                    <td>
-                                                       <a asp-controller="Instructor" asp-action="UpdateInstructor" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
-                                                    </td>
-													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><span class="list-img"><img src="~/edu/images/course/sm-1.jpg" alt=""></span></td>
-													<td>Admissions Information 2018</td>
-                                                    <td>21 June 2018</td>
-													<td><a asp-controller="Instructor" asp-action="InstructorProfile" style="background-color:blue" href="admin-event-edit.html" class="ad-st-view">View Details</a></td>
-                                                    <td>
-                                                       <a asp-controller="Instructor" asp-action="UpdateInstructor" style="background-color:green" href="admin-event-edit.html" class="ad-st-view">Edit</a>
-                                                    </td>
-													<td><a style="background-color:red" href="admin-event-edit.html" class="ad-st-view">Delete</a></td>
-                                                </tr>
-                                               
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!-- begin:: Content -->
+<div class="kt-container  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-success flaticon2-open-text-book"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Instructors
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-wrapper">
+                    <a asp-action="AddInstructor" class="btn btn-clean btn-icon-sm">
+                        <i class="la la-plus"></i>
+                        Add Instructor
+                    </a>
+                    &nbsp;
                 </div>
             </div>
+        </div>
+
+        <vc:datatable datatable-id="@datatableId"
+                      url="@dataLoadUrl"
+                      columns="@columns"
+                      action-controls="@null"
+                      filter-controls="@null"
+                      page-size="10"
+                      server-filtering="true"
+                      server-sorting="false"
+                      server-paging="true"
+                      filter-placeholder="Instructor FirstName"></vc:datatable>
+    </div>
+</div>
+
+<!-- end:: Content -->
+  

@@ -9,7 +9,7 @@ namespace WebUI.Controllers
             return View();
         }
 
-        public IActionResult CourseList()
+        public IActionResult CoursesList()
         {
             return View();
         }
