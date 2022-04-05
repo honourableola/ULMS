@@ -7,7 +7,7 @@
     ViewBag.Title = "Instructors";
 
     var apiBaseUrl = configuration.GetValue<string>("ApiBaseUrl");
-    var instructorData = apiBaseUrl + "/" + "api" + "/" + "Instructor" + "/" + "GetAllInstructors" + "/" + "data";
+    var instructorData = apiBaseUrl + "/" + "api" + "/" + "Instructor" + "/" + "Data";
     // initialize datatable
     const string datatableId = "instructorsDataTable";
     var dataLoadUrl = instructorData;

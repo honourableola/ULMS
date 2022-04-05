@@ -105,7 +105,7 @@
 						<li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Modules</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Module" asp-action="ViewAllModules">Voew All Modules</a>
+                                    <li><a asp-controller="Module" asp-action="ViewAllModules">View All Modules</a>
                                     </li>
                                      <li><a asp-controller="Module" asp-action="AddModule">Add Module</a>
                                     </li>
@@ -119,29 +119,33 @@
                                     <li><a asp-controller="Topic" asp-action="ViewAllTopics">View All Topics</a>
                                     </li>
                                     <li><a asp-controller="Topic" asp-action="AddTopic">Add Topic</a>
-                                    </li>
-                                   
+                                    </li>                 
                                 </ul>
                             </div>
                         </li>
                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Questions Bank</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Question" asp-action="ViewAllQuestions">View All Questions</a>
+                                    <li>
+                                        <a asp-controller="Question" asp-action="ViewAllQuestions">View All Questions</a>
                                     </li>
-                                    <li><a asp-controller="Question" asp-action="AddQuestion">Add New Question</a>
+                                    <li>
+                                        <a asp-controller="Question" asp-action="AddQuestion">Add New Question</a>
                                     </li>
-                                    <li><a asp-controller="Option" asp-action="ViewAllOptions">View All Learners</a>
+                                    <li>
+                                        <a asp-controller="Option" asp-action="ViewAllOptions">View All Options</a>
                                     </li>
-                                    <li><a asp-controller="Option" asp-action="AddOption">Add New Learner</a>
+                                    <li>
+                                        <a asp-controller="Option" asp-action="AddOption">Add New Option</a>
                                     </li>
+
                                 </ul>
                             </div>
                         </li>
                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>My Courses</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Course" asp-action="CoursesList">View Assigned Courses</a>
+                                    <li><a asp-controller="Course" asp-action="MyAssignedCourses">View Assigned Courses</a>
                                     </li>
                                  
                                 </ul>
@@ -150,38 +154,15 @@
                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>My Assignments</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Assignment" asp-action="ViewAllCategories">View All Course Categories</a>
+                                    <li><a asp-controller="Assignment" asp-action="ViewAllCategories">View All Assignments</a>
                                     </li>
-                                    <li><a asp-controller="Assignment" asp-action="AddCategory">Add New Course Category</a>
+                                    <li><a asp-controller="Assignment" asp-action="AddAssignment">Add New Assignment</a>
                                     </li>
                                 
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> All Courses</a>
-                            <div class="collapsible-body left-sub-menu">
-                                <ul>
-                                    <li><a asp-controller="Course" asp-action="CoursesList">All Course</a>
-                                    </li>
-                                    <li><a asp-controller="Course" asp-action="AddCourse">Add New Course</a>
-                                    </li>
-                                    
-                                </ul>
-                            </div>
-                        </li>
                         
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Requests</a>
-                            <div class="collapsible-body left-sub-menu">
-                                <ul>
-                                    <li><a href="admin-all-courses.html">View Pending Course Requests</a>
-                                    </li>
-                                     <li><a href="admin-all-courses.html">View Approved Course Requests</a>
-                                    </li>
-                                    <li><a href="admin-add-courses.html">View Rejected Course Requests</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
                        
                     </ul>
                 </div>

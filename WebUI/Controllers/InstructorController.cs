@@ -4,6 +4,15 @@ namespace WebUI.Controllers
 {
     public class InstructorController : Controller
     {
+        public IActionResult DashBoard()
+        {
+            return View();
+        }
+
+        public IActionResult SampleInstructorTable()
+        {
+            return View();
+        }
         public IActionResult AddInstructor()
         {
             return View();

@@ -1,4 +1,4 @@
-﻿
+﻿@*
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration configuration
 
@@ -7,7 +7,7 @@
     var apiBaseUrl = configuration.GetValue<string>("ApiBaseUrl");
     //ViewData["base"] = configuration["AuthSSO:StaticContentURL"];
 }
-
+*@
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,10 +46,11 @@
     <div class="container-fluid sb1">
         <div class="row">
             <!--== LOGO ==-->
-            <div class="col-md-2 col-sm-3 col-xs-6 sb1-1">
+            <div style="background-color:antiquewhite" class="col-md-2 col-sm-3 col-xs-6 sb1-1">
                 <a href="#" class="btn-close-menu"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <a href="#" class="atab-menu"><i class="fa fa-bars tab-menu" aria-hidden="true"></i></a>
-                <a href="index-2.html" class="logo"><img src="~/edu/images/logo1.png" alt="" />
+                <a href="index-2.html" class="logo">
+                    <img src="~/edu/images/mwlmslogoresized.png" alt="" />
                 </a>
             </div>
             <!--== SEARCH ==-->
@@ -70,15 +71,18 @@
             <!--== MY ACCCOUNT ==-->
             <div class="col-md-2 col-sm-3 col-xs-6">
                 <!-- Dropdown Trigger -->
-                <a class='waves-effect dropdown-button top-user-pro' href='#' data-activates='top-menu'><img src="images/user/6.png" alt="" />My Account <i class="fa fa-angle-down" aria-hidden="true"></i>
+                <a class='waves-effect dropdown-button top-user-pro' href='#' data-activates='top-menu'>
+                    <img src="images/user/6.png" alt="" />My Account <i class="fa fa-angle-down" aria-hidden="true"></i>
                 </a>
 
                 <!-- Dropdown Structure -->
                 <ul id='top-menu' class='dropdown-content top-menu-sty'>
-                    <li><a href="admin-panel-setting.html" class="waves-effect"><i class="fa fa-cogs" aria-hidden="true"></i>Admin Setting</a>
+                    <li>
+                        <a href="admin-panel-setting.html" class="waves-effect"><i class="fa fa-cogs" aria-hidden="true"></i>Admin Setting</a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="#" class="ho-dr-con-last waves-effect"><i class="fa fa-sign-in" aria-hidden="true"></i> Logout</a>
+                    <li>
+                        <a href="#" class="ho-dr-con-last waves-effect"><i class="fa fa-sign-in" aria-hidden="true"></i> Logout</a>
                     </li>
                 </ul>
             </div>
@@ -92,7 +96,8 @@
                 <!--== USER INFO ==-->
                 <div class="sb2-12">
                     <ul>
-                        <li><img src="~/edu/images/placeholder.jpg" alt="">
+                        <li>
+                            <img src="~/edu/images/placeholder.jpg" alt="">
                         </li>
                         <li>
                             <h5>Victoria Baker <span> Santa Ana, CA</span></h5>
@@ -103,116 +108,144 @@
                 <!--== LEFT MENU ==-->
                 <div class="sb2-13">
                     <ul class="collapsible" data-collapsible="accordion">
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> Profile</a>                          
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> Profile</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Admin" asp-action="ViewAdminProfile">View Profile</a>
+                                    <li>
+                                        <a asp-controller="Admin" asp-action="ViewAdminProfile">View Profile</a>
                                     </li>
-                                    <li><a asp-controller="Admin" asp-action="UpdateAdmin">Update Profile</a>
+                                    <li>
+                                        <a asp-controller="Admin" asp-action="UpdateAdmin">Update Profile</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-						<li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Default Settings</a>
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Default Settings</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="CourseConstant" asp-action="AddSettings">Configure System Settings</a>
+                                    <li>
+                                        <a asp-controller="CourseConstant" asp-action="AddSettings">Configure System Settings</a>
                                     </li>
-                                     <li><a asp-controller="CourseConstant" asp-action="ViewSettings">View System Settings</a>
+                                    <li>
+                                        <a asp-controller="CourseConstant" asp-action="ViewSettings">View System Settings</a>
                                     </li>
-                                    <li><a asp-controller="CourseConstant" asp-action="UpdateSettings">Update System Settings</a>
+                                    <li>
+                                        <a asp-controller="CourseConstant" asp-action="UpdateSettings">Update System Settings</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                         <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> Administrators</a>
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> Administrators</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Admin" asp-action="ViewAllAdmins">View All Administrators</a>
+                                    <li>
+                                        <a asp-controller="Admin" asp-action="ViewAllAdmins">View All Administrators</a>
                                     </li>
-                                    <li><a asp-controller="Admin" asp-action="AddAdmin">Add Admin</a>
+                                    <li>
+                                        <a asp-controller="Admin" asp-action="AddAdmin">Add Admin</a>
                                     </li>
-                                    <li><a asp-controller="Admin" asp-action="ViewAdminProfile">View Profile</a>
+                                    <li>
+                                        <a asp-controller="Admin" asp-action="ViewAdminProfile">View Profile</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Instructors</a>
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Instructors</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Instructor" asp-action="ViewAllInstructors">View All Instructors</a>
+                                    <li>
+                                        <a asp-controller="Instructor" asp-action="SampleInstructorTable">View All Instructors</a>
                                     </li>
-                                    <li><a asp-controller="Instructor" asp-action="AddInstructor">Add New Instructor</a>
+                              
+                                    <li>
+                                        <a asp-controller="Instructor" asp-action="AddInstructor">Add New Instructor</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Learners</a>
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Learners</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Learner" asp-action="ViewAllLearners">View All Learners</a>
+                                    <li>
+                                        <a asp-controller="Learner" asp-action="GetAllLearners">View All Learners</a>
                                     </li>
-                                    <li><a asp-controller="Learner" asp-action="AddLearner">Add New Learner</a>
+                                    <li>
+                                        <a asp-controller="Learner" asp-action="AddLearner">Add New Learner</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Categories</a>
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Categories</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Category" asp-action="ViewAllCategories">View All Course Categories</a>
+                                    <li>
+                                        <a asp-controller="Category" asp-action="GetCategories">View All Course Categories</a>
                                     </li>
-                                    <li><a asp-controller="Category" asp-action="AddCategory">Add New Course Category</a>
+                                    <li>
+                                        <a asp-controller="Category" asp-action="AddCategory">Add New Course Category</a>
                                     </li>
-                                
+
                                 </ul>
                             </div>
                         </li>
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> All Courses</a>
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i> All Courses</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a asp-controller="Course" asp-action="CoursesList">All Course</a>
+                                    <li>
+                                        <a asp-controller="Course" asp-action="CoursesList">All Course</a>
                                     </li>
-                                    <li><a asp-controller="Course" asp-action="AddCourse">Add New Course</a>
+                                    <li>
+                                        <a asp-controller="Course" asp-action="AddCourse">Add New Course</a>
                                     </li>
-                                    
+
                                 </ul>
                             </div>
                         </li>
-                        
-                        <li><a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Requests</a>
+
+                        <li>
+                            <a href="javascript:void(0)" class="collapsible-header"><i class="fa fa-book" aria-hidden="true"></i>Course Requests</a>
                             <div class="collapsible-body left-sub-menu">
                                 <ul>
-                                    <li><a href="admin-all-courses.html">View Pending Course Requests</a>
+                                    <li>
+                                        <a href="admin-all-courses.html">View Pending Course Requests</a>
                                     </li>
-                                     <li><a href="admin-all-courses.html">View Approved Course Requests</a>
+                                    <li>
+                                        <a href="admin-all-courses.html">View Approved Course Requests</a>
                                     </li>
-                                    <li><a href="admin-add-courses.html">View Rejected Course Requests</a>
+                                    <li>
+                                        <a href="admin-add-courses.html">View Rejected Course Requests</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                       
+
                     </ul>
                 </div>
             </div>
 
             <!--== BODY INNER CONTAINER ==-->
             <div class="container-fluid">
-     <main role="main" class="pb-3">
-           @RenderBody()
-      </main>
-   </div>
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
 
         </div>
     </div>
 
-    <script>
-        let appConfig = {
-            appBaseUrl: "@appBaseUrl/Home/Index",
-            apiBaseUrl: "@apiBaseUrl/api"
-        }
-    </script>
+    @*<script>
+            let appConfig = {
+                appBaseUrl: "@appBaseUrl/Home/Index",
+                apiBaseUrl: "@apiBaseUrl/api"
+            }
+        </script>*@
 
     <!--Import jQuery before materialize.js-->
     <script src="~/edu/js/main.min.js"></script>
@@ -220,16 +253,19 @@
     <script src="~/edu/js/materialize.min.js"></script>
     <script src="~/edu/js/custom.js"></script>
     <script src="~/edu/toastr/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="~/js/notification.js"></script>
-    <script src="~/js/configuration.js"></script>
-    <script src="~/js/authentication.js"></script>
-    <script src="~/js/create.js"></script>
-    <script src="~/js/list.js"></script>
-    <script src="~/js/edit.js"></script>
-    <script src="~/js/utils.js"></script>
-   
-   @await RenderSectionAsync("scripts", false) 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @*  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="~/js/notification.js"></script>
+        <script src="~/js/configuration.js"></script>
+        <script src="~/js/authentication.js"></script>
+        <script src="~/js/create.js"></script>
+        <script src="~/js/list.js"></script>
+        <script src="~/js/edit.js"></script>
+        <script src="~/js/utils.js"></script>*@
+
+    @await RenderSectionAsync("scripts", false)
 </body>
 
 

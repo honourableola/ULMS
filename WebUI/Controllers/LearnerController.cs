@@ -9,6 +9,16 @@ namespace WebUI.Controllers
             return View();
         }
 
+        public IActionResult GetAllLearners()
+        {
+            return View();
+        }
+
+        public IActionResult DashBoard()
+        {
+            return View();
+        }
+
         public IActionResult LearnerProfile()
         {
             return View();
