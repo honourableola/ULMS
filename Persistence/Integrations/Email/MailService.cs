@@ -51,7 +51,7 @@ namespace Persistence.Integrations.Email
 
         public async Task SendSuccessfulCourseAssignmentToInstructorEmailAsync(SuccessfulCourseAssignmentToInstructor request)
         {
-            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseAssignmentToInstructor.html";
+            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseAssignmentToInstructor.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
@@ -72,7 +72,7 @@ namespace Persistence.Integrations.Email
 
         public async Task SendSuccessfulCourseAssignmentToLearnerEmailAsync(SuccessfulCourseAssignmentToLearner request)
         {
-            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseAssignmentToLearner.html";
+            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseAssignmentToLearner.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
@@ -93,7 +93,7 @@ namespace Persistence.Integrations.Email
 
         public async Task SendSuccessfulCourseRequestApprovalEmailAsync(CourseRequestApproval request)
         {
-            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseRequestApproval.html";
+            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseRequestApproval.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
@@ -114,7 +114,7 @@ namespace Persistence.Integrations.Email
 
         public async Task SendSuccessfulCourseRequestEmailAsync(SuccessfulCourseRequestMail request)
         {
-            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseRequestMail.html";
+            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseRequestMail.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
@@ -135,7 +135,7 @@ namespace Persistence.Integrations.Email
 
         public async Task SendCourseRequestRejectionEmailAsync(CourseRequestRejection request)
         {
-            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseRequestRejection.html";
+            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\SuccessfulCourseRequestRejection.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
@@ -156,8 +156,8 @@ namespace Persistence.Integrations.Email
 
         public async Task SendWelcomeEmailAsync(WelcomeMail request)
         {
-            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\WelcomeTemplate.html";
-            StreamReader str = new StreamReader(FilePath);
+            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\honourableola\\ULMS\\ULMS.API\\wwwroot\\Templates\\WelcomeTemplate.html";
+             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
             MailText = MailText.Replace("[username]", request.ToEmail).Replace("[email]", request.ToEmail).Replace("[password]", request.Password).Replace("[firstname]", request.FirstName).Replace("[lastname]", request.LastName);
@@ -177,7 +177,7 @@ namespace Persistence.Integrations.Email
 
         public async Task SendAssignmentSuccessfullyAssignedToLearnerEmailAsync(AssignmentSuccessfullyAssigned request)
         {
-            string FilePath = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\AssignmentSuccessfullyAssigned.html";
+            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\ULMS\\src\\ULMS.API\\wwwroot\\Templates\\AssignmentSuccessfullyAssigned.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();

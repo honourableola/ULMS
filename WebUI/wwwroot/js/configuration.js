@@ -7,6 +7,11 @@
 // }
 axios.defaults.baseURL = appConfig.apiBaseUrl;
 
+let axiosConfig = {
+    headers: {
+        'Tenant': 'delta',
+    }
+};
 // Add a request interceptor
 axios.interceptors.request.use(config => {
     const token = localStorage.getItem('authToken');
@@ -16,6 +21,7 @@ axios.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json';
     config.headers['Accept'] = 'application/json';
     config.headers['ApiKey'] = appConfig.apiKey;
+    config.headers.common['Tenant'] = 'delta';
     config.headers.common['Access-Control-Allow-Origin'] = '*';
     return config;
 },

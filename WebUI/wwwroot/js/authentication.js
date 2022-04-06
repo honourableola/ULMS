@@ -80,7 +80,9 @@ async function login(userName, password) {
 async function register(registrationInfo, url) {
     try {
         const data = registrationInfo;
-        const response = await axios.post(url, data);
+        const response = await axios.post(url, data, {
+            headers: { Tenant: 'delta' }
+        });
         if (response) {
             notifyRegistrationSuccess(response.data.message);
         }

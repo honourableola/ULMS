@@ -1,22 +1,23 @@
-﻿async function handleCreateJobForm() {
+﻿async function handleCreateInstructorForm() {
 
-    let form = document.getElementById('createJobForm');
+    let form = document.getElementById('createInstructorForm');
 
     form.addEventListener('submit', async e => {
 
         e.preventDefault();
 
-        const submitButton = $('createJobBtn');
+        const submitButton = $('createInstructorBtn');
 
         spinButton(submitButton);
 
-        const url = `${appConfig.apiBaseUrl}/jobs`;
+        const url = `${appConfig.apiBaseUrl}/instructor/AddInstructor`;
 
-        const jobTitle = $('#createJobForm input[name=jobTitle]').val();
+        const firstName = $('#createInstructorForm input[name=firstName]').val();
+        const lastName = $('#createInstructorForm input[name=lastName]').val();
+        const email = $('#createInstructorForm input[name=email]').val();
+        const phoneNumber = $('#createInstructorForm input[name=phoneNumber]').val();
 
-        const jobDescription = $('#createJobForm input[name=jobDescription]').val();
-
-        if (!jobTitle) {
+        if (!firstName) {
 
             notifyDataRequired('Kindly complete the form correctly.');
             stopButtonSpin(submitButton);
@@ -25,7 +26,7 @@
         } else {
 
             const registrationInfo = {
-                jobTitle, jobDescription
+                firstName, lastName, email, phoneNumber
             }
 
             await register(registrationInfo, url).then((result) => {
