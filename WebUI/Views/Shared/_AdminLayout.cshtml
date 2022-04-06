@@ -1,4 +1,4 @@
-﻿@*
+﻿
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration configuration
 
@@ -7,7 +7,7 @@
     var apiBaseUrl = configuration.GetValue<string>("ApiBaseUrl");
     //ViewData["base"] = configuration["AuthSSO:StaticContentURL"];
 }
-*@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -240,12 +240,12 @@
         </div>
     </div>
 
-    @*<script>
+    <script>
             let appConfig = {
                 appBaseUrl: "@appBaseUrl/Home/Index",
                 apiBaseUrl: "@apiBaseUrl/api"
             }
-        </script>*@
+        </script>
 
     <!--Import jQuery before materialize.js-->
     <script src="~/edu/js/main.min.js"></script>
@@ -256,14 +256,14 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @*  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="~/js/notification.js"></script>
         <script src="~/js/configuration.js"></script>
         <script src="~/js/authentication.js"></script>
         <script src="~/js/create.js"></script>
         <script src="~/js/list.js"></script>
         <script src="~/js/edit.js"></script>
-        <script src="~/js/utils.js"></script>*@
+        <script src="~/js/utils.js"></script>
 
     @await RenderSectionAsync("scripts", false)
 </body>
