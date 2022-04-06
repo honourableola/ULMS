@@ -1,7 +1,7 @@
 ﻿@*@page*@
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "System Settings";
+    ViewData["Title"] = "Admins";
 }
 <link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
 <div class="sb2-2">
@@ -12,7 +12,7 @@
                 <a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
             </li>
             <li class="active-bre">
-                <a href="#">Settings</a>
+                <a href="#"> Admins</a>
             </li>
             <li class="page-back">
                 <a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
@@ -26,23 +26,23 @@
             <div class="col-md-12">
                 <div class="box-inn-sp">
                     <div class="inn-title">
-                        <h4>System Settings</h4>
+                        <h4>All Administrators</h4>
                     </div>
                     <div class="tab-inn">
                         <div class="table-responsive table-desi">
-                            <table style="color:black" class="table table-hover" id="courseConstantDatatable">
+                            <table style="color:black" class="table table-hover" id="adminDatatable">
                                 <thead>
                                     <tr>
                                         <th>MWLMS Code</th>
                                         <th>S/No</th>
-                                        <th>Major Course</th>
-                                        <th>Additional Courses</th>
-                                        <th>No of Assessment Questions</th>
-                                        <th>Additional Courses</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
                                         <th>View</th>
                                         <th>Delete</th>
                                     </tr>
                                 </thead>
+
                             </table>
                         </div>
                     </div>
@@ -56,5 +56,5 @@
 {
     <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/js/courseConstantDatatable.js"></script>
+    <script src="~/js/adminDatatable.js"></script>
 }
