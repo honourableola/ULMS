@@ -33,9 +33,9 @@ namespace Persistence.Implementations.Services
             //_mailSender = mailSender;
         }
 
-        public async Task<BaseResponse> AddAdmin(CreateAdminRequestModel model, IFormFile file)
+        public async Task<BaseResponse> AddAdmin(CreateAdminRequestModel model/*, IFormFile file*/)
         {
-            string adminImage = "";
+            /*string adminImage = "";
             if (file != null)
             {
                 var path = "C:\\Users\\OWNER\\source\\repos\\ULMS\\src\\Persistence\\Images\\";
@@ -48,7 +48,7 @@ namespace Persistence.Implementations.Services
                 {
                     file.CopyTo(fileStream);
                 }
-            }
+            }*/
                 var userExist = await _userRepository.ExistsAsync(u => u.Email.ToLower() == model.Email.ToLower());
             if (userExist)
             {
@@ -83,7 +83,7 @@ namespace Persistence.Implementations.Services
                 LastName = model.LastName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                AdminPhoto = adminImage,
+                AdminPhoto = model.Image,
                 UserId = user.Id,
                 User = user
             };

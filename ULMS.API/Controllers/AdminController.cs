@@ -25,9 +25,9 @@ namespace ULMS.API.Controllers
 
         [Route("AddAdmin")]
         [HttpPost]
-        public async Task<IActionResult> AddAdmin([FromHeader(Name = "Tenant")] string tenant, [FromBody]CreateAdminRequestModel model, IFormFile file)
+        public async Task<IActionResult> AddAdmin(/*[FromHeader(Name = "Tenant")] string tenant,*/ [FromBody]CreateAdminRequestModel model/*, IFormFile file*/)
         {
-            var response = await _adminService.AddAdmin(model, file);
+            var response = await _adminService.AddAdmin(model);
             return Ok(response);
         }
 

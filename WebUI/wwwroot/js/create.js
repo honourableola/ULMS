@@ -114,7 +114,7 @@ async function handleCreateAdminForm() {
         } else {
 
             const registrationInfo = {
-                firstName, lastName, email, phoneNumber
+                firstName, lastName, email, phoneNumber, adminPhoto
             }
 
             await register(registrationInfo, url).then((result) => {
@@ -235,7 +235,7 @@ async function handleCreateSettingsForm() {
         const noOfAssessmentQuestions = $('#createCourseConstantForm input[name=noOfAssessmentQuestions]').val();
         const durationOfAssessment = $('#createCourseConstantForm input[name=durationOfAssessment]').val();
 
-        if (!maximumNoOfAdditionalCourses || !maximumNoOfMajorCourses || !noOfAssessmentQuestions ) {
+        if (!maximumNoOfMajorCourses) {
 
             notifyDataRequired('Kindly complete the form correctly.');
             stopButtonSpin(submitButton);
