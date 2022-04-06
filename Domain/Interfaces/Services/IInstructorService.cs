@@ -1,4 +1,6 @@
-﻿using Domain.Models;
+﻿using Domain.DTOs;
+using Domain.Models;
+using Domain.Paging;
 using System;
 using System.Threading.Tasks;
 using static Domain.Models.InstructorViewModel;
@@ -15,5 +17,6 @@ namespace Domain.Interfaces.Services
         public Task<InstructorsResponseModel> SearchInstructorsByName(string searchText);
         public Task<InstructorsResponseModel> GetInstructorsByCourse(Guid courseId);
         public Task<InstructorsResponseModel> GetAllInstructors();
+        public Task<PaginatedList<InstructorDTO>> LoadInstructorsAsync(string filter, int page, int limit);
     }
 }

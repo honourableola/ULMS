@@ -48,7 +48,7 @@ namespace Persistence.Implementations.Services
         public CourseConstant GetCourseConstant()
         {
             var courseConstants =  _courseConstantRepository.Query().Where(a => a.Id != null).ToList();
-            if(courseConstants == null)
+            if(courseConstants == null || courseConstants.Count == 0)
             {
                 throw new BadRequestException("No record exist on the constants table");
             }

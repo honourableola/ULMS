@@ -9,6 +9,21 @@ namespace WebUI.Controllers
             return View();
         }
 
+        public IActionResult ViewMajorCourses()
+        {
+            return View();
+        }
+
+        public IActionResult GetCourses()
+        {
+            return View();
+        }
+
+        public IActionResult ViewAdditionalCourses()
+        {
+            return View();
+        }
+
         public IActionResult CoursesList()
         {
             return View();

@@ -18,5 +18,10 @@ namespace WebUI.Controllers
         {
             return View();
         }
+
+        public IActionResult GetCategories()
+        {
+            return View();
+        }
     }
 }

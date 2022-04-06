@@ -6,6 +6,7 @@ using Domain.Interfaces.Identity;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
+using Domain.Paging;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Integrations.Email;
 using Persistence.Integrations.MailKitModels;
@@ -357,6 +358,12 @@ namespace Persistence.Implementations.Services
             };
         }
 
-       
+        public async Task<PaginatedList<InstructorDTO>> LoadInstructorsAsync(string filter, int page, int limit)
+        {
+            return await _instructorRepository.LoadInstructorsAsync(filter, page, limit);
+        }
+
+
+
     }
 }

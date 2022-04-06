@@ -1,51 +1,60 @@
-﻿@{
+﻿@*@page*@
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Admin DashBoard";
+    ViewData["Title"] = "System Settings";
 }
+<link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
 <div class="sb2-2">
-<div style="font-size:15px"  class="tab-content">
-                        <div id="home" class="tab-pane fade active in">
-                            <div class="box-inn-sp">
-                                <div class="inn-title">
-                                    <h4>Default Settings</h4>
-                                    <p>Airtport Hotels The Right Way To Start A Short Break Holiday</p>
-                                </div>
-                                <div class="bor">
-                                    <form>
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <input id="list-title" type="text" value="Marine Engineering" class="validate">
-                                                <label for="list-title" class="">Course Name</label>
-                                            </div>
-                                            <div class="input-field col s12">
-                                                <input id="list-name" type="text" value="John Smith" class="validate">
-                                                <label for="list-name">Contact Person</label>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <textarea class="materialize-textarea">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.</textarea>
-                                                <label>Course Descriptions:</label>
-                                            </div>
-                                        </div>
-                                            <div class="row">
-                                                <div class="input-field col s12">
-                                                    <select>
-									  <option value="" disabled selected>Select Status</option>
-									  <option value="1">Active</option>
-									  <option value="2">De-Active</option>
-									  <option value="3">Delete</option>
-									</select>
-                                                </div>
-                                            </div>
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input type="submit" class="waves-button-input" value="Submit"></i>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+    <!--== breadcrumbs ==-->
+    <div class="sb2-2-2">
+        <ul>
+            <li>
+                <a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+            </li>
+            <li class="active-bre">
+                <a href="#">Settings</a>
+            </li>
+            <li class="page-back">
+                <a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+            </li>
+        </ul>
+    </div>
+
+    <!--== User Details ==-->
+    <div class="sb2-2-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box-inn-sp">
+                    <div class="inn-title">
+                        <h4>System Settings</h4>
+                    </div>
+                    <div class="tab-inn">
+                        <div class="table-responsive table-desi">
+                            <table style="color:black" class="table table-hover" id="courseConstantDatatable">
+                                <thead>
+                                    <tr>
+                                        <th>MWLMS Code</th>
+                                        <th>S/No</th>
+                                        <th>Major Course</th>
+                                        <th>Additional Courses</th>
+                                        <th>No of Assessment Questions</th>
+                                        <th>Additional Courses</th>
+                                        <th>View</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/courseConstantDatatable.js"></script>
+}

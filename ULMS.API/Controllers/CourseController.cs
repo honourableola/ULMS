@@ -3,6 +3,7 @@ using Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using static Domain.Models.CourseViewModel;
@@ -94,6 +95,44 @@ namespace ULMS.API.Controllers
         {
             var response = await _courseService.GetAllCourses();
             return Ok(response);
+        }
+
+        [Route("GetCourses")]
+        [HttpPost]
+        public async Task<IActionResult> GetCourses()
+        {
+            try
+            {
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault().ToLower();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var instructors = await _courseService.GetAllCourses();
+                var instructorData = instructors.Data;
+                /*if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    instructorData = instructorData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }*/
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    instructorData = instructorData.Where(m => m.Name.ToLower().Contains(searchValue)
+                                                || m.CategoryName.ToLower().Contains(searchValue)
+                                                || m.Description.ToLower().Contains(searchValue));
+                }
+                recordsTotal = instructorData.Count();
+                var data = instructorData.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [Route("GetAllArchivedCourses")]
