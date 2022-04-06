@@ -1,62 +1,70 @@
-﻿ @{
+﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Admin DashBoard";
 }
 
 <div class="sb2-2">
-                <!--== breadcrumbs ==-->
-                <div class="sb2-2-2">
-                    <ul>
-                        <li><a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
-                        </li>
-                        <li class="active-bre"><a href="#"> Add Admin</a>
-                        </li>
-                        <li class="page-back"><a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
-                        </li>
-                    </ul>
-                </div>
+    <!--== breadcrumbs ==-->
+    <div class="sb2-2-2">
+        <ul>
+            <li>
+                <a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+            </li>
+            <li class="active-bre">
+                <a href="#"> Add Admin</a>
+            </li>
+            <li class="page-back">
+                <a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+            </li>
+        </ul>
+    </div>
 
-                <!--== User Details ==-->
-                <div class="sb2-2-3">
-                    <div class="row">
-                        <div class="col-md-12">
-						<div class="box-inn-sp admin-form">
-                                <div class="inn-title">
-                                    <h4>Create a Default Setting</h4>
-                                    <p>Customize the following settings for the functionality of your Application</p>
+    <!--== User Details ==-->
+    <div class="sb2-2-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box-inn-sp admin-form">
+                    <div class="inn-title">
+                        <h4>Create a Default Setting</h4>
+                        <p>Customize the following settings for the functionality of your Application</p>
+                    </div>
+                    <div class="tab-inn">
+                        <form id="createSettingsForm">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="number" name="maximumNoOfMajorCourses" class="validate" required>
+                                    <label class="">Number of Major Courses</label>
                                 </div>
-                                <div class="tab-inn">
-                                    <form>
-                                        <div class="row">
-                                            <div class="input-field col s6">
-                                                <input type="number" value="" class="validate" required>
-                                                <label class="">Number of Major Courses</label>
-                                            </div>
-                                            <div class="input-field col s6">
-                                                <input type="number" value="" class="validate" required>
-                                                <label class="">Number of Additional Courses </label>
-                                            </div>
-                                        </div>
-                                         <div class="row">
-                                            <div class="input-field col s6">
-                                                <input type="number" value="" class="validate" required>
-                                                <label class="">Number of Assessment Questions</label>
-                                            </div>
-                                            <div class="input-field col s6">
-                                                <input type="number" value="" class="validate" required>
-                                                <label class="">Duration of Assessment</label>
-                                            </div>
-                                        </div>
-                               
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input type="submit" class="waves-button-input"></i>
-                                            </div>
-                                        </div>
-                                    </form>
+                                <div class="input-field col s6">
+                                    <input type="number" name="maximumNoOfAdditionalCourses" class="validate" required>
+                                    <label class="">Number of Additional Courses </label>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="number" name="noOfAssessmentQuestions" class="validate" required>
+                                    <label class="">Number of Assessment Questions</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input type="number" name="durationOfAssessment" class="validate" >
+                                    <label class="">Duration of Assessment</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input id="createSettingsBtn" type="submit" class="waves-button-input"></i>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>handleCreateSettingsForm();</script>
+}

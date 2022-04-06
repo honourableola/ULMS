@@ -19,7 +19,7 @@ namespace WebUI.Controllers
             return View();
         }
 
-        public IActionResult ViewAllTopics()
+        public IActionResult GetTopics()
         {
             return View();
         }

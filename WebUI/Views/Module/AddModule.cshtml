@@ -1,71 +1,138 @@
-﻿ @{
+﻿@{
     Layout = "~/Views/Shared/_InstructorLayout.cshtml";
     ViewData["Title"] = "Instructor DashBoard";
 }
 
 <div class="sb2-2">
-                <!--== breadcrumbs ==-->
-                <div class="sb2-2-2">
-                    <ul>
-                        <li><a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
-                        </li>
-                        <li class="active-bre"><a href="#">Add Option</a>
-                        </li>
-                        <li class="page-back"><a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
-                        </li>
-                    </ul>
-                </div>
+    <!--== breadcrumbs ==-->
+    <div class="sb2-2-2">
+        <ul>
+            <li>
+                <a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+            </li>
+            <li class="active-bre">
+                <a href="#">Add Option</a>
+            </li>
+            <li class="page-back">
+                <a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+            </li>
+        </ul>
+    </div>
 
-                <!--== User Details ==-->
-                <div class="sb2-2-3">
-                    <div class="row">
-                        <div class="col-md-12">
-						<div class="box-inn-sp admin-form">
-                                <div class="inn-title">
-                                    <h4>Add  an Option</h4>
-                                    <p>Provide the following details to add a new Option</p>
+    <!--== User Details ==-->
+    <div class="sb2-2-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box-inn-sp admin-form">
+                    <div class="inn-title">
+                        <h4>Add  an Option</h4>
+                        <p>Provide the following details to add a new Option</p>
+                    </div>
+                    <div class="tab-inn">
+                        <form id="createModuleForm">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" name="name" class="validate" required>
+                                    <label class="">Name</label>
                                 </div>
-                                <div class="tab-inn">
-                                    <form>
-                                        <div class="row">
-                                            <div class="input-field col s6">
-                                                <input type="text" value="" class="validate" required>
-                                                <label class="">Label</label>
-                                            </div>
-                                            <div class="input-field col s6">
-                                                <input type="number" value="" class="validate" required>
-                                                <label class="">Option</label>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="input-field col s6">
-                                                <select>
-									  <option value="" disabled selected>Select Status</option>
-									  <option value="1">Active</option>
-									  <option value="2">De-Active</option>
-									  <option value="3">Delete</option>
-									</select>
-                                                <label class="">Status</label>
-                                            </div>
-                                             <div class="input-field col s6">
-                                                <select>
-									  <option value="" disabled selected>Select Question</option>
-									  <option value="1">Active</option>
-									  <option value="2">De-Active</option>
-									  <option value="3">Delete</option>
-									</select>
-                                                <label class="">Question</label>
-                                            </div>
-                                        </div>                                
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input type="submit" class="waves-button-input"></i>
-                                            </div>
-                                        </div>
-                                    </form>
+                                <div class="input-field col s6">
+                                    <input type="text" name="description" class="validate" required>
+                                    <label class="">Description</label>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" name="content" class="validate" required>
+                                    <label class="">Content</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <select name="courseId">
+                                        <option value="" disabled selected>Select Status</option>
+                                        <option value="1">Active</option>
+                                        <option value="2">De-Active</option>
+                                        <option value="3">Delete</option>
+                                    </select>
+                                    <label class="">Course</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="file-field input-field col s6">
+                                    <div class="btn admin-upload-btn">
+                                        <span>Module Image1</span>
+                                        <input name="moduleImage1" type="file">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Module Image1">
+                                    </div>
+                                </div>
+
+                                <div class="file-field input-field col s6">
+                                    <div class="btn admin-upload-btn">
+                                        <span>Module Image2</span>
+                                        <input name="moduleImage2" type="file">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Module Image2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="file-field input-field col s6">
+                                    <div class="btn admin-upload-btn">
+                                        <span>Module Pdf1</span>
+                                        <input name="modulePDF1" type="file">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Module Pdf1">
+                                    </div>
+                                </div>
+                                <div class="file-field input-field col s6">
+                                    <div class="btn admin-upload-btn">
+                                        <span>Module Pdf2</span>
+                                        <input name="modulePDF2" type="file">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Module Pdf2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="file-field input-field col s6">
+                                    <div class="btn admin-upload-btn">
+                                        <span>Module Video 1</span>
+                                        <input name="moduleVideo1" type="file">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Module Video 1">
+                                    </div>
+                                </div>
+
+                                <div class="file-field input-field col s6">
+                                    <div class="btn admin-upload-btn">
+                                        <span>Module Video 2</span>
+                                        <input name="moduleVideo2" type="file">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input class="file-path validate" type="text" placeholder="Module Video 2">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input id="createModuleBtn" type="submit" class="waves-button-input"></i>
+                                </div>
+                            </div>
+                                    </form>
+                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+@section Scripts
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>handleCreateModuleForm();</script>
+}

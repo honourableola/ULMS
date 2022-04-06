@@ -16,9 +16,97 @@
         const lastName = $('#createInstructorForm input[name=lastName]').val();
         const email = $('#createInstructorForm input[name=email]').val();
         const phoneNumber = $('#createInstructorForm input[name=phoneNumber]').val();
+        const instructorPhoto = $('#createInstructorForm input[name=instructorPhoto]').val();
 
-        if (!firstName) {
+        if (!firstName || !lastName || !email || phoneNumber || !instructorPhoto) {
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
 
+        } else {
+
+            const registrationInfo = {
+                firstName, lastName, email, phoneNumber, instructorPhoto
+            }
+
+            await register(registrationInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+async function handleCreateLearnerForm() {
+
+    let form = document.getElementById('createLearnerForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createLearnerBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/learner/AddLearner`;
+
+        const firstName = $('#createLearnerForm input[name=firstName]').val();
+        const lastName = $('#createLearnerForm input[name=lastName]').val();
+        const email = $('#createLearnerForm input[name=email]').val();
+        const phoneNumber = $('#createLearnerForm input[name=phoneNumber]').val();
+        const learnerPhoto = $('#createLearnerForm input[name=learnerPhoto]').val();
+
+        if (!firstName || !lastName || !email || !phoneNumber) {
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
+
+        } else {
+
+            const registrationInfo = {
+                firstName, lastName, email, phoneNumber, learnerPhoto
+            }
+
+            await register(registrationInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+async function handleCreateAdminForm() {
+
+    let form = document.getElementById('createAdminForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createAdminBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/admin/AddAdmin`;
+
+        const firstName = $('#createAdminForm input[name=firstName]').val();
+        const lastName = $('#createAdminForm input[name=lastName]').val();
+        const email = $('#createAdminForm input[name=email]').val();
+        const phoneNumber = $('#createAdminForm input[name=phoneNumber]').val();
+        const adminPhoto = $('#createAdminForm input[name=adminPhoto]').val();
+
+        if (!firstName || !lastName || !email || !phoneNumber) {
             notifyDataRequired('Kindly complete the form correctly.');
             stopButtonSpin(submitButton);
             form.reset();
@@ -42,64 +130,21 @@
     });
 }
 
-async function handleCreateGradeForm() {
+async function handleCreateCategoryForm() {
 
-    let form = document.getElementById('createGradeForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createGradeBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/grades`;
-
-        const name = $('#createGradeForm input[name=name]').val();
-
-        if (!name) {
-
-            notifyDataRequired('Kindly complete the form correctly.');
-            stopButtonSpin(submitButton);
-            form.reset();
-
-        } else {
-
-            const gradeInfo = {
-
-                name
-            }
-
-            await register(gradeInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-            form.reset();
-        }
-
-    });
-}
-
-async function handleCountryForm() {
-
-    let form = document.getElementById('createCountryForm');
+    let form = document.getElementById('createCategoryForm');
 
     form.addEventListener('submit', async e => {
 
         e.preventDefault();
 
-        const submitButton = $('countryBtn');
+        const submitButton = $('createCategoryBtn');
 
         spinButton(submitButton);
 
-        const url = `${appConfig.apiBaseUrl}/countries`;
+        const url = `${appConfig.apiBaseUrl}/category/Addcategory`;
 
-        const name = $('#createCountryForm input[name=name]').val();
+        const name = $('#createCategoryForm input[name=name]').val();
 
         if (!name) {
 
@@ -128,7 +173,285 @@ async function handleCountryForm() {
     });
 }
 
-async function handleRoleForm() {
+async function handleCreateCourseForm() {
+
+    let form = document.getElementById('createCourseForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createCourseBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/course/AddCourse`;
+
+        const name = $('#createCourseForm input[name=name]').val();
+        const description = $('#createCourseForm input[name=description]').val();
+        const categoryId = $('#createCourseForm select[name=categoryId]').val();
+     
+
+        if (!name || !description || !categoryId ) {
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
+
+        } else {
+
+            const courseInfo = {
+                name, description, categoryId
+            }
+
+            await register(courseInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+async function handleCreateSettingsForm() {
+
+    let form = document.getElementById('createSettingsForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createSettingsBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/courseConstant/AddCourseConstant`;
+
+        const maximumNoOfMajorCourses = $('#createCourseConstantForm input[name=maximumNoOfMajorCourses]').val();
+        const maximumNoOfAdditionalCourses = $('#createCourseConstantForm input[name=maximumNoOfAdditionalCourses]').val();
+        const noOfAssessmentQuestions = $('#createCourseConstantForm input[name=noOfAssessmentQuestions]').val();
+        const durationOfAssessment = $('#createCourseConstantForm input[name=durationOfAssessment]').val();
+
+        if (!maximumNoOfAdditionalCourses || !maximumNoOfMajorCourses || !noOfAssessmentQuestions ) {
+
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
+
+        } else {
+
+            const registrationInfo = {
+
+                maximumNoOfAdditionalCourses, maximumNoOfMajorCourses, noOfAssessmentQuestions, durationOfAssessment
+            }
+
+            await register(registrationInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+async function handleCreateModuleForm() {
+
+    let form = document.getElementById('createModuleForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createModuleBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/module/AddModule`;
+
+        const name = $('#createModuleForm input[name=name]').val();
+        const description = $('#createModuleForm input[name=description]').val();
+        const content = $('#createModuleForm input[name=content]').val();
+        const courseId = $('#createModuleForm select[name=courseId]').val();
+        const moduleImage1 = $('#createModuleForm input[name=moduleImage1]').val();
+        const moduleImage2 = $('#createModuleForm input[name=moduleImage2]').val();
+        const modulePDF1 = $('#createModuleForm input[name=modulePDF1]').val();
+        const modulePDF2 = $('#createModuleForm input[name=modulePDF2]').val();
+        const moduleVideo1 = $('#createModuleForm input[name=moduleVideo1]').val();
+        const moduleVideo2 = $('#createModuleForm input[name=moduleVideo2]').val();
+
+        if (!name || !description || !content || !courseId) {
+
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
+
+        } else {
+
+            const registrationInfo = {
+
+                name, description, content, courseId, moduleImage1, moduleImage2, modulePDF1, modulePDF2, moduleVideo1, moduleVideo2
+            }
+
+            await register(registrationInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+async function handleCreateTopicForm() {
+
+    let form = document.getElementById('createTopicForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createTopicBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/topic/AddTopic`;
+
+        const title = $('#createCourseConstantForm input[name=title]').val();
+        const content = $('#createCourseConstantForm input[name=content]').val();
+        const moduleId = $('#createCourseConstantForm select[name=moduleId]').val();
+
+        if (!title || !content || !moduleId ) {
+
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
+
+        } else {
+
+            const registrationInfo = {
+
+                title, content, moduleId
+            }
+
+            await register(registrationInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+async function handleCreateQuestionForm() {
+
+    let form = document.getElementById('createQuestionForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createQuestionBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/question/AddQuestion`;
+
+        const questionText = $('#createCourseConstantForm input[name=questionText]').val();
+        const points = $('#createCourseConstantForm input[name=points]').val();
+        const moduleId = $('#createCourseConstantForm select[name=moduleId]').val();
+
+        if (!points || !questionText || !moduleId) {
+
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
+
+        } else {
+
+            const registrationInfo = {
+
+                questionText, points, moduleId
+            }
+
+            await register(registrationInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+async function handleCreateOptionForm() {
+
+    let form = document.getElementById('createOptionForm');
+
+    form.addEventListener('submit', async e => {
+
+        e.preventDefault();
+
+        const submitButton = $('createOptionBtn');
+
+        spinButton(submitButton);
+
+        const url = `${appConfig.apiBaseUrl}/option/AddOption`;
+
+        const label = $('#createCourseConstantForm input[name=label]').val();
+        const optionText = $('#createCourseConstantForm input[name=optionText]').val();
+        const status = $('#createCourseConstantForm select[name=status]').val();
+        const questionId = $('#createCourseConstantForm select[name=questionId]').val();
+
+        if (!label || !optionText || !status | questionId) {
+
+            notifyDataRequired('Kindly complete the form correctly.');
+            stopButtonSpin(submitButton);
+            form.reset();
+
+        } else {
+
+            const registrationInfo = {
+
+                label, optionText, status, questionId
+            }
+
+            await register(registrationInfo, url).then((result) => {
+
+                stopButtonSpin(submitButton);
+                form.reset();
+
+            });
+
+            stopButtonSpin(submitButton);
+            form.reset();
+        }
+
+    });
+}
+
+
+async function handleCreateRoleForm() {
 
     let form = document.getElementById('createRoleForm');
 
@@ -140,7 +463,7 @@ async function handleRoleForm() {
 
         spinButton(submitButton);
 
-        const url = `${appConfig.apiBaseUrl}/roles`;
+        const url = `${appConfig.apiBaseUrl}/role/AddRole`;
 
         const name = $('#createRoleForm input[name=name]').val();
         const description = $('#createRoleForm input[name=description]').val();
@@ -173,335 +496,6 @@ async function handleRoleForm() {
 }
 
 
-async function handleCreateReligionForm() {
-
-    let form = document.getElementById('createReligionForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createReligionBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/religions`;
-
-        const name = $('#createReligionForm input[name=name]').val();
-
-        if (!name) {
-
-            notifyDataRequired('Kindly complete the form correctly.');
-            stopButtonSpin(submitButton);
-            form.reset();
-
-        } else {
-
-            const registrationInfo = {
-
-                name
-            }
-
-            await register(registrationInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-            form.reset();
-        }
-
-    });
-}
-
-async function handleCreateDepartmentForm() {
-
-    let form = document.getElementById('createDepartmentForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createDepartmentBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/departments`;
-
-        const name = $('#createDepartmentForm input[name=name]').val();
-
-        const departmentCode = $('#createDepartmentForm input[name=departmentCode]').val();
-
-
-
-        if (!name || !departmentCode) {
-
-            notifyDataRequired('Kindly complete the form correctly.');
-            stopButtonSpin(submitButton);
-            form.reset();
-
-        } else {
-
-            const formInfo = {
-
-                name, departmentCode
-            }
-
-            await register(formInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-            form.reset();
-        }
-
-    });
-}
-
-async function handleEmployeeForm() {
-
-    let form = document.getElementById('createEmployeeForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createEmployeeBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/users/employee`;
-
-        const userName = $('#createEmployeeForm input[name=userName]').val();
-        const password = $('#createEmployeeForm input[name=password]').val();
-
-
-
-        if (!userName || !password) {
-
-            notifyDataRequired('Kindly complete the form correctly.');
-            stopButtonSpin(submitButton);
-
-
-        } else {
-
-            const registerRoleInfo = {
-                userName, password
-            }
-            await register(registerRoleInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-            //form.reset();
-        }
-
-    });
-}
-
-
-
-function spinButton(btn) {
-    btn.addClass("kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light").attr("disabled", true);
-}
-
-function stopButtonSpin(btn) {
-    btn.removeClass("kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light").attr("disabled", false);
-}
-
-async function handleCreateLeaveTypeForm() {
-
-    let form = document.getElementById('createLeaveTypeForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createLeaveTypeBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/leaveTypes`;
-
-        const name = $('#createLeaveTypeForm input[name=name]').val();
-
-        if (!name) {
-
-            notifyDataRequired('Kindly complete the form correctly.');
-            stopButtonSpin(submitButton);
-            form.reset();
-
-        } else {
-
-            const leaveTypeInfo = {
-
-                name
-            }
-
-            await register(leaveTypeInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-            form.reset();
-        }
-
-    });
-}
-
-async function handleEmployeeLeaveForm() {
-
-    let form = document.getElementById('createEmployeeLeaveForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createEmployeeLeaveBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/leaves/create-leave`;
-
-        const employeeId = $('#createEmployeeLeaveForm select[name=employeeId]').val();
-        const year = parseInt($('#createEmployeeLeaveForm input[name=year]').val());
-        const employeeLeaveTypeId = $('#createEmployeeLeaveForm select[name=employeeLeaveTypeId]').val();
-        const proceededDate = $('#createEmployeeLeaveForm input[name=proceededDate]').val();
-        const appliedDate = $('#createEmployeeLeaveForm input[name=appliedDate]').val();
-        //const approvedDate = $('#createEmployeeLeaveForm input[name=approvedDate]').val();
-        const returnedDate = $('#createEmployeeLeaveForm input[name=returnedDate]').val();
-        //const duration = parseInt($('#createEmployeeLeaveForm input[name=duration]').val());
-        //const noOfDays = parseInt($('#createEmployeeLeaveForm input[name=noOfDays]').val());
-        const leaveStatus = parseInt($('#createEmployeeLeaveForm select[name=leaveStatus]').val());
-        const relieverName = $('#createEmployeeLeaveForm input[name=relieverName]').val();
-        const employeeLeaveAllowanceRequest = Boolean($('#createEmployeeLeaveForm input[name=employeeLeaveAllowanceRequest]').val());
-
-
-        if (!employeeId || !year || !employeeLeaveTypeId || !proceededDate || !appliedDate || !returnedDate || !leaveStatus || !relieverName) {
-
-            notifyDataRequired('Kindly complete the form correctly.');
-            stopButtonSpin(submitButton);
-
-        } else {
-
-            const registerLeaveInfo = {
-                employeeId, year, employeeLeaveTypeId,
-                proceededDate, returnedDate, appliedDate,
-                leaveStatus, relieverName, employeeLeaveAllowanceRequest
-            }
-            await register(registerLeaveInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-            //form.reset();
-        }
-
-    });
-}
-
-async function handleCreateLoanTypeForm() {
-
-    let form = document.getElementById('createLoanTypeForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createLoanTypeBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/loanTypes`;
-
-        const name = $('#createLoanTypeForm input[name=name]').val();
-
-        const description = $('#createLoanTypeForm input[name=description]').val();
-
-        if (!name || !description) {
-
-            notifyDataRequired('Kindly complete the form correctly.');
-            stopButtonSpin(submitButton);
-            form.reset();
-
-        } else {
-
-            const loanTypeInfo = {
-
-                name, description
-            }
-
-            await register(loanTypeInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-            form.reset();
-        }
-
-    });
-}
-
-async function handleEmployeeLoanForm() {
-
-    let form = document.getElementById('createEmployeeLoanForm');
-
-    form.addEventListener('submit', async e => {
-
-        e.preventDefault();
-
-        const submitButton = $('createEmployeeLoanBtn');
-
-        spinButton(submitButton);
-
-        const url = `${appConfig.apiBaseUrl}/loans/create-loan`;
-
-        const employeeId = $('#createEmployeeLoanForm select[name=employeeId]').val();
-        const employeeLoanTypeId = $('#createEmployeeLoanForm select[name=employeeLoanTypeId]').val();
-        const requestedAmount = parseFloat($('#createEmployeeLoanForm input[name=requestedAmount]').val());
-        const interestPercentage = parseInt($('#createEmployeeLoanForm input[name=interestPercentage]').val());
-        const installmentNumber = parseInt($('#createEmployeeLoanForm input[name=installmentNumber]').val());
-
-        if (!employeeId || !employeeLoanTypeId || !requestedAmount || !interestPercentage || !installmentNumber) {
-
-            notifyDataRequired('Kindly complete the form correctly!');
-            stopButtonSpin(submitButton);
-
-        } else {
-
-            const registerLoanInfo = {
-                employeeId, employeeLoanTypeId, requestedAmount,
-                interestPercentage, installmentNumber
-            }
-            await register(registerLoanInfo, url).then((result) => {
-
-                stopButtonSpin(submitButton);
-                form.reset();
-
-            });
-
-            stopButtonSpin(submitButton);
-        }
-
-    });
-}
 
 
 async function handleEmployeeLoanInstallmentForm() {

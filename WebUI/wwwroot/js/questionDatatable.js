@@ -1,10 +1,10 @@
 ﻿$(document).ready(function () {
-    $("#topicDatatable").DataTable({
+    $("#questionDatatable").DataTable({
         "processing": true,
         "serverSide": true,
         "filter": true,
         "ajax": {
-            "url": "https://localhost:44355/api/topic/gettopics",
+            "url": "https://localhost:44355/api/question/getquestions",
             "type": "POST",
             "datatype": "json",
             headers: { 'Tenant': 'delta' }
@@ -22,7 +22,8 @@
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }
             },
-            { "data": "title", "name": "title", "autoWidth": true },
+            { "data": "questionText", "name": "Question Text", "autoWidth": true },
+            { "data": "points", "name": "Points", "autoWidth": true },
             { "data": "moduleName", "name": "Module", "autoWidth": true },
             {
                 "render": function (data, row) { return "<a href='#' style='color:white' class='btn btn-Success' onclick=ViewInstructor('" + row.id + "'); >View</a>"; }

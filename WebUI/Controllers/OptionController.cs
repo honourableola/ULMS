@@ -19,7 +19,7 @@ namespace WebUI.Controllers
             return View();
         }
 
-        public IActionResult ViewAllOptions()
+        public IActionResult GetOptions()
         {
             return View();
         }

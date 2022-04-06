@@ -15,7 +15,7 @@
             "searchable": false
         }],
         "columns": [
-            { "data": "categoryId", "name": "WMLMS Code", "autoWidth": true },
+            { "data": "id", "name": "WMLMS Code", "autoWidth": true },
             {
                 "data": null, "sortable": false,
                 render: function (data, type, row, meta) {
@@ -23,7 +23,8 @@
                 }
             },
             { "data": "name", "name": "Name", "autoWidth": true },
-            { "data": "categoryName", "name": "Category Name", "autoWidth": true },
+            { "data": "description", "name": "Description", "autoWidth": true },
+            { "data": "courseName", "name": "Course", "autoWidth": true },
             {
                 "render": function (data, row) { return "<a href='#' style='color:white' class='btn btn-Success' onclick=ViewInstructor('" + row.id + "'); >View</a>"; }
             },

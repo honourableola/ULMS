@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,13 +70,14 @@ namespace Persistence.Implementations.Services
 
         public async Task<QuestionsResponseModel> GetAllQuestions()
         {
-            var questions = await _questionRepository.GetAllAsync(a => a.Id.ToString().Length > 0);
+            var questions = await _questionRepository.Query().Include(q => q.Module).ToListAsync();
 
                 var questionsReturned = questions.Select(question => new QuestionDTO
                {
                    Id = question.Id,
                    QuestionText = question.QuestionText,
                    Points = question.Points,
+                   ModuleName = question.Module.Name,
                    ModuleId = question.ModuleId,
                    Options = question.Options.Select(o => new OptionDTO
                    {
@@ -106,7 +108,7 @@ namespace Persistence.Implementations.Services
 
         public async Task<QuestionResponseModel> GetQuestionById(Guid id)
         {
-            var question = await _questionRepository.GetAsync(id);
+            var question = await _questionRepository.Query().Include(q => q.Module).SingleOrDefaultAsync(q => q.Id == id);
             if (question == null)
             {
                 throw new NotFoundException($"question with id {id} does not exist");
@@ -120,6 +122,7 @@ namespace Persistence.Implementations.Services
                     QuestionText = question.QuestionText,
                     Points = question.Points,
                     ModuleId = question.ModuleId,
+                    ModuleName = question.Module.Name,
                     Options = question.Options.Select(o => new OptionDTO
                     {
                         Id = o.Id,
@@ -136,13 +139,14 @@ namespace Persistence.Implementations.Services
 
         public async Task<QuestionsResponseModel> GetQuestionsByModule(Guid moduleId)
         {
-            var questions =  _questionRepository.GetQuestionsByModule(moduleId);
+            var questions =  _questionRepository.Query().Include(q => q.Module).Where(q => q.ModuleId == moduleId);
                 var req = questions.Select(question => new QuestionDTO
                 {
                     Id = question.Id,
                     QuestionText = question.QuestionText,
                     Points = question.Points,
                     ModuleId = question.ModuleId,
+                    ModuleName = question.Module.Name,
                     Options = question.Options.Select(o => new OptionDTO
                     {
                         Id = o.Id,

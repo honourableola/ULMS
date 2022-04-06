@@ -66,6 +66,39 @@ namespace Persistence.Implementations.Services
 
         }
 
+        public async Task<OptionsResponseModel> GetAllOptions()
+        {
+            var options = await _optionRepository.Query()
+                .Include(o => o.Question)
+                .Select(o => new OptionDTO
+                {
+                    Id = o.Id,
+                    Label = o.Label,
+                    OptionText = o.OptionText,
+                    Status = o.Status,
+                    QuestionId = o.QuestionId
+                }).ToListAsync();
+
+            if (options == null)
+            {
+                throw new BadRequestException($"Options not found");
+            }
+            else if (options.Count == 0)
+            {
+                return new OptionsResponseModel
+                {
+                    Message = $" No Option Found",
+                    Status = true
+                };
+            }
+
+            return new OptionsResponseModel
+            {
+                Data = options,
+                Message = $"{options.Count} Options retrieved successfully",
+                Status = true
+            };
+        }
 
         public async Task<OptionResponseModel> GetOption(Guid id)
         {

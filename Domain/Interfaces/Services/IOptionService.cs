@@ -11,6 +11,7 @@ namespace Domain.Interfaces.Services
         public Task<BaseResponse> UpdateOption(Guid id, UpdateOptionRequestModel model);
         public Task<BaseResponse> DeleteOption(Guid id);
         public Task<OptionResponseModel> GetOption(Guid id);
+        public Task<OptionsResponseModel> GetAllOptions();
         public Task<OptionsResponseModel> GetOptionsByQuestion(Guid questionId);
     }
 }

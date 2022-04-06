@@ -156,8 +156,8 @@ namespace Persistence.Integrations.Email
 
         public async Task SendWelcomeEmailAsync(WelcomeMail request)
         {
-            string FilePath = "C:\\Users\\nurudeen\\source\\repos\\honourableola\\ULMS\\ULMS.API\\wwwroot\\Templates\\WelcomeTemplate.html";
-             StreamReader str = new StreamReader(FilePath);
+            string FilePath = "C:\\Users\\OWNER\\Desktop\\clonedProj\\ULMS.API\\wwwroot\\Templates\\WelcomeTemplate.html";
+            StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
             MailText = MailText.Replace("[username]", request.ToEmail).Replace("[email]", request.ToEmail).Replace("[password]", request.Password).Replace("[firstname]", request.FirstName).Replace("[lastname]", request.LastName);

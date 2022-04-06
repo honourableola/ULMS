@@ -10,6 +10,7 @@ namespace Domain.DTOs
         public int Points { get; set; }
         public Guid AssessmentId { get; set; }
         public Guid ModuleId { get; set; }
+        public string ModuleName { get; set; }
         public AssessmentDTO AssessmentDTO { get; set; }
         public ICollection<OptionDTO> Options = new List<OptionDTO>();
 

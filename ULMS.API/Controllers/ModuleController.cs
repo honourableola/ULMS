@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static Domain.Models.ModuleViewModel;
 
@@ -122,6 +123,47 @@ namespace ULMS.API.Controllers
         {
             var response = await _moduleService.GetAllModules();
             return Ok(response);
+        }
+
+        [Route("GetModules")]
+        [HttpPost]
+        public async Task<IActionResult> GetModules()
+        {
+            try
+            {
+                var draw = Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault().ToLower();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var modules = await _moduleService.GetAllModules();
+                var moduleData = modules.Data;
+                /*if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    instructorData = instructorData.OrderBy(sortColumn + " " + sortColumnDirection);
+                }*/
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    moduleData = moduleData.Where(m => m.Name.ToString().ToLower().Contains(searchValue)
+                                                 || m.Content.ToLower().Contains(searchValue)
+                                                 || m.CourseName.ToLower().Contains(searchValue)
+                                                 || m.Description.ToLower().Contains(searchValue)
+                                                 );
+
+                }
+                recordsTotal = moduleData.Count();
+                var data = moduleData.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [Route("GetModulesByCourse/{courseId}")]

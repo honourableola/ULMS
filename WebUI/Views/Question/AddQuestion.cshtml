@@ -1,62 +1,71 @@
-﻿ @{
+﻿@{
     Layout = "~/Views/Shared/_InstructorLayout.cshtml";
     ViewData["Title"] = "Instructor DashBoard";
 }
 
 <div class="sb2-2">
-                <!--== breadcrumbs ==-->
-                <div class="sb2-2-2">
-                    <ul>
-                        <li><a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
-                        </li>
-                        <li class="active-bre"><a href="#"> Add Question</a>
-                        </li>
-                        <li class="page-back"><a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
-                        </li>
-                    </ul>
-                </div>
+    <!--== breadcrumbs ==-->
+    <div class="sb2-2-2">
+        <ul>
+            <li>
+                <a href="index-2.html"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+            </li>
+            <li class="active-bre">
+                <a href="#"> Add Question</a>
+            </li>
+            <li class="page-back">
+                <a href="index-2.html"><i class="fa fa-backward" aria-hidden="true"></i> Back</a>
+            </li>
+        </ul>
+    </div>
 
-                <!--== User Details ==-->
-                <div class="sb2-2-3">
-                    <div class="row">
-                        <div class="col-md-12">
-						<div class="box-inn-sp admin-form">
-                                <div class="inn-title">
-                                    <h4>Add  a Question</h4>
-                                    <p>Provide the following details to add a new Question</p>
+    <!--== User Details ==-->
+    <div class="sb2-2-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box-inn-sp admin-form">
+                    <div class="inn-title">
+                        <h4>Add  a Question</h4>
+                        <p>Provide the following details to add a new Question</p>
+                    </div>
+                    <div class="tab-inn">
+                        <form id="createQuestionForm">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" name="questionText" class="validate" required>
+                                    <label class="">Question</label>
                                 </div>
-                                <div class="tab-inn">
-                                    <form>
-                                        <div class="row">
-                                            <div class="input-field col s6">
-                                                <input type="text" value="" class="validate" required>
-                                                <label class="">Question</label>
-                                            </div>
-                                            <div class="input-field col s6">
-                                                <input type="number" value="" class="validate" required>
-                                                <label class="">Points</label>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <select>
-									  <option value="" disabled selected>Select Module</option>
-									  <option value="1">Active</option>
-									  <option value="2">De-Active</option>
-									  <option value="3">Delete</option>
-									</select>
-                                                <label class="">Module</label>
-                                            </div>
-                                        </div>                                
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                                <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input type="submit" class="waves-button-input"></i>
-                                            </div>
-                                        </div>
-                                    </form>
+                                <div class="input-field col s6">
+                                    <input type="number" name="points" class="validate" required>
+                                    <label class="">Points</label>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="moduleId">
+                                        <option value="" disabled selected>Select Module</option>
+                                        <option value="1">Active</option>
+                                        <option value="2">De-Active</option>
+                                        <option value="3">Delete</option>
+                                    </select>
+                                    <label class="">Module</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="waves-effect waves-light btn-large waves-input-wrapper" style=""><input id="createQuestionBtn" type="submit" class="waves-button-input"></i>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>handleCreateQuestionForm();</script>
+}
